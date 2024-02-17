@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:heroicons/heroicons.dart';
 import 'package:kairasahrl/models/container_model.dart';
 import 'package:kairasahrl/screens/container/containerupdate.dart';
 import 'package:kairasahrl/widget/sizedtext.dart';
 
 class ContainerListScreen extends StatefulWidget {
+  static const routeName = "/ContainerListScreen";
   const ContainerListScreen({super.key});
 
   @override
@@ -11,12 +13,14 @@ class ContainerListScreen extends StatefulWidget {
 }
 
 class _ContainerListScreenState extends State<ContainerListScreen> {
+  final TextEditingController _searchTextController = TextEditingController();
+  final FocusNode _searchTextFocusNode = FocusNode();
   final List<Containere> _containers = [
     Containere(
       id: 1,
-      name: 'Container 1',
+      name: 'Viande Container',
       slug: 'container_1',
-      customer: 'Customer 1',
+      customer: 'İssa mahamat',
       customerTel: '1234567890',
       cityID: 1,
       contTypeID: 1,
@@ -114,6 +118,13 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
     // Add more Container objects if needed
   ];
 
+  @override
+  void dispose() {
+    _searchTextController.dispose();
+    _searchTextFocusNode.dispose();
+    super.dispose();
+  }
+
   void deleteContainer(int id) {
     setState(() {
       _containers.removeWhere((container) => container.id == id);
@@ -157,16 +168,56 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.indigo.shade50,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.indigo.shade50,
+        backgroundColor: Colors.white,
         title: const Text(
           'Liste des Containers',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(
+              color: Colors.black, fontFamily: 'varila', fontSize: 24),
         ),
       ),
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              height: kBottomNavigationBarHeight,
+              child: TextField(
+                focusNode: _searchTextFocusNode,
+                controller: _searchTextController,
+                onChanged: (valuee) {
+                  setState(() {});
+                },
+                decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide:
+                        const BorderSide(color: Colors.indigo, width: 1),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide:
+                        const BorderSide(color: Colors.indigo, width: 1),
+                  ),
+                  hintText: "Vous recherchez ? ",
+                  prefixIcon: const Icon(Icons.search),
+                  suffix: IconButton(
+                    onPressed: () {
+                      _searchTextController.clear();
+                      _searchTextFocusNode.unfocus();
+                    },
+                    icon: Icon(
+                      Icons.close,
+                      color: _searchTextFocusNode.hasFocus
+                          ? Colors.red
+                          : Colors.black,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
           Expanded(
             child: MediaQuery.removePadding(
               context: context,
@@ -190,7 +241,7 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
                       );
                     },
                     child: Container(
-                      height: 120,
+                      height: 106,
                       margin: const EdgeInsets.symmetric(
                           vertical: 8.0, horizontal: 16.0),
                       decoration: BoxDecoration(
@@ -240,23 +291,55 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          containerdepense.name,
+                                          containerdepense.customer,
                                           style: const TextStyle(
                                               fontSize: 16,
-                                              color: Colors.black,
+                                              color:
+                                                  Color.fromARGB(255, 0, 0, 0),
                                               fontWeight: FontWeight.bold),
                                         ),
-                                        const SizedBox(
-                                          height: 10,
+                                        Row(
+                                          children: [
+                                            const HeroIcon(
+                                              HeroIcons
+                                                  .viewColumns, // Choisissez l'icône que vous souhaitez afficher
+                                              size: 10, // Taille de l'icône
+                                              color: Colors
+                                                  .indigo, // Couleur de l'icône
+                                            ),
+                                            const SizedBox(width: 2),
+                                            Text(
+                                              containerdepense.name,
+                                              style: const TextStyle(
+                                                  fontSize: 10,
+                                                  color: Colors.black38,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
                                         ),
-                                        Text(
-                                          'ID: ${containerdepense.id}',
-                                          style: const TextStyle(
-                                              fontSize: 16,
-                                              color: Color.fromARGB(
-                                                  255, 85, 84, 84),
-                                              fontWeight: FontWeight.bold),
-                                        )
+                                        Row(
+                                          children: [
+                                            const HeroIcon(
+                                              HeroIcons
+                                                  .phoneArrowUpRight, // Choisissez l'icône que vous souhaitez afficher
+                                              size: 10, // Taille de l'icône
+                                              color: Colors
+                                                  .indigo, // Couleur de l'icône
+                                            ),
+                                            const SizedBox(width: 2),
+                                            Text(
+                                              containerdepense.customerTel,
+                                              style: const TextStyle(
+                                                  fontSize: 10,
+                                                  color: Colors.black38,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedText(
+                                            text:
+                                                'creer le ${containerdepense.createdAt}',
+                                            color: Colors.green)
                                       ],
                                     ),
                                   ],
@@ -264,10 +347,6 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
                                 const SizedBox(
                                   height: 15,
                                 ),
-                                SizedText(
-                                    text:
-                                        'creer le ${containerdepense.createdAt}',
-                                    color: Colors.green)
                               ],
                             ),
                             Row(

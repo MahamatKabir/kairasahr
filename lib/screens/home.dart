@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:kairasahrl/screens/city/citylist_screen.dart';
 import 'package:kairasahrl/screens/container/containerlist_screen.dart';
-import 'package:kairasahrl/screens/user_screen.dart';
+
+import 'package:intl/intl.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -9,6 +11,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String formattedDate = DateFormat('d MMM yyyy').format(DateTime.now());
+  String dayOfWeek = DateFormat('EEEE').format(DateTime.now());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,24 +22,63 @@ class _MyHomePageState extends State<MyHomePage> {
           margin: const EdgeInsets.only(top: 18, left: 24, right: 24),
           child: Column(
             children: [
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Salut Fadoul',
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.indigo,
-                        fontWeight: FontWeight.bold),
+                  Row(
+                    children: [
+                      Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              width: 3,
+                              color: Colors.grey,
+                            ),
+                            image: const DecorationImage(
+                                fit: BoxFit.cover,
+                                image: AssetImage("assets/images/cont.png"))),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Bienvenu',
+                            style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            'Mahamat kabir',
+                            style: TextStyle(
+                                fontSize: 8,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      )
+                    ],
                   ),
-                  RotatedBox(
-                    quarterTurns: 135,
-                    child: Icon(
-                      Icons.bar_chart_rounded,
-                      size: 28,
-                      color: Colors.indigo,
-                    ),
-                  ),
+                  Column(
+                    children: [
+                      Text(
+                        formattedDate,
+                        style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                      ),
+                      Text(
+                        dayOfWeek,
+                        style: const TextStyle(fontSize: 8, color: Colors.grey),
+                      ),
+                    ],
+                  )
                 ],
               ),
               Expanded(
@@ -95,17 +138,19 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       _cardMenu(
+                          onTap: () {},
+                          title: 'UTILISATEUR',
+                          icon: 'assets/images/utilisateur.jpeg'),
+                      _cardMenu(
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const UserScreen()),
+                                  builder: (context) => const CityListScreen()),
                             );
                           },
-                          title: 'UTILISATEUR',
-                          icon: 'assets/images/utilisateur.jpeg'),
-                      _cardMenu(
-                          title: 'VILLES', icon: 'assets/images/ville.jpeg'),
+                          title: 'VILLES',
+                          icon: 'assets/images/ville.jpeg'),
                     ],
                   )
                 ],
@@ -134,7 +179,11 @@ class _MyHomePageState extends State<MyHomePage> {
             color: color,
           ),
           child: Column(children: [
-            Image.asset(icon),
+            Image.asset(
+              icon,
+              width: 100,
+              height: 100,
+            ),
             const SizedBox(
               height: 10,
             ),

@@ -4,6 +4,7 @@ import 'package:kairasahrl/models/container_model.dart';
 import 'package:kairasahrl/widget/customer.dart';
 
 class ContainerUpScreen extends StatefulWidget {
+  static const routeName = "/ContainerUpScreen";
   final Containere container;
   final Function(int) onDelete;
   final Function(
@@ -51,89 +52,97 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       body: SafeArea(
-        child: Stack(
-          alignment: AlignmentDirectional.center,
-          children: [
-            CustomBackgroundContainer(
-              title: 'Container Detail',
-              leadingIcon: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Icon(Icons.arrow_back, color: Colors.white),
-              ),
+        child: Stack(children: [
+          CustomBackgroundContainer(
+            title: 'Container Detail',
+            leadingIcon: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: const Icon(Icons.arrow_back, color: Colors.white),
             ),
-            Center(
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 100.0),
+            child: Container(
+              color: Colors.white,
               child: SingleChildScrollView(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.white,
-                    border: Border.all(
-                      width: 2,
-                      color: Color.fromARGB(255, 1, 1, 37),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildTextFieldWithBorder(
+                      'Container Name:',
+                      _nameController,
                     ),
-                  ),
-                  height: 550,
-                  width: 320,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _buildTextFieldWithBorder(
-                              'Container Name:', _nameController),
-                          _buildTextFieldWithBorder('Slug:', _slugController),
-                          _buildTextFieldWithBorder(
-                              'Customer:', _customerController),
-                          _buildTextFieldWithBorder(
-                              'Customer Tel:', _customerTelController),
-                          _buildTextFieldWithBorder(
+                    _buildTextFieldWithBorder('Customer:', _customerController),
+                    _buildTextFieldWithBorder(
+                        'Customer Tel:', _customerTelController),
+                    _buildTextFieldWithBorder('Slug:', _slugController),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Flexible(
+                          flex: 4,
+                          child: _buildTextFieldWithBorder(
                               'Ville ID:', _cityIDController),
-                          _buildTextFieldWithBorder(
-                              'Statut:', _statusController),
-                          _buildTextFieldWithBorder(
+                        ),
+                        Flexible(
+                            flex: 3,
+                            child: _buildTextFieldWithBorder(
+                                'Statut:', _statusController)),
+                        Flexible(
+                          flex: 3,
+                          child: _buildTextFieldWithBorder(
                               'Type de conteneur ID:', _contTypeIDController),
-                          _buildTextWithBorder(
-                              'Created At: ${widget.container.createdAt}'),
-                          _buildTextWithBorder('ID: ${widget.container.id}'),
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ElevatedButton(
-                                onPressed: _isUpdatingContainer
-                                    ? null
-                                    : _updateContainer,
-                                child: const Text('Update'),
-                              ),
-                              const SizedBox(width: 10),
-                              ElevatedButton(
-                                onPressed: () {
-                                  widget.onDelete(widget.container.id);
-                                  Navigator.pop(context);
-                                  Fluttertoast.showToast(
-                                    msg: 'Container Deleted Successfully',
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    backgroundColor: Colors.green,
-                                    textColor: Colors.white,
-                                  );
-                                },
-                                child: const Text('Delete'),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ),
+                    Row(
+                      children: [
+                        Flexible(
+                          flex: 3,
+                          child: _buildTextWithBorder(
+                              'ID: ${widget.container.id}'),
+                        ),
+                        Flexible(
+                          flex: 7,
+                          child: _buildTextWithBorder(
+                              'Created At: ${widget.container.createdAt}'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed:
+                              _isUpdatingContainer ? null : _updateContainer,
+                          child: const Text('Update'),
+                        ),
+                        const SizedBox(width: 10),
+                        ElevatedButton(
+                          onPressed: () {
+                            widget.onDelete(widget.container.id);
+                            Navigator.pop(context);
+                            Fluttertoast.showToast(
+                              msg: 'Container Deleted Successfully',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: Colors.green,
+                              textColor: Colors.white,
+                            );
+                          },
+                          child: const Text('Delete'),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ]),
       ),
     );
   }
@@ -141,9 +150,9 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
   Widget _buildTextFieldWithBorder(
       String label, TextEditingController controller) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 5),
       padding: const EdgeInsets.symmetric(horizontal: 15),
-      width: 300,
+      width: 350,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
@@ -156,15 +165,14 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
         children: [
           Text(
             label,
-            style: const TextStyle(fontSize: 20, color: Colors.black),
+            style: const TextStyle(fontSize: 10, color: Colors.black),
           ),
-          const SizedBox(height: 5),
           TextField(
             controller: controller,
-            style: const TextStyle(color: Colors.black),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-            ),
+            style: const TextStyle(color: Colors.black, fontSize: 16),
+            // decoration: const InputDecoration(
+            //   border: InputBorder.none,
+            // ),
           ),
         ],
       ),
@@ -176,6 +184,7 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
       margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 15),
       width: 300,
+      height: 90,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         border: Border.all(

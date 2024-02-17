@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:kairasahrl/screens/add_screen.dart';
 import 'package:kairasahrl/screens/home.dart';
+import 'package:kairasahrl/screens/profile/profile_screen.dart';
 
 class BottomBarScreen extends StatefulWidget {
   const BottomBarScreen({Key? key}) : super(key: key);
@@ -14,7 +15,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   int _selectedIndex = 0;
   final List<Map<String, dynamic>> _pages = [
     {'page': const MyHomePage(), 'title': 'Home Screen'},
-    {'page': const MyHomePage(), 'title': 'user Screen'},
+    {'page': const ProfileScreen(), 'title': 'user Screen'},
   ];
   void _selectedPage(int index) {
     setState(() {

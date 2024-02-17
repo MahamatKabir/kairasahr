@@ -18,7 +18,7 @@ class CustomMainContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        //borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(10),
         color: Colors.white,
       ),
       height: 430,

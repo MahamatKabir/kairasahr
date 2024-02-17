@@ -15,13 +15,13 @@ class SizedText extends StatelessWidget {
           Text(
             text,
             style: TextStyle(
-                fontSize: 16, color: color, fontWeight: FontWeight.w700),
+                fontSize: 10, color: color, fontWeight: FontWeight.w400),
             maxLines: 1,
             softWrap: false,
             overflow: TextOverflow.clip,
           ),
           const SizedBox(
-            height: 5,
+            height: 2,
           ),
           Row(
             children: [
