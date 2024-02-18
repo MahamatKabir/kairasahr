@@ -10,33 +10,32 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Profile"),
-      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 20),
         child: Column(
           children: [
             const ProfilePic(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 100),
             ProfileMenu(
               text: "Liste des contenairs",
-              icon: "assets/icons/User Icon.svg",
+              icon:
+                  Icons.cabin_outlined, // Utilisez l'icône IconData directement
               press: () => {},
             ),
             ProfileMenu(
               text: "Liste des depenses",
-              icon: "assets/icons/Bell.svg",
+              icon: Icons.payment, // Utilisez l'icône IconData directement
               press: () {},
             ),
             ProfileMenu(
               text: "Liste des villes",
-              icon: "assets/icons/Settings.svg",
+              icon:
+                  Icons.location_city, // Utilisez l'icône IconData directement
               press: () {},
             ),
             ProfileMenu(
               text: "Log Out",
-              icon: "assets/icons/Log out.svg",
+              icon: Icons.logout, // Utilisez l'icône IconData directement
               press: () {},
             ),
           ],

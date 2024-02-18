@@ -71,50 +71,6 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
       status: 1,
       createdAt: '2024-02-06',
     ),
-    Containere(
-      id: 1,
-      name: 'Container 1',
-      slug: 'container_1',
-      customer: 'Customer 1',
-      customerTel: '1234567890',
-      cityID: 1,
-      contTypeID: 1,
-      status: 1,
-      createdAt: '2024-02-06',
-    ),
-    Containere(
-      id: 1,
-      name: 'Container 1',
-      slug: 'container_1',
-      customer: 'Customer 1',
-      customerTel: '1234567890',
-      cityID: 1,
-      contTypeID: 1,
-      status: 1,
-      createdAt: '2024-02-06',
-    ),
-    Containere(
-      id: 1,
-      name: 'Container 1',
-      slug: 'container_1',
-      customer: 'Customer 1',
-      customerTel: '1234567890',
-      cityID: 1,
-      contTypeID: 1,
-      status: 1,
-      createdAt: '2024-02-06',
-    ),
-    Containere(
-      id: 2,
-      name: 'Container 2',
-      slug: 'container_2',
-      customer: 'Customer 2',
-      customerTel: '9876543210',
-      cityID: 2,
-      contTypeID: 2,
-      status: 1,
-      createdAt: '2024-02-07',
-    ),
     // Add more Container objects if needed
   ];
 
@@ -168,13 +124,12 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.indigo.shade50,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.indigo.shade50,
         title: const Text(
           'Liste des Containers',
-          style: TextStyle(
-              color: Colors.black, fontFamily: 'varila', fontSize: 24),
+          style: TextStyle(color: Colors.black, fontSize: 20),
         ),
       ),
       body: Column(
@@ -201,7 +156,10 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
                         const BorderSide(color: Colors.indigo, width: 1),
                   ),
                   hintText: "Vous recherchez ? ",
-                  prefixIcon: const Icon(Icons.search),
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    color: Colors.indigo,
+                  ),
                   suffix: IconButton(
                     onPressed: () {
                       _searchTextController.clear();
@@ -242,25 +200,30 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
                     },
                     child: Container(
                       height: 106,
+
                       margin: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 16.0),
-                      decoration: BoxDecoration(
-                        color: Colors.indigo.shade50,
-                        borderRadius: const BorderRadius.only(
-                          topRight: Radius.circular(20),
-                          bottomRight: Radius.circular(20),
-                        ),
-                        boxShadow: const [
+                          vertical: 8.0, horizontal: 8.0),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(10),
+                            bottomRight: Radius.circular(10),
+                            topLeft: Radius.circular(10),
+                            bottomLeft: Radius.circular(10)),
+                        boxShadow: [
                           BoxShadow(
-                            color: Color(0xFFd8dbe0),
+                            color: Colors.white,
                             offset: Offset(1, 1),
-                            spreadRadius: 5.0,
-                            blurRadius: 10.0,
+                            spreadRadius: 1.0,
+                            blurRadius: 1.0,
                           )
                         ],
                       ),
                       child: Container(
-                        margin: const EdgeInsets.only(top: 10, left: 18),
+                        margin: const EdgeInsets.only(
+                          top: 10,
+                          left: 10,
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -269,14 +232,14 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
                                 Row(
                                   children: [
                                     Container(
-                                      height: 60,
-                                      width: 60,
+                                      height: 70,
+                                      width: 70,
                                       decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10),
                                           border: Border.all(
                                             width: 3,
-                                            color: Colors.grey,
+                                            color: Colors.indigo.shade50,
                                           ),
                                           image: const DecorationImage(
                                               fit: BoxFit.cover,
@@ -349,29 +312,18 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
                                 ),
                               ],
                             ),
-                            Row(
-                              children: [
-                                Column(
-                                  children: [
-                                    Container(
-                                      width: 80,
-                                      height: 27,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          color: Colors.indigo),
-                                      child: const Center(
-                                        child: Text(
-                                          'select',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.white),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ],
+                            Container(
+                              margin:
+                                  const EdgeInsets.only(bottom: 20, left: 20),
+                              width: 40,
+                              height: 30,
+                              child: const Center(
+                                child: HeroIcon(
+                                  HeroIcons.chevronRight,
+                                  size: 16,
+                                  color: Colors.indigo,
+                                ),
+                              ),
                             )
                           ],
                         ),

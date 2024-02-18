@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class ProfileMenu extends StatelessWidget {
   const ProfileMenu({
@@ -9,7 +8,8 @@ class ProfileMenu extends StatelessWidget {
     this.press,
   }) : super(key: key);
 
-  final String text, icon;
+  final String text;
+  final IconData icon; // Utilisez IconData pour l'icône
   final VoidCallback? press;
 
   @override
@@ -27,10 +27,11 @@ class ProfileMenu extends StatelessWidget {
         onPressed: press,
         child: Row(
           children: [
-            SvgPicture.asset(
-              icon,
+            Icon(
+              // Utilisez simplement Icon avec l'icône IconData
+              icon, // Utilisez l'icône IconData
               color: Colors.grey,
-              width: 22,
+              size: 22,
             ),
             const SizedBox(width: 20),
             Expanded(child: Text(text)),

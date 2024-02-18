@@ -41,7 +41,7 @@ class _AddScreenState extends State<AddScreen> {
         alignment: AlignmentDirectional.center,
         children: [
           CustomBackgroundContainer(
-            title: 'AJOUTER',
+            title: '',
             leadingIcon: GestureDetector(
               onTap: () {
                 Navigator.of(context).pop();
@@ -62,9 +62,9 @@ class _AddScreenState extends State<AddScreen> {
               child: Row(
                 children: [
                   // Exemple d'un élément avec le nom "islam"
-                  _buildItemWithLabel("Ville"),
                   _buildItemWithLabelContainer("Container"),
                   _buildItemWithLabelDepense("Depense"),
+                  _buildItemWithLabel("Ville"),
                   // Vous pouvez répéter cette méthode pour chaque élément de votre liste
                 ],
               ),
@@ -88,45 +88,56 @@ class _AddScreenState extends State<AddScreen> {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
-              color: Colors.white,
+              color: Colors.indigo.shade50,
             ),
             height: 600,
             width: 340,
-            child: Column(children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                height: 62,
-                width: 300,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    width: 2,
-                    color: const Color(0xffC5C5C5),
-                  ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const Text(
+                          'Nom de la ville:',
+                          style: TextStyle(fontSize: 10),
+                        ),
+                        const SizedBox(
+                          height: 3,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          height: 62,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                          ),
+                          child: TextField(
+                            controller: _nameController,
+                            decoration: const InputDecoration(labelText: ''),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                      ]),
                 ),
-                child: TextField(
-                  controller: _nameController,
-                  decoration:
-                      const InputDecoration(labelText: 'Nom de la Ville'),
+                ElevatedButton(
+                  style: buttonPrimary,
+                  onPressed: _isAddingCity ? null : _addCity,
+                  child: _isAddingCity
+                      ? const CircularProgressIndicator()
+                      : const Text(
+                          'Ajouter',
+                          style: TextStyle(color: Colors.white),
+                        ),
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ElevatedButton(
-                style: buttonPrimary,
-                onPressed: _isAddingCity ? null : _addCity,
-                child: _isAddingCity
-                    ? const CircularProgressIndicator()
-                    : const Text(
-                        'Ajouter',
-                        style: TextStyle(color: Colors.white),
-                      ),
-              ),
-            ]),
+              ],
+            ),
           ),
 
           //height: 100,
@@ -148,180 +159,204 @@ class _AddScreenState extends State<AddScreen> {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
-              color: Colors.white,
+              color: Colors.indigo.shade50,
             ),
             height: 600,
             width: 340,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      height: 62,
-                      width: 300,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          width: 2,
-                          color: const Color(0xffC5C5C5),
-                        ),
-                      ),
-                      child: TextField(
-                        controller: _nameControllere,
-                        decoration: const InputDecoration(
-                          labelText: 'Nom du Conteneur',
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      width: 300,
-                      height: 62,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          width: 2,
-                          color: const Color(0xffC5C5C5),
-                        ),
-                      ),
-                      child: TextField(
-                        controller: _customerController,
-                        decoration: const InputDecoration(labelText: 'Client'),
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      width: 62,
-                      height: 70,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          width: 2,
-                          color: const Color(0xffC5C5C5),
-                        ),
-                      ),
-                      child: TextField(
-                        controller: _customerTelController,
-                        decoration: const InputDecoration(
-                            labelText: 'Téléphone du Client'),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            width: 300,
-                            height: 62,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                width: 2,
-                                color: const Color(0xffC5C5C5),
-                              ),
-                            ),
-                            child: DropdownButtonFormField<int>(
-                              value: _selectedCityID,
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedCityID = value!;
-                                });
-                              },
-                              items: _cityData.map((city) {
-                                return DropdownMenuItem<int>(
-                                  value: city['id'],
-                                  child: Text(city['name']),
-                                );
-                              }).toList(),
-                              decoration:
-                                  const InputDecoration(labelText: 'Ville'),
+                        const Text(
+                          'Nom du Container:',
+                          style: TextStyle(fontSize: 10),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          height: 58,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white),
+                          child: TextField(
+                            controller: _nameControllere,
+                            decoration: const InputDecoration(
+                              labelText: '',
                             ),
                           ),
                         ),
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            width: 300,
-                            height: 62,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                width: 2,
-                                color: const Color(0xffC5C5C5),
-                              ),
-                            ),
-                            child: DropdownButtonFormField<int>(
-                              value: _selectedContTypeID,
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedContTypeID = value!;
-                                });
-                              },
-                              items: _contTypeData.map((contType) {
-                                return DropdownMenuItem<int>(
-                                  value: contType['id'],
-                                  child: Text(contType['name']),
-                                );
-                              }).toList(),
-                              decoration: const InputDecoration(
-                                  labelText: 'Type de conteneur'),
-                            ),
+                        const SizedBox(height: 3),
+                        const Text(
+                          'Client:',
+                          style: TextStyle(fontSize: 10),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          height: 58,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white),
+                          child: TextField(
+                            controller: _customerController,
+                            decoration: const InputDecoration(labelText: ''),
                           ),
                         ),
+                        const SizedBox(height: 3),
+                        const Text(
+                          'Téléphone:',
+                          style: TextStyle(fontSize: 10),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          height: 58,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white),
+                          child: TextField(
+                            controller: _customerTelController,
+                            decoration: const InputDecoration(labelText: ''),
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Ville:',
+                                    style: TextStyle(fontSize: 10),
+                                  ),
+                                  const SizedBox(
+                                    height: 2,
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15),
+                                    width: 300,
+                                    height: 58,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.white),
+                                    child: DropdownButtonFormField<int>(
+                                      value: _selectedCityID,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _selectedCityID = value!;
+                                        });
+                                      },
+                                      items: _cityData.map((city) {
+                                        return DropdownMenuItem<int>(
+                                          value: city['id'],
+                                          child: Text(city['name']),
+                                        );
+                                      }).toList(),
+                                      decoration:
+                                          const InputDecoration(labelText: ''),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 2,
+                            ),
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  const Text(
+                                    'Type de Container:',
+                                    style: TextStyle(fontSize: 10),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15),
+                                    height: 58,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.white),
+                                    child: DropdownButtonFormField<int>(
+                                      value: _selectedContTypeID,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _selectedContTypeID = value!;
+                                        });
+                                      },
+                                      items: _contTypeData.map((contType) {
+                                        return DropdownMenuItem<int>(
+                                          value: contType['id'],
+                                          child: Text(contType['name']),
+                                        );
+                                      }).toList(),
+                                      decoration:
+                                          const InputDecoration(labelText: ''),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 3,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Staus:',
+                              style: TextStyle(fontSize: 10),
+                            ),
+                            Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              height: 58,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white),
+                              child: DropdownButtonFormField<int>(
+                                value: _selectedStatus,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selectedStatus = value!;
+                                  });
+                                },
+                                items: const [
+                                  DropdownMenuItem<int>(
+                                    value: 0,
+                                    child: Text('Inactif'),
+                                  ),
+                                  DropdownMenuItem<int>(
+                                    value: 1,
+                                    child: Text('Actif'),
+                                  ),
+                                ],
+                                decoration: const InputDecoration(),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 5),
                       ],
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      width: 300,
-                      height: 62,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          width: 2,
-                          color: const Color(0xffC5C5C5),
-                        ),
-                      ),
-                      child: DropdownButtonFormField<int>(
-                        value: _selectedStatus,
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedStatus = value!;
-                          });
-                        },
-                        items: const [
-                          DropdownMenuItem<int>(
-                            value: 0,
-                            child: Text('Inactif'),
-                          ),
-                          DropdownMenuItem<int>(
-                            value: 1,
-                            child: Text('Actif'),
-                          ),
-                        ],
-                        decoration: const InputDecoration(labelText: 'Statut'),
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    ElevatedButton(
-                      style: buttonPrimary,
-                      onPressed: _isAddingContainer ? null : _addContainer,
-                      child: _isAddingContainer
-                          ? const CircularProgressIndicator()
-                          : const Text(
-                              'Ajouter',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+                ElevatedButton(
+                  style: buttonPrimary,
+                  onPressed: _isAddingContainer ? null : _addContainer,
+                  child: _isAddingContainer
+                      ? const CircularProgressIndicator()
+                      : const Text(
+                          'Ajouter',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                ),
+              ],
             ),
           ),
         ],
@@ -345,91 +380,106 @@ class _AddScreenState extends State<AddScreen> {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
-              color: Colors.white,
+              color: Colors.indigo.shade50,
             ),
             height: 600,
             width: 340,
-            child: Padding(
-              padding: EdgeInsets.all(20),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      height: 62,
-                      width: 300,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          width: 2,
-                          color: const Color(0xffC5C5C5),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Article:',
+                          style: TextStyle(fontSize: 10),
                         ),
-                      ),
-                      child: TextField(
-                        controller: _articleController,
-                        decoration: const InputDecoration(labelText: 'Article'),
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      height: 62,
-                      width: 300,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          width: 2,
-                          color: const Color(0xffC5C5C5),
+                        const SizedBox(
+                          height: 5,
                         ),
-                      ),
-                      child: TextField(
-                        controller: _totalController,
-                        decoration: const InputDecoration(labelText: 'Total'),
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      height: 62,
-                      width: 300,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          width: 2,
-                          color: const Color(0xffC5C5C5),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          height: 62,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: TextField(
+                            controller: _articleController,
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide.none),
+                                labelText: ''),
+                          ),
                         ),
-                      ),
-                      child: DropdownButtonFormField<int>(
-                        decoration:
-                            const InputDecoration(labelText: 'Container'),
-                        value: _selectedContainerID,
-                        items: _containerData.map((container) {
-                          return DropdownMenuItem<int>(
-                            value: container['id'],
-                            child: Text(container[
-                                'name']), // Assuming 'name' field exists
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedContainerID = value!;
-                          });
-                        },
-                      ),
+                        const SizedBox(height: 5),
+                        const Text(
+                          'Total:',
+                          style: TextStyle(fontSize: 10),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          height: 62,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white),
+                          child: TextField(
+                            controller: _totalController,
+                            decoration: const InputDecoration(labelText: ''),
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        const Text(
+                          'Container:',
+                          style: TextStyle(fontSize: 10),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          height: 62,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white),
+                          child: DropdownButtonFormField<int>(
+                            decoration: const InputDecoration(labelText: ''),
+                            value: _selectedContainerID,
+                            items: _containerData.map((container) {
+                              return DropdownMenuItem<int>(
+                                value: container['id'],
+                                child: Text(container[
+                                    'name']), // Assuming 'name' field exists
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedContainerID = value!;
+                              });
+                            },
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                      ],
                     ),
-                    ElevatedButton(
-                      style: buttonPrimary,
-                      onPressed: _isAddingExpense ? null : _addExpense,
-                      child: _isAddingExpense
-                          ? const CircularProgressIndicator()
-                          : const Text(
-                              'Ajouter',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+                ElevatedButton(
+                  style: buttonPrimary,
+                  onPressed: _isAddingExpense ? null : _addExpense,
+                  child: _isAddingExpense
+                      ? const CircularProgressIndicator()
+                      : const Text(
+                          'Ajouter',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                ),
+              ],
             ),
           )
         ],

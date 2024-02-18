@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:heroicons/heroicons.dart';
 import 'package:kairasahrl/screens/add_screen.dart';
 import 'package:kairasahrl/screens/home.dart';
 import 'package:kairasahrl/screens/profile/profile_screen.dart';
+import 'package:kairasahrl/screens/statistic.dart';
 
 class BottomBarScreen extends StatefulWidget {
   const BottomBarScreen({Key? key}) : super(key: key);
@@ -15,6 +17,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   int _selectedIndex = 0;
   final List<Map<String, dynamic>> _pages = [
     {'page': const MyHomePage(), 'title': 'Home Screen'},
+    {'page': StatisticPage(), 'title': 'user Screen'},
     {'page': const ProfileScreen(), 'title': 'user Screen'},
   ];
   void _selectedPage(int index) {
@@ -30,9 +33,9 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       //   title: Text( _pages[_selectedIndex]['title']),
       // ),
       body: _pages[_selectedIndex]['page'],
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Container(
-        margin: const EdgeInsets.only(top: 10),
+        margin: const EdgeInsets.only(top: 1),
         height: 54,
         width: 54,
         child: FloatingActionButton(
@@ -70,8 +73,13 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             label: "Home",
           ),
           BottomNavigationBarItem(
+            icon: HeroIcon(
+                _selectedIndex == 1 ? HeroIcons.chartBar : HeroIcons.chartBar),
+            label: "User",
+          ),
+          BottomNavigationBarItem(
             icon: Icon(
-                _selectedIndex == 1 ? IconlyBold.user2 : IconlyLight.user2),
+                _selectedIndex == 2 ? IconlyBold.user2 : IconlyLight.user2),
             label: "User",
           ),
         ],

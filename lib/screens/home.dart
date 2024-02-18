@@ -3,6 +3,7 @@ import 'package:kairasahrl/screens/city/citylist_screen.dart';
 import 'package:kairasahrl/screens/container/containerlist_screen.dart';
 
 import 'package:intl/intl.dart';
+import 'package:kairasahrl/screens/depenses/depenselist_screen.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -86,21 +87,23 @@ class _MyHomePageState extends State<MyHomePage> {
                 physics: const BouncingScrollPhysics(),
                 children: [
                   const SizedBox(
-                    height: 32,
+                    height: 15,
                   ),
                   Center(
                       child: Image.asset(
-                    'assets/images/container.png',
+                    'assets/images/airplane.png',
                     scale: 1,
                   )),
                   const SizedBox(
-                    height: 16,
+                    height: 1,
                   ),
                   const Center(
                     child: Text(
-                      'KAİRA-SAHRL',
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                      'Société Kaïra Sarl',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.indigo),
                     ),
                   ),
                   const SizedBox(
@@ -128,14 +131,23 @@ class _MyHomePageState extends State<MyHomePage> {
                           title: 'CONTAINERS',
                           icon: 'assets/images/conta.jpeg'),
                       _cardMenu(
-                          title: 'DEPENSES', icon: 'assets/images/expense.png'),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const DepenseListScreen()),
+                            );
+                          },
+                          title: 'DEPENSES',
+                          icon: 'assets/images/expense.png'),
                     ],
                   ),
                   const SizedBox(
                     height: 16,
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       _cardMenu(
                           onTap: () {},
@@ -181,8 +193,8 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(children: [
             Image.asset(
               icon,
-              width: 100,
-              height: 100,
+              width: 80,
+              height: 80,
             ),
             const SizedBox(
               height: 10,
