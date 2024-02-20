@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:kairasahrl/screens/add_screen.dart';
-import 'package:kairasahrl/screens/btm_bar.dart';
 import 'package:kairasahrl/screens/city/citylist_screen.dart';
 import 'package:kairasahrl/screens/container/containerlist_screen.dart';
 

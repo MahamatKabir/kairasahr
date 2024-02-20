@@ -161,7 +161,7 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
     _createdByController.text = widget.expense.createdBy.toString();
     _createdAtController.text = widget.expense.createdAt;
     _updatedByController.text = widget.expense.updatedBy.toString();
-    _updatedAtController.text = widget.expense.updatedAt;
+    _updatedAtController.text = widget.expense.updatedAt.toString();
   }
 
   void _updateExpense() {

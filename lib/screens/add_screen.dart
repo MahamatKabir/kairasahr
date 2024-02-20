@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kairasahrl/widget/button.dart';
 import 'package:kairasahrl/widget/customer.dart';
-import 'package:kairasahrl/widget/customermain.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
@@ -20,18 +19,30 @@ class _AddScreenState extends State<AddScreen> {
   final TextEditingController _slugController = TextEditingController();
   final TextEditingController _customerController = TextEditingController();
   final TextEditingController _customerTelController = TextEditingController();
+  final TextEditingController _brokerController = TextEditingController();
+  final TextEditingController _brokerTelController = TextEditingController();
+  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _newCController = TextEditingController();
+  final TextEditingController _contDetailsController = TextEditingController();
   final TextEditingController _articleController = TextEditingController();
   final TextEditingController _totalController = TextEditingController();
   bool _isAddingContainer = false;
   bool _isAddingCity = false;
   bool _isAddingExpense = false;
   int _selectedCityID = 0;
-  int _selectedContTypeID = 0;
+  //int _selectedContTypeID = 0;
   int _selectedStatus = 0; // 0: Inactif, 1: Actif
   int _selectedContainerID = 0;
+  int _selectedContSizeID = 1;
+  String _selectedContSizeName = '';
   List<Map<String, dynamic>> _cityData = [];
   List<Map<String, dynamic>> _contTypeData = [];
-  List<Map<String, dynamic>> _containerData = [];
+  final List<Map<String, dynamic>> _containerData = [];
+  final List<Map<String, dynamic>> _contSizeData = [
+    {"id": 1, "name": "20 pieds"},
+    {"id": 2, "name": "40 pieds"},
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,8 +65,8 @@ class _AddScreenState extends State<AddScreen> {
           ),
           Positioned(
             width: 348,
-            height: 950,
-            top: 50,
+            height: 1300,
+            top: 40,
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               physics: const PageScrollPhysics(), // Pour le défilement par page
@@ -146,6 +157,224 @@ class _AddScreenState extends State<AddScreen> {
     );
   }
 
+  // Widget _buildItemWithLabelContainer(String label) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 2.0),
+  //     child: Column(
+  //       children: [
+  //         Text(
+  //           label,
+  //           style: const TextStyle(color: Colors.white),
+  //         ),
+  //         const SizedBox(height: 10), // Espacement entre le label et l'élément
+  //         Container(
+  //           decoration: BoxDecoration(
+  //             borderRadius: BorderRadius.circular(5),
+  //             color: Colors.indigo.shade50,
+  //           ),
+  //           height: 600,
+  //           width: 340,
+  //           child: Column(
+  //             children: [
+  //               Padding(
+  //                 padding: const EdgeInsets.all(20.0),
+  //                 child: SingleChildScrollView(
+  //                   child: Column(
+  //                     mainAxisAlignment: MainAxisAlignment.start,
+  //                     crossAxisAlignment: CrossAxisAlignment.start,
+  //                     children: [
+  //                       const Text(
+  //                         'Nom du Container:',
+  //                         style: TextStyle(fontSize: 10),
+  //                       ),
+  //                       Container(
+  //                         padding: const EdgeInsets.symmetric(horizontal: 10),
+  //                         height: 58,
+  //                         decoration: BoxDecoration(
+  //                             borderRadius: BorderRadius.circular(10),
+  //                             color: Colors.white),
+  //                         child: TextField(
+  //                           controller: _nameControllere,
+  //                           decoration: const InputDecoration(
+  //                             labelText: '',
+  //                           ),
+  //                         ),
+  //                       ),
+  //                       const SizedBox(height: 3),
+  //                       const Text(
+  //                         'Client:',
+  //                         style: TextStyle(fontSize: 10),
+  //                       ),
+  //                       Container(
+  //                         padding: const EdgeInsets.symmetric(horizontal: 15),
+  //                         height: 58,
+  //                         decoration: BoxDecoration(
+  //                             borderRadius: BorderRadius.circular(10),
+  //                             color: Colors.white),
+  //                         child: TextField(
+  //                           controller: _customerController,
+  //                           decoration: const InputDecoration(labelText: ''),
+  //                         ),
+  //                       ),
+  //                       const SizedBox(height: 3),
+  //                       const Text(
+  //                         'Téléphone:',
+  //                         style: TextStyle(fontSize: 10),
+  //                       ),
+  //                       Container(
+  //                         padding: const EdgeInsets.symmetric(horizontal: 15),
+  //                         height: 58,
+  //                         decoration: BoxDecoration(
+  //                             borderRadius: BorderRadius.circular(10),
+  //                             color: Colors.white),
+  //                         child: TextField(
+  //                           controller: _customerTelController,
+  //                           decoration: const InputDecoration(labelText: ''),
+  //                         ),
+  //                       ),
+  //                       const SizedBox(height: 5),
+  //                       Row(
+  //                         children: [
+  //                           Expanded(
+  //                             child: Column(
+  //                               crossAxisAlignment: CrossAxisAlignment.start,
+  //                               children: [
+  //                                 const Text(
+  //                                   'Ville:',
+  //                                   style: TextStyle(fontSize: 10),
+  //                                 ),
+  //                                 const SizedBox(
+  //                                   height: 2,
+  //                                 ),
+  //                                 Container(
+  //                                   padding: const EdgeInsets.symmetric(
+  //                                       horizontal: 15),
+  //                                   width: 300,
+  //                                   height: 58,
+  //                                   decoration: BoxDecoration(
+  //                                       borderRadius: BorderRadius.circular(10),
+  //                                       color: Colors.white),
+  //                                   child: DropdownButtonFormField<int>(
+  //                                     value: _selectedCityID,
+  //                                     onChanged: (value) {
+  //                                       setState(() {
+  //                                         _selectedCityID = value!;
+  //                                       });
+  //                                     },
+  //                                     items: _cityData.map((city) {
+  //                                       return DropdownMenuItem<int>(
+  //                                         value: city['id'],
+  //                                         child: Text(city['name']),
+  //                                       );
+  //                                     }).toList(),
+  //                                     decoration:
+  //                                         const InputDecoration(labelText: ''),
+  //                                   ),
+  //                                 ),
+  //                               ],
+  //                             ),
+  //                           ),
+  //                           const SizedBox(
+  //                             width: 2,
+  //                           ),
+  //                           Expanded(
+  //                             child: Column(
+  //                               children: [
+  //                                 const Text(
+  //                                   'Type de Container:',
+  //                                   style: TextStyle(fontSize: 10),
+  //                                 ),
+  //                                 Container(
+  //                                   padding: const EdgeInsets.symmetric(
+  //                                       horizontal: 15),
+  //                                   height: 58,
+  //                                   decoration: BoxDecoration(
+  //                                       borderRadius: BorderRadius.circular(10),
+  //                                       color: Colors.white),
+  //                                   child: DropdownButtonFormField<int>(
+  //                                     value: _selectedContTypeID,
+  //                                     onChanged: (value) {
+  //                                       setState(() {
+  //                                         _selectedContTypeID = value!;
+  //                                       });
+  //                                     },
+  //                                     items: _contTypeData.map((contType) {
+  //                                       return DropdownMenuItem<int>(
+  //                                         value: contType['id'],
+  //                                         child: Text(contType['name']),
+  //                                       );
+  //                                     }).toList(),
+  //                                     decoration:
+  //                                         const InputDecoration(labelText: ''),
+  //                                   ),
+  //                                 ),
+  //                               ],
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                       const SizedBox(
+  //                         height: 3,
+  //                       ),
+  //                       Column(
+  //                         crossAxisAlignment: CrossAxisAlignment.start,
+  //                         children: [
+  //                           const Text(
+  //                             'Staus:',
+  //                             style: TextStyle(fontSize: 10),
+  //                           ),
+  //                           Container(
+  //                             padding:
+  //                                 const EdgeInsets.symmetric(horizontal: 15),
+  //                             height: 58,
+  //                             decoration: BoxDecoration(
+  //                                 borderRadius: BorderRadius.circular(10),
+  //                                 color: Colors.white),
+  //                             child: DropdownButtonFormField<int>(
+  //                               value: _selectedStatus,
+  //                               onChanged: (value) {
+  //                                 setState(() {
+  //                                   _selectedStatus = value!;
+  //                                 });
+  //                               },
+  //                               items: const [
+  //                                 DropdownMenuItem<int>(
+  //                                   value: 0,
+  //                                   child: Text('Inactif'),
+  //                                 ),
+  //                                 DropdownMenuItem<int>(
+  //                                   value: 1,
+  //                                   child: Text('Actif'),
+  //                                 ),
+  //                               ],
+  //                               decoration: const InputDecoration(),
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                       const SizedBox(height: 5),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ),
+  //               ElevatedButton(
+  //                 style: buttonPrimary,
+  //                 onPressed: _isAddingContainer ? null : _addContainer,
+  //                 child: _isAddingContainer
+  //                     ? const CircularProgressIndicator()
+  //                     : const Text(
+  //                         'Ajouter',
+  //                         style: TextStyle(color: Colors.white),
+  //                       ),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
   Widget _buildItemWithLabelContainer(String label) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2.0),
@@ -161,202 +390,335 @@ class _AddScreenState extends State<AddScreen> {
               borderRadius: BorderRadius.circular(5),
               color: Colors.indigo.shade50,
             ),
-            height: 600,
-            width: 340,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Nom du Container:',
-                          style: TextStyle(fontSize: 10),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          height: 58,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white),
-                          child: TextField(
-                            controller: _nameControllere,
-                            decoration: const InputDecoration(
-                              labelText: '',
+            height: 1200,
+            width: 350,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Nom du Container:',
+                            style: TextStyle(fontSize: 10),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            height: 40,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white),
+                            child: TextField(
+                              controller: _nameControllere,
+                              decoration: const InputDecoration(
+                                labelText: '',
+                              ),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 3),
-                        const Text(
-                          'Client:',
-                          style: TextStyle(fontSize: 10),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          height: 58,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white),
-                          child: TextField(
-                            controller: _customerController,
-                            decoration: const InputDecoration(labelText: ''),
+                          const SizedBox(height: 3),
+                          const Text(
+                            'Client:',
+                            style: TextStyle(fontSize: 10),
                           ),
-                        ),
-                        const SizedBox(height: 3),
-                        const Text(
-                          'Téléphone:',
-                          style: TextStyle(fontSize: 10),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          height: 58,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white),
-                          child: TextField(
-                            controller: _customerTelController,
-                            decoration: const InputDecoration(labelText: ''),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            height: 40,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white),
+                            child: TextField(
+                              controller: _customerController,
+                              decoration: const InputDecoration(labelText: ''),
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 5),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Column(
+                          const SizedBox(height: 3),
+                          Row(
+                            children: [
+                              Expanded(
+                                  child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Text(
-                                    'Ville:',
+                                    'Téléphone:',
                                     style: TextStyle(fontSize: 10),
-                                  ),
-                                  const SizedBox(
-                                    height: 2,
                                   ),
                                   Container(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 15),
-                                    width: 300,
-                                    height: 58,
+                                    height: 40,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
                                         color: Colors.white),
-                                    child: DropdownButtonFormField<int>(
-                                      value: _selectedCityID,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _selectedCityID = value!;
-                                        });
-                                      },
-                                      items: _cityData.map((city) {
-                                        return DropdownMenuItem<int>(
-                                          value: city['id'],
-                                          child: Text(city['name']),
-                                        );
-                                      }).toList(),
+                                    child: TextField(
+                                      controller: _customerTelController,
                                       decoration:
                                           const InputDecoration(labelText: ''),
                                     ),
                                   ),
                                 ],
+                              )),
+                              const SizedBox(
+                                width: 5,
                               ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Statut:',
+                                      style: TextStyle(fontSize: 10),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 15),
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: Colors.white),
+                                      child: DropdownButtonFormField<int>(
+                                        value: _selectedStatus,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _selectedStatus = value!;
+                                          });
+                                        },
+                                        items: const [
+                                          DropdownMenuItem<int>(
+                                            value: 0,
+                                            child: Text('Inactif'),
+                                          ),
+                                          DropdownMenuItem<int>(
+                                            value: 1,
+                                            child: Text('Actif'),
+                                          ),
+                                        ],
+                                        decoration: const InputDecoration(
+                                          labelText: '',
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 3),
+                          const Text(
+                            'Courtier:',
+                            style: TextStyle(fontSize: 10),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            height: 40,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white),
+                            child: TextField(
+                              controller: _brokerController,
+                              decoration: const InputDecoration(labelText: ''),
                             ),
-                            const SizedBox(
-                              width: 2,
-                            ),
-                            Expanded(
-                              child: Column(
+                          ),
+                          const SizedBox(height: 3),
+                          Row(
+                            children: [
+                              Expanded(
+                                  child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Text(
-                                    'Type de Container:',
+                                    'Téléphone du Courtier:',
                                     style: TextStyle(fontSize: 10),
                                   ),
                                   Container(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 15),
-                                    height: 58,
+                                    height: 40,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
                                         color: Colors.white),
-                                    child: DropdownButtonFormField<int>(
-                                      value: _selectedContTypeID,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _selectedContTypeID = value!;
-                                        });
-                                      },
-                                      items: _contTypeData.map((contType) {
-                                        return DropdownMenuItem<int>(
-                                          value: contType['id'],
-                                          child: Text(contType['name']),
-                                        );
-                                      }).toList(),
+                                    child: TextField(
+                                      controller: _brokerTelController,
                                       decoration:
                                           const InputDecoration(labelText: ''),
                                     ),
                                   ),
                                 ],
+                              )),
+                              const SizedBox(
+                                width: 5,
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 3,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Staus:',
-                              style: TextStyle(fontSize: 10),
-                            ),
-                            Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 15),
-                              height: 58,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.white),
-                              child: DropdownButtonFormField<int>(
-                                value: _selectedStatus,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedStatus = value!;
-                                  });
-                                },
-                                items: const [
-                                  DropdownMenuItem<int>(
-                                    value: 0,
-                                    child: Text('Inactif'),
+                              Expanded(
+                                  child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Montant:',
+                                    style: TextStyle(fontSize: 10),
                                   ),
-                                  DropdownMenuItem<int>(
-                                    value: 1,
-                                    child: Text('Actif'),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15),
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.white),
+                                    child: TextField(
+                                      controller: _amountController,
+                                      decoration:
+                                          const InputDecoration(labelText: ''),
+                                    ),
                                   ),
                                 ],
-                                decoration: const InputDecoration(),
-                              ),
+                              ))
+                            ],
+                          ),
+                          const SizedBox(height: 3),
+                          const Text(
+                            'Nouveau C:',
+                            style: TextStyle(fontSize: 10),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            height: 45,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white),
+                            child: TextField(
+                              controller: _newCController,
+                              decoration: const InputDecoration(labelText: ''),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 5),
-                      ],
+                          ),
+                          const SizedBox(height: 3),
+                          const Text(
+                            'Détails du Container:',
+                            style: TextStyle(fontSize: 10),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            height: 40,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white),
+                            child: TextField(
+                              controller: _contDetailsController,
+                              decoration: const InputDecoration(labelText: ''),
+                              maxLines: null,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Ville:',
+                                      style: TextStyle(fontSize: 10),
+                                    ),
+                                    const SizedBox(
+                                      height: 2,
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 15),
+                                      width: 300,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: Colors.white),
+                                      child: DropdownButtonFormField<int>(
+                                        value: _selectedCityID,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _selectedCityID = value!;
+                                          });
+                                        },
+                                        items: _cityData.map((city) {
+                                          return DropdownMenuItem<int>(
+                                            value: city['id'],
+                                            child: Text(city['name']),
+                                          );
+                                        }).toList(),
+                                        decoration: const InputDecoration(
+                                            labelText: ''),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Type de Container:',
+                                      style: TextStyle(fontSize: 10),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 15),
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.white,
+                                      ),
+                                      child: DropdownButtonFormField<int>(
+                                        value: _selectedContSizeID,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _selectedContSizeID = value!;
+                                            // Trouvez le nom correspondant à l'ID sélectionné
+                                            _selectedContSizeName =
+                                                _contSizeData.firstWhere(
+                                                    (element) =>
+                                                        element['id'] ==
+                                                        value)['name'];
+                                          });
+                                        },
+                                        items: _contSizeData.map((contSize) {
+                                          return DropdownMenuItem<int>(
+                                            value: contSize['id'],
+                                            child: Text(contSize['name']),
+                                          );
+                                        }).toList(),
+                                        decoration: const InputDecoration(
+                                            labelText: ''),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 3,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                ElevatedButton(
-                  style: buttonPrimary,
-                  onPressed: _isAddingContainer ? null : _addContainer,
-                  child: _isAddingContainer
-                      ? const CircularProgressIndicator()
-                      : const Text(
-                          'Ajouter',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                ),
-              ],
+                  ElevatedButton(
+                    style: buttonPrimary,
+                    onPressed: _isAddingContainer ? null : _addContainer,
+                    child: _isAddingContainer
+                        ? const CircularProgressIndicator()
+                        : const Text(
+                            'Ajouter',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -410,9 +772,31 @@ class _AddScreenState extends State<AddScreen> {
                           child: TextField(
                             controller: _articleController,
                             decoration: const InputDecoration(
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide.none),
-                                labelText: ''),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
+                              labelText: '',
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        const Text(
+                          'Slug:', // Nouvelle ligne ajoutée ici
+                          style: TextStyle(fontSize: 10),
+                        ), // Nouvelle ligne ajoutée ici
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          height: 62,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                          ),
+                          child: TextField(
+                            controller:
+                                _slugController, // Ajout d'un nouveau controller pour Slug
+                            decoration: const InputDecoration(
+                              labelText: '',
+                            ),
                           ),
                         ),
                         const SizedBox(height: 5),
@@ -424,8 +808,9 @@ class _AddScreenState extends State<AddScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           height: 62,
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white),
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                          ),
                           child: TextField(
                             controller: _totalController,
                             decoration: const InputDecoration(labelText: ''),
@@ -443,8 +828,9 @@ class _AddScreenState extends State<AddScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           height: 62,
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white),
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                          ),
                           child: DropdownButtonFormField<int>(
                             decoration: const InputDecoration(labelText: ''),
                             value: _selectedContainerID,
@@ -545,11 +931,65 @@ class _AddScreenState extends State<AddScreen> {
 
       setState(() {
         if (_cityData.isNotEmpty) _selectedCityID = _cityData[0]['id'];
-        if (_contTypeData.isNotEmpty)
-          _selectedContTypeID = _contTypeData[0]['id'];
       });
     }
   }
+
+  // void _addContainer() async {
+  //   setState(() {
+  //     _isAddingContainer = true;
+  //   });
+
+  //   final containerName = _nameControllere.text.trim();
+  //   final containerSlug = _slugController.text.trim();
+  //   final customer = _customerController.text.trim();
+  //   final customerTel = _customerTelController.text.trim();
+  //   final containerId = _generateContainerId();
+  //   final createdAt = DateTime.now().toIso8601String();
+
+  //   if (containerName.isNotEmpty &&
+  //       containerSlug.isNotEmpty &&
+  //       customer.isNotEmpty &&
+  //       customerTel.isNotEmpty) {
+  //     final response = await http.post(
+  //       Uri.parse('https://votre-api-url/containers'),
+  //       body: json.encode({
+  //         'id': containerId,
+  //         'name': containerName,
+  //         'slug': containerSlug,
+  //         'customer': customer,
+  //         'customerTel': customerTel,
+  //         'cityID': _selectedCityID,
+  //         'contTypeID': _selectedContTypeID,
+  //         'status': _selectedStatus,
+  //         'created_at': createdAt,
+  //       }),
+  //       headers: {'Content-Type': 'application/json'},
+  //     );
+  //     if (response.statusCode == 200) {
+  //       Fluttertoast.showToast(
+  //         msg: 'Conteneur ajouté avec succès',
+  //         toastLength: Toast.LENGTH_SHORT,
+  //         gravity: ToastGravity.BOTTOM,
+  //         backgroundColor: Colors.green,
+  //         textColor: Colors.white,
+  //       );
+  //       Navigator.pop(context);
+  //     } else {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(content: Text('Échec de l\'ajout du conteneur')),
+  //       );
+  //     }
+  //   } else {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text('Veuillez remplir tous les champs')),
+  //     );
+  //   }
+
+  //   setState(() {
+  //     _isAddingContainer = false;
+  //   });
+  // }
 
   void _addContainer() async {
     setState(() {
@@ -557,26 +997,34 @@ class _AddScreenState extends State<AddScreen> {
     });
 
     final containerName = _nameControllere.text.trim();
-    final containerSlug = _slugController.text.trim();
     final customer = _customerController.text.trim();
-    final customerTel = _customerTelController.text.trim();
-    final containerId = _generateContainerId();
+    final customerTel = int.parse(_customerTelController.text.trim());
+    final broker = _brokerController.text.trim();
+    final brokerTel = int.parse(_brokerTelController.text.trim());
+    final amount = double.parse(_amountController.text.trim());
+    final newC = _newCController.text.trim();
+    final contDetails = _contDetailsController.text.trim();
     final createdAt = DateTime.now().toIso8601String();
 
     if (containerName.isNotEmpty &&
-        containerSlug.isNotEmpty &&
         customer.isNotEmpty &&
-        customerTel.isNotEmpty) {
+        broker.isNotEmpty &&
+        newC.isNotEmpty &&
+        contDetails.isNotEmpty) {
       final response = await http.post(
         Uri.parse('https://votre-api-url/containers'),
         body: json.encode({
-          'id': containerId,
           'name': containerName,
-          'slug': containerSlug,
           'customer': customer,
           'customerTel': customerTel,
+          'broker': broker,
+          'brokerTel': brokerTel,
+          'amount': amount,
+          'newC': newC,
+          'contDetails': contDetails,
           'cityID': _selectedCityID,
-          'contTypeID': _selectedContTypeID,
+          'contTypeID':
+              _selectedContSizeID, // Utilise _selectedContSizeID pour l'ID du type de conteneur sélectionné
           'status': _selectedStatus,
           'created_at': createdAt,
         }),
@@ -614,11 +1062,13 @@ class _AddScreenState extends State<AddScreen> {
 
     final article = _articleController.text.trim();
     final total = int.tryParse(_totalController.text.trim()) ?? 0;
+    final slug =
+        _slugController.text.trim(); // Récupération de la valeur du slug
     final expenseId = _generateExpenseId(); // Automatically generate ID
     final createdAt = DateTime.now().toIso8601String();
 
-    if (article.isNotEmpty && total > 0) {
-      //final   createdBy = _fetchContainerData(); // Fetch the user who created the expense
+    if (article.isNotEmpty && total > 0 && slug.isNotEmpty) {
+      // final createdBy = _fetchContainerData(); // Fetch the user who created the expense
 
       final response = await http.post(
         Uri.parse('https://your-api-url/expenses'),
@@ -626,6 +1076,7 @@ class _AddScreenState extends State<AddScreen> {
           'id': expenseId,
           'article': article,
           'total': total,
+          'slug': slug, // Ajout du slug dans les données envoyées
           // 'created_by': createdBy, // Passing createdBy ID
           'created_at': createdAt,
         }),
