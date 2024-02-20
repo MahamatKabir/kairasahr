@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heroicons/heroicons.dart';
 
 class SizedText extends StatelessWidget {
   final String text;
@@ -9,34 +10,30 @@ class SizedText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size textSize = _textSize(text);
-    return Container(
-      child: Column(
-        children: [
-          Text(
-            text,
-            style: TextStyle(
-                fontSize: 10, color: color, fontWeight: FontWeight.w400),
-            maxLines: 1,
-            softWrap: false,
-            overflow: TextOverflow.clip,
+    return Row(
+      children: [
+        Container(
+          height: 10,
+          width: 10,
+          child: const HeroIcon(
+            HeroIcons.calendar,
           ),
-          const SizedBox(
-            height: 2,
-          ),
-          Row(
-            children: [
-              for (int i = 0; i < textSize.width / 10; i++)
-                i.isEven
-                    ? Container(
-                        width: 10,
-                        color: color,
-                        height: 2,
-                      )
-                    : Container(width: 5, color: Colors.white, height: 2),
-            ],
-          )
-        ],
-      ),
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        Text(
+          text,
+          style: TextStyle(
+              fontSize: 10, color: color, fontWeight: FontWeight.w400),
+          maxLines: 1,
+          softWrap: false,
+          overflow: TextOverflow.clip,
+        ),
+        const SizedBox(
+          height: 2,
+        ),
+      ],
     );
   }
 

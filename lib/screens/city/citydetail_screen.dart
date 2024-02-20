@@ -34,7 +34,7 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.indigo.shade50,
       body: SafeArea(
         child: Stack(
           alignment: AlignmentDirectional.center,
@@ -49,14 +49,13 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 50.0),
+              padding: const EdgeInsets.only(top: 1),
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.indigo.shade50,
                 ),
-                height: 450,
-                width: 340,
+                width: 400,
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -124,29 +123,27 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
   Widget _buildTextFieldWithBorder(
       String label, TextEditingController controller) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      width: 300,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          width: 2,
-          color: const Color(0xffC5C5C5),
-        ),
-      ),
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 11),
+      width: 400,
+      color: Colors.indigo.shade50,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             label,
-            style: const TextStyle(fontSize: 20, color: Colors.black),
+            style: const TextStyle(fontSize: 10, color: Colors.black),
           ),
-          const SizedBox(height: 5),
-          TextField(
-            controller: controller,
-            style: const TextStyle(color: Colors.black),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
+          Container(
+            height: 50,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10), color: Colors.white),
+            child: TextField(
+              controller: controller,
+              style: const TextStyle(color: Colors.black),
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+              ),
             ),
           ),
         ],
@@ -156,19 +153,13 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
 
   Widget _buildTextWithBorder(String text) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      width: 300,
+      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 11),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          width: 2,
-          color: const Color(0xffC5C5C5),
-        ),
-      ),
+          borderRadius: BorderRadius.circular(10), color: Colors.white),
+      width: 400,
       child: Text(
         text,
-        style: const TextStyle(fontSize: 20, color: Colors.black),
+        style: const TextStyle(fontSize: 16, color: Colors.black),
       ),
     );
   }

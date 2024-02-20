@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:kairasahrl/screens/add_screen.dart';
+import 'package:kairasahrl/screens/btm_bar.dart';
 import 'package:kairasahrl/screens/city/citylist_screen.dart';
 import 'package:kairasahrl/screens/container/containerlist_screen.dart';
 
 import 'package:intl/intl.dart';
 import 'package:kairasahrl/screens/depenses/depenselist_screen.dart';
+import 'package:kairasahrl/screens/profile/profile_screen.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -12,6 +16,30 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    // Navigation vers la page correspondante en fonction de l'index sélectionné
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MyHomePage()),
+        );
+        break;
+      case 1:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => ProfileScreen()),
+        );
+        break;
+    }
+  }
+
   String formattedDate = DateFormat('d MMM yyyy').format(DateTime.now());
   String dayOfWeek = DateFormat('EEEE').format(DateTime.now());
   @override
@@ -50,14 +78,14 @@ class _MyHomePageState extends State<MyHomePage> {
                           Text(
                             'Bienvenu',
                             style: TextStyle(
-                                fontSize: 10,
+                                fontSize: 14,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold),
                           ),
                           Text(
                             'Mahamat kabir',
                             style: TextStyle(
-                                fontSize: 8,
+                                fontSize: 12,
                                 color: Colors.grey,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -70,13 +98,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       Text(
                         formattedDate,
                         style: const TextStyle(
-                            fontSize: 10,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                             color: Colors.black),
                       ),
                       Text(
                         dayOfWeek,
-                        style: const TextStyle(fontSize: 8, color: Colors.grey),
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.grey),
                       ),
                     ],
                   )
@@ -87,11 +116,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 physics: const BouncingScrollPhysics(),
                 children: [
                   const SizedBox(
-                    height: 15,
+                    height: 10,
                   ),
                   Center(
                       child: Image.asset(
                     'assets/images/airplane.png',
+                    height: 150,
                     scale: 1,
                   )),
                   const SizedBox(
@@ -169,7 +199,53 @@ class _MyHomePageState extends State<MyHomePage> {
               ))
             ],
           ),
-        )));
+        )),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: Container(
+          margin: const EdgeInsets.only(top: 1),
+          height: 54,
+          width: 54,
+          child: FloatingActionButton(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AddScreen()),
+              );
+            },
+            shape: RoundedRectangleBorder(
+              side: const BorderSide(width: 3, color: Colors.indigo),
+              borderRadius: BorderRadius.circular(150),
+            ),
+            child: const Icon(
+              Icons.add,
+              color: Colors.indigo,
+            ),
+          ),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.white,
+          type: BottomNavigationBarType.fixed,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          currentIndex: _selectedIndex,
+          unselectedItemColor: Colors.black12,
+          selectedItemColor: Colors.indigo,
+          onTap: _onItemTapped,
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(
+                  _selectedIndex == 0 ? IconlyBold.home : IconlyLight.home),
+              label: "Home",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                  _selectedIndex == 1 ? IconlyBold.user2 : IconlyLight.user2),
+              label: "User",
+            ),
+          ],
+        ));
   }
 
   _cardMenu({

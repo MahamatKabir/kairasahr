@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kairasahrl/screens/btm_bar.dart';
+import 'package:kairasahrl/screens/home.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -10,13 +11,13 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Timer(const Duration(seconds: 1), () {
-      Get.to(const BottomBarScreen());
+      Get.to(const MyHomePage());
     });
     return const Scaffold(
         backgroundColor: Color.fromARGB(255, 4, 1, 54),
         body: Center(
           child: Text(
-            'Kairasarhl',
+            'Société Kaira Sarl',
             style: TextStyle(
               color: Colors.white,
               fontSize: 35,

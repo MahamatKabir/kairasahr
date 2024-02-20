@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kairasahrl/screens/btm_bar.dart';
 import 'package:kairasahrl/screens/splash_screen.dart';
-
 import 'screens/container/containerlist_screen.dart';
-import 'screens/container/containerupdate.dart';
 
 void main() {
   runApp(const MyApp());

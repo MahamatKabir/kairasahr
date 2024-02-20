@@ -68,7 +68,7 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 100.0),
             child: Container(
-              color: Colors.white,
+              color: Colors.indigo.shade50,
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -127,16 +127,10 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
   Widget _buildTextFieldWithBorder(
       String label, TextEditingController controller) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      padding: const EdgeInsets.symmetric(horizontal: 15),
+      margin: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       width: 350,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          width: 2,
-          color: const Color(0xffC5C5C5),
-        ),
-      ),
+      color: Colors.indigo.shade50,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -144,9 +138,14 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
             label,
             style: const TextStyle(fontSize: 10, color: Colors.black),
           ),
-          TextField(
-            controller: controller,
-            style: const TextStyle(color: Colors.black, fontSize: 16),
+          Container(
+            height: 50,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10), color: Colors.white),
+            child: TextField(
+              controller: controller,
+              style: const TextStyle(color: Colors.black, fontSize: 16),
+            ),
           ),
         ],
       ),

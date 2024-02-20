@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kairasahrl/models/container_model.dart';
+import 'package:kairasahrl/widget/button.dart';
 import 'package:kairasahrl/widget/customer.dart';
 
 class ContainerUpScreen extends StatefulWidget {
@@ -39,7 +40,7 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
   final TextEditingController _cityIDController = TextEditingController();
   final TextEditingController _contTypeIDController = TextEditingController();
 
-  bool _isUpdatingContainer = false;
+  bool _isEditing = false;
 
   @override
   void initState() {
@@ -65,62 +66,89 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 100.0),
             child: Container(
-              color: Colors.white,
+              color: Colors.indigo.shade50,
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildTextFieldWithBorder(
-                      'Container Name:',
-                      _nameController,
+                    _buildEditableField(
+                      label: 'Container Name:',
+                      controller: _nameController,
                     ),
-                    _buildTextFieldWithBorder('Customer:', _customerController),
-                    _buildTextFieldWithBorder(
-                        'Customer Tel:', _customerTelController),
-                    _buildTextFieldWithBorder('Slug:', _slugController),
+                    _buildEditableField(
+                      label: 'Customer:',
+                      controller: _customerController,
+                    ),
+                    _buildEditableField(
+                      label: 'Customer Tel:',
+                      controller: _customerTelController,
+                    ),
+                    _buildEditableField(
+                      label: 'Slug:',
+                      controller: _slugController,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Flexible(
                           flex: 4,
-                          child: _buildTextFieldWithBorder(
-                              'Ville ID:', _cityIDController),
+                          child: _buildEditableField(
+                            label: 'Ville ID:',
+                            controller: _cityIDController,
+                          ),
                         ),
                         Flexible(
-                            flex: 3,
-                            child: _buildTextFieldWithBorder(
-                                'Statut:', _statusController)),
+                          flex: 3,
+                          child: _buildEditableField(
+                            label: 'Statut:',
+                            controller: _statusController,
+                          ),
+                        ),
                         Flexible(
                           flex: 3,
-                          child: _buildTextFieldWithBorder(
-                              'Type de conteneur ID:', _contTypeIDController),
+                          child: _buildEditableField(
+                            label: 'Type de Conteneur',
+                            controller: _contTypeIDController,
+                          ),
                         ),
                       ],
                     ),
-                    Row(
-                      children: [
-                        Flexible(
-                          flex: 3,
-                          child: _buildTextWithBorder(
-                              'ID: ${widget.container.id}'),
-                        ),
-                        Flexible(
-                          flex: 7,
-                          child: _buildTextWithBorder(
-                              'Created At: ${widget.container.createdAt}'),
-                        ),
-                      ],
+                    Container(
+                      color: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 5),
+                      child: Row(
+                        children: [
+                          Flexible(
+                            flex: 5,
+                            child: _buildReadOnlyField(
+                              label: 'ID:',
+                              text: '${widget.container.id}',
+                            ),
+                          ),
+                          Flexible(
+                            flex: 5,
+                            child: _buildReadOnlyField(
+                              label: 'Created At:',
+                              text: widget.container.createdAt,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 5),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
-                          onPressed:
-                              _isUpdatingContainer ? null : _updateContainer,
-                          child: const Text('Update'),
+                          onPressed: _isEditing ? _updateContainer : null,
+                          child: const Text(
+                            'Update',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(height: 2),
                         ElevatedButton(
                           onPressed: () {
                             widget.onDelete(widget.container.id);
@@ -147,19 +175,14 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
     );
   }
 
-  Widget _buildTextFieldWithBorder(
-      String label, TextEditingController controller) {
+  Widget _buildEditableField({
+    required String label,
+    required TextEditingController controller,
+  }) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      padding: const EdgeInsets.symmetric(horizontal: 15),
+      color: Colors.indigo.shade50,
+      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 2),
       width: 350,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          width: 2,
-          color: const Color(0xffC5C5C5),
-        ),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -167,34 +190,69 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
             label,
             style: const TextStyle(fontSize: 10, color: Colors.black),
           ),
-          TextField(
-            controller: controller,
-            style: const TextStyle(color: Colors.black, fontSize: 16),
-            // decoration: const InputDecoration(
-            //   border: InputBorder.none,
-            // ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     IconButton(
+          //       icon: Icon(Icons.edit),
+          //       onPressed: () {
+          //         setState(() {
+          //           _isEditing = true;
+          //         });
+          //       },
+          //     ),
+          //   ],
+          // ),
+          Container(
+            height: 50,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10), color: Colors.white),
+            child: TextField(
+              controller: controller,
+              enabled: _isEditing,
+              style: const TextStyle(color: Colors.black, fontSize: 16),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTextWithBorder(String text) {
+  Widget _buildReadOnlyField({
+    required String label,
+    required String text,
+  }) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 2),
       width: 300,
-      height: 90,
+      height: 60,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           width: 2,
-          color: const Color(0xffC5C5C5),
+          color: Colors.indigo.shade50,
         ),
       ),
-      child: Text(
-        text,
-        style: const TextStyle(fontSize: 20, color: Colors.black),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10), color: Colors.white),
+            child: Text(
+              label,
+              style: const TextStyle(fontSize: 10, color: Colors.black),
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10), color: Colors.white),
+            child: Text(
+              text,
+              style: const TextStyle(fontSize: 20, color: Colors.black),
+            ),
+          ),
+        ],
       ),
     );
   }
