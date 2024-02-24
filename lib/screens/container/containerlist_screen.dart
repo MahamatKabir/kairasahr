@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:kairasahrl/models/container_model.dart';
-import 'package:kairasahrl/screens/add_screen.dart';
+import 'package:kairasahrl/screens/addscreen.dart';
+import 'package:kairasahrl/screens/btm_bar.dart';
 import 'package:kairasahrl/screens/container/containerupdate.dart';
-import 'package:kairasahrl/screens/home.dart';
 import 'package:kairasahrl/screens/profile/profile_screen.dart';
 import 'package:kairasahrl/widget/sizedtext.dart';
 
@@ -205,7 +205,7 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
       case 0:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const MyHomePage()),
+          MaterialPageRoute(builder: (context) => const BottomBarScreen()),
         );
         break;
       case 1:
@@ -222,10 +222,11 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
     return Scaffold(
         backgroundColor: Colors.indigo.shade50,
         appBar: AppBar(
-          backgroundColor: Colors.indigo.shade50,
+          backgroundColor: const Color.fromARGB(255, 1, 0, 66),
+          iconTheme: const IconThemeData(color: Colors.white),
           title: const Text(
             'Liste des Containers',
-            style: TextStyle(color: Colors.black, fontSize: 20),
+            style: TextStyle(color: Colors.white, fontSize: 20),
           ),
         ),
         body: Container(
@@ -501,7 +502,7 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const AddScreen()),
+                MaterialPageRoute(builder: (context) => const AddScreenne()),
               );
             },
             shape: RoundedRectangleBorder(

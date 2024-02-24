@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
-import 'package:kairasahrl/screens/add_screen.dart';
+import 'package:heroicons/heroicons.dart';
+import 'package:kairasahrl/screens/addscreen.dart';
+import 'package:kairasahrl/screens/btm_bar.dart';
 import 'package:kairasahrl/screens/city/citydetail_screen.dart';
-import 'package:kairasahrl/screens/home.dart';
 import 'package:kairasahrl/screens/profile/profile_screen.dart';
 
 import '../../models/city_model.dart';
@@ -76,13 +77,13 @@ class _CityListScreenState extends State<CityListScreen> {
       case 0:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => MyHomePage()),
+          MaterialPageRoute(builder: (context) => const BottomBarScreen()),
         );
         break;
       case 1:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => ProfileScreen()),
+          MaterialPageRoute(builder: (context) => const ProfileScreen()),
         );
         break;
     }
@@ -93,10 +94,11 @@ class _CityListScreenState extends State<CityListScreen> {
     return Scaffold(
         backgroundColor: Colors.indigo.shade50,
         appBar: AppBar(
-          backgroundColor: Colors.indigo.shade50,
+          backgroundColor: const Color.fromARGB(255, 1, 0, 66),
+          iconTheme: const IconThemeData(color: Colors.white),
           title: const Text(
             'Liste des Containers',
-            style: TextStyle(color: Colors.black, fontSize: 20),
+            style: TextStyle(color: Colors.white, fontSize: 20),
           ),
         ),
         body: Column(children: [
@@ -142,12 +144,7 @@ class _CityListScreenState extends State<CityListScreen> {
           Expanded(
               child: MediaQuery.removePadding(
             context: context,
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 4.0,
-                mainAxisSpacing: 4.0,
-              ),
+            child: ListView.builder(
               itemCount: _cities.length,
               itemBuilder: (context, index) {
                 final city = _cities[index];
@@ -156,28 +153,36 @@ class _CityListScreenState extends State<CityListScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => CityDetailScreenn(
-                                city: city,
-                                onDelete:
-                                    deleteCity, // Passer la fonction de suppression
-                                onUpdate: updateCity,
-                              )),
+                        builder: (context) => CityDetailScreenn(
+                          city: city,
+                          onDelete:
+                              deleteCity, // Passer la fonction de suppression
+                          onUpdate: updateCity,
+                        ),
+                      ),
                     );
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Card(
                       color: Colors.white,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            city.name,
-                            style: const TextStyle(
-                                fontSize: 20, color: Colors.black),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
+                      child: ListTile(
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              city.name,
+                              style: const TextStyle(
+                                  fontSize: 20, color: Colors.black),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const HeroIcon(
+                              HeroIcons.chevronRight,
+                              size: 16,
+                              color: Colors.indigo,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -197,7 +202,7 @@ class _CityListScreenState extends State<CityListScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const AddScreen()),
+                MaterialPageRoute(builder: (context) => const AddScreenne()),
               );
             },
             shape: RoundedRectangleBorder(

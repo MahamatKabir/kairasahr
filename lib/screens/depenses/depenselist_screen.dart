@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
-import 'package:heroicons/heroicons.dart';
-
 import 'package:kairasahrl/models/depense_model.dart';
-import 'package:kairasahrl/screens/add_screen.dart';
-
+import 'package:kairasahrl/screens/addscreen.dart';
+import 'package:kairasahrl/screens/btm_bar.dart';
 import 'package:kairasahrl/screens/depenses/depenseupdate_screen.dart';
-import 'package:kairasahrl/screens/home.dart';
 import 'package:kairasahrl/screens/profile/profile_screen.dart';
 import 'package:kairasahrl/widget/sizedtext.dart';
 
@@ -40,7 +37,7 @@ class _DepenseListScreenState extends State<DepenseListScreen> {
       slug: 'achat_fournitures_bureau',
       total: 90000,
       paid: 150,
-      containerID: 2,
+      containerID: 3,
       createdBy: 1,
       createdAt: '2024-02-17',
       updatedBy: 1,
@@ -64,7 +61,7 @@ class _DepenseListScreenState extends State<DepenseListScreen> {
       slug: 'achat_fournitures_bureau',
       total: 3000000,
       paid: 150,
-      containerID: 2,
+      containerID: 4,
       createdBy: 1,
       createdAt: '2024-02-17',
       updatedBy: 1,
@@ -132,7 +129,7 @@ class _DepenseListScreenState extends State<DepenseListScreen> {
       case 0:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const MyHomePage()),
+          MaterialPageRoute(builder: (context) => const BottomBarScreen()),
         );
         break;
       case 1:
@@ -149,11 +146,11 @@ class _DepenseListScreenState extends State<DepenseListScreen> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: const Color.fromARGB(255, 1, 0, 66),
+          iconTheme: const IconThemeData(color: Colors.white),
           title: const Text(
             'Liste des Depenses',
-            style: TextStyle(
-                color: Colors.black, fontFamily: 'varila', fontSize: 20),
+            style: TextStyle(color: Colors.white, fontSize: 20),
           ),
         ),
         body: Column(
@@ -324,7 +321,7 @@ class _DepenseListScreenState extends State<DepenseListScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const AddScreen()),
+                MaterialPageRoute(builder: (context) => const AddScreenne()),
               );
             },
             shape: RoundedRectangleBorder(

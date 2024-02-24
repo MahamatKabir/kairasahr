@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
-import 'package:kairasahrl/screens/add_screen.dart';
+import 'package:kairasahrl/screens/addscreen.dart';
 import 'package:kairasahrl/screens/home.dart';
 import 'package:kairasahrl/screens/profile/profile_screen.dart';
 
@@ -41,7 +41,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const AddScreen()),
+              MaterialPageRoute(builder: (context) => const AddScreenne()),
             );
           },
           shape: RoundedRectangleBorder(

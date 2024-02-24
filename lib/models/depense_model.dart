@@ -7,8 +7,8 @@ class Expense {
   int containerID;
   int createdBy;
   String createdAt;
-  int updatedBy;
-  String updatedAt;
+  int? updatedBy;
+  String? updatedAt;
 
   Expense({
     required this.id,

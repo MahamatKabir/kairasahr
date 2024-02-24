@@ -1,3 +1,5 @@
+import 'package:kairasahrl/models/depense_model.dart';
+
 class Containere {
   int id;
   String name;
@@ -10,12 +12,13 @@ class Containere {
   int cityID;
   int contTypeID;
   int status;
-  String newC;
-  String contDetails;
+  String? newC;
+  String? contDetails;
   String? createdBy;
   String createdAt;
   String? updatedBy;
   String? updatedAt;
+  List<Expense>? depenses;
 
   Containere({
     required this.id,
@@ -29,12 +32,13 @@ class Containere {
     required this.cityID,
     required this.contTypeID,
     required this.status,
-    required this.newC,
-    required this.contDetails,
+    this.newC,
+    this.contDetails,
     this.createdBy,
     required this.createdAt,
     this.updatedBy,
     this.updatedAt,
+    this.depenses,
   });
 
   factory Containere.fromJson(Map<String, dynamic> json) {
@@ -56,6 +60,8 @@ class Containere {
       createdAt: json['created_at'],
       updatedBy: json['updated_by'],
       updatedAt: json['updated_at'],
+      depenses:
+          List<Expense>.from(json["depenses"].map((x) => Expense.fromJson(x))),
     );
   }
 }
