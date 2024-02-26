@@ -27,34 +27,43 @@ class _CityAddScreenState extends State<CityAddScreen> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(10),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(
-                      height: 20,
+                      height: 6,
                     ),
                     const Text(
-                      'Nom de la ville:',
-                      style: TextStyle(fontSize: 10),
+                      'Nom de la ville',
+                      style: TextStyle(fontSize: 13),
                     ),
                     const SizedBox(
                       height: 3,
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                      height: 62,
+                      height: 45,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
                         color: Colors.white,
+                        borderRadius: BorderRadius.circular(4.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color.fromARGB(255, 0, 0, 0)
+                                .withOpacity(0.7),
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                          ),
+                        ],
                       ),
                       child: TextField(
                         controller: _nameController,
-                        decoration: const InputDecoration(labelText: ''),
+                        decoration: const InputDecoration(
+                            labelText: '', border: InputBorder.none),
                       ),
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 14,
                     ),
                   ]),
             ),

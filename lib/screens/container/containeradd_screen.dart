@@ -35,6 +35,7 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        padding: const EdgeInsets.only(top: 10.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
           color: Colors.indigo.shade50,
@@ -50,39 +51,61 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Nom du Container:',
-                        style: TextStyle(fontSize: 10),
+                        'Nom du Container',
+                        style: TextStyle(
+                          fontSize: 13,
+                        ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        height: 40,
+                        padding: const EdgeInsets.symmetric(horizontal: 6),
+                        height: 45,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromARGB(255, 0, 0, 0)
+                                  .withOpacity(0.7),
+                              spreadRadius: 1,
+                              blurRadius: 1,
+                            ),
+                          ],
+                        ),
                         child: TextField(
                           controller: _nameControllere,
                           decoration: const InputDecoration(
                             labelText: '',
+                            border: InputBorder.none,
                           ),
                         ),
                       ),
-                      const SizedBox(height: 3),
+                      const SizedBox(height: 9),
                       const Text(
-                        'Client:',
-                        style: TextStyle(fontSize: 10),
+                        'Client',
+                        style: TextStyle(fontSize: 13),
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
-                        height: 40,
+                        height: 45,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromARGB(255, 0, 0, 0)
+                                  .withOpacity(0.7),
+                              spreadRadius: 1,
+                              blurRadius: 1,
+                            ),
+                          ],
+                        ),
                         child: TextField(
                           controller: _customerController,
-                          decoration: const InputDecoration(labelText: ''),
+                          decoration: const InputDecoration(
+                              labelText: '', border: InputBorder.none),
                         ),
                       ),
-                      const SizedBox(height: 3),
+                      const SizedBox(height: 9),
                       Row(
                         children: [
                           Expanded(
@@ -90,42 +113,61 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                'Téléphone:',
-                                style: TextStyle(fontSize: 10),
+                                'Téléphone',
+                                style: TextStyle(fontSize: 13),
                               ),
                               Container(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 15),
-                                height: 40,
+                                height: 45,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(4.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color.fromARGB(255, 0, 0, 0)
+                                          .withOpacity(0.7),
+                                      spreadRadius: 1,
+                                      blurRadius: 1,
+                                    ),
+                                  ],
+                                ),
                                 child: TextField(
                                   controller: _customerTelController,
-                                  decoration:
-                                      const InputDecoration(labelText: ''),
+                                  decoration: const InputDecoration(
+                                      labelText: '', border: InputBorder.none),
                                 ),
                               ),
                             ],
                           )),
                           const SizedBox(
-                            width: 5,
+                            width: 12,
                           ),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  'Statut:',
-                                  style: TextStyle(fontSize: 10),
+                                  'Statut',
+                                  style: TextStyle(fontSize: 13),
                                 ),
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 15),
-                                  height: 40,
+                                  height: 45,
                                   decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.white),
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(4.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color:
+                                            const Color.fromARGB(255, 0, 0, 0)
+                                                .withOpacity(0.7),
+                                        spreadRadius: 1,
+                                        blurRadius: 1,
+                                      ),
+                                    ],
+                                  ),
                                   child: DropdownButtonFormField<int>(
                                     value: _selectedStatus,
                                     onChanged: (value) {
@@ -144,8 +186,8 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                                       ),
                                     ],
                                     decoration: const InputDecoration(
-                                      labelText: '',
-                                    ),
+                                        labelText: '',
+                                        border: InputBorder.none),
                                   ),
                                 ),
                               ],
@@ -153,23 +195,33 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 3),
+                      const SizedBox(height: 12),
                       const Text(
-                        'Courtier:',
-                        style: TextStyle(fontSize: 10),
+                        'Courtier',
+                        style: TextStyle(fontSize: 13),
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
-                        height: 40,
+                        height: 45,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromARGB(255, 0, 0, 0)
+                                  .withOpacity(0.7),
+                              spreadRadius: 1,
+                              blurRadius: 1,
+                            ),
+                          ],
+                        ),
                         child: TextField(
                           controller: _brokerController,
-                          decoration: const InputDecoration(labelText: ''),
+                          decoration: const InputDecoration(
+                              labelText: '', border: InputBorder.none),
                         ),
                       ),
-                      const SizedBox(height: 3),
+                      const SizedBox(height: 6),
                       Row(
                         children: [
                           Expanded(
@@ -177,53 +229,71 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                'Téléphone du Courtier:',
-                                style: TextStyle(fontSize: 10),
+                                'Téléphone du Courtier',
+                                style: TextStyle(fontSize: 13),
                               ),
                               Container(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 15),
-                                height: 40,
+                                height: 45,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(4.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color.fromARGB(255, 0, 0, 0)
+                                          .withOpacity(0.7),
+                                      spreadRadius: 1,
+                                      blurRadius: 1,
+                                    ),
+                                  ],
+                                ),
                                 child: TextField(
                                   controller: _brokerTelController,
-                                  decoration:
-                                      const InputDecoration(labelText: ''),
+                                  decoration: const InputDecoration(
+                                      labelText: '', border: InputBorder.none),
                                 ),
                               ),
                             ],
                           )),
                           const SizedBox(
-                            width: 5,
+                            width: 8,
                           ),
                           Expanded(
                               child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                'Montant:',
-                                style: TextStyle(fontSize: 10),
+                                'Montant',
+                                style: TextStyle(fontSize: 13),
                               ),
                               Container(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 15),
-                                height: 40,
+                                height: 45,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(4.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color.fromARGB(255, 0, 0, 0)
+                                          .withOpacity(0.7),
+                                      spreadRadius: 1,
+                                      blurRadius: 1,
+                                    ),
+                                  ],
+                                ),
                                 child: TextField(
                                   controller: _amountController,
-                                  decoration:
-                                      const InputDecoration(labelText: ''),
+                                  decoration: const InputDecoration(
+                                      labelText: '', border: InputBorder.none),
                                 ),
                               ),
                             ],
                           ))
                         ],
                       ),
-                      const SizedBox(height: 3),
+                      const SizedBox(height: 12),
                       Row(
                         children: [
                           Expanded(
@@ -232,19 +302,25 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                               children: [
                                 const Text(
                                   'Ville:',
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                                const SizedBox(
-                                  height: 2,
+                                  style: TextStyle(fontSize: 13),
                                 ),
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 15),
-                                  width: 300,
-                                  height: 40,
+                                  height: 45,
                                   decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.white),
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(4.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color:
+                                            const Color.fromARGB(255, 0, 0, 0)
+                                                .withOpacity(0.7),
+                                        spreadRadius: 1,
+                                        blurRadius: 1,
+                                      ),
+                                    ],
+                                  ),
                                   child: DropdownButtonFormField<int>(
                                     value: _selectedCityID,
                                     onChanged: (value) {
@@ -266,7 +342,7 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                             ),
                           ),
                           const SizedBox(
-                            width: 5,
+                            width: 12,
                           ),
                           Expanded(
                             child: Column(
@@ -274,15 +350,24 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                               children: [
                                 const Text(
                                   'Type de Container:',
-                                  style: TextStyle(fontSize: 10),
+                                  style: TextStyle(fontSize: 13),
                                 ),
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 15),
-                                  height: 40,
+                                  height: 45,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
                                     color: Colors.white,
+                                    borderRadius: BorderRadius.circular(4.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color:
+                                            const Color.fromARGB(255, 0, 0, 0)
+                                                .withOpacity(0.7),
+                                        spreadRadius: 1,
+                                        blurRadius: 1,
+                                      ),
+                                    ],
                                   ),
                                   child: DropdownButtonFormField<int>(
                                     value: _selectedContSizeID,
@@ -307,51 +392,76 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                         ],
                       ),
                       const Text(
-                        'Nouveau C:',
-                        style: TextStyle(fontSize: 10),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        height: 52,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white),
-                        child: TextField(
-                          controller: _newCController,
-                          decoration: const InputDecoration(labelText: ''),
-                        ),
-                      ),
-                      const SizedBox(height: 3),
-                      const Text(
-                        'Détails du Container:',
-                        style: TextStyle(fontSize: 10),
+                        'Nouveau C',
+                        style: TextStyle(fontSize: 13),
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         height: 60,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromARGB(255, 0, 0, 0)
+                                  .withOpacity(0.7),
+                              spreadRadius: 1,
+                              blurRadius: 1,
+                            ),
+                          ],
+                        ),
+                        child: TextField(
+                          controller: _newCController,
+                          decoration: const InputDecoration(labelText: ''),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      const Text(
+                        'Détails du Container',
+                        style: TextStyle(fontSize: 13),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        height: 70,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromARGB(255, 0, 0, 0)
+                                  .withOpacity(0.7),
+                              spreadRadius: 1,
+                              blurRadius: 1,
+                            ),
+                          ],
+                        ),
                         child: TextField(
                           controller: _contDetailsController,
                           decoration: const InputDecoration(labelText: ''),
                           maxLines: null,
                         ),
                       ),
-                      const SizedBox(height: 5),
+                      const SizedBox(height: 12),
                     ],
                   ),
                 ),
               ),
-              ElevatedButton(
-                style: buttonPrimary,
-                onPressed: _isAddingContainer ? null : _addContainer,
-                child: _isAddingContainer
-                    ? const CircularProgressIndicator()
-                    : const Text(
-                        'Ajouter',
-                        style: TextStyle(color: Colors.white),
-                      ),
+              Container(
+                width: 350,
+                //color: const Color.fromARGB(255, 1, 1, 55),
+                decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 1, 1, 55),
+                    borderRadius: BorderRadius.circular(50)),
+                child: ElevatedButton(
+                  style: buttonPrimary,
+                  onPressed: _isAddingContainer ? null : _addContainer,
+                  child: _isAddingContainer
+                      ? const CircularProgressIndicator()
+                      : const Text(
+                          'Ajouter',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                ),
               ),
             ],
           ),

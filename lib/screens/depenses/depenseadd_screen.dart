@@ -37,30 +37,33 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Article:',
-                      style: TextStyle(fontSize: 10),
-                    ),
-                    const SizedBox(
-                      height: 5,
+                      'Article',
+                      style: TextStyle(fontSize: 13),
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                      height: 62,
+                      height: 45,
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(4.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color.fromARGB(255, 0, 0, 0)
+                                .withOpacity(0.7),
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                          ),
+                        ],
                       ),
                       child: TextField(
                         controller: _articleController,
                         decoration: const InputDecoration(
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                          ),
                           labelText: '',
+                          border: InputBorder.none,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 5),
+                    const SizedBox(height: 9),
                     // const Text(
                     //   'Slug:', // Nouvelle ligne ajoutée ici
                     //   style: TextStyle(fontSize: 10),
@@ -80,40 +83,58 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
                     //     ),
                     //   ),
                     // ),
-                    const SizedBox(height: 5),
+
                     const Text(
-                      'Total:',
-                      style: TextStyle(fontSize: 10),
+                      'Total',
+                      style: TextStyle(fontSize: 13),
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                      height: 62,
+                      height: 45,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
                         color: Colors.white,
+                        borderRadius: BorderRadius.circular(4.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color.fromARGB(255, 0, 0, 0)
+                                .withOpacity(0.7),
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                          ),
+                        ],
                       ),
                       child: TextField(
                         controller: _totalController,
-                        decoration: const InputDecoration(labelText: ''),
+                        decoration: const InputDecoration(
+                            labelText: '', border: InputBorder.none),
                         keyboardType: TextInputType.number,
                       ),
                     ),
                     const SizedBox(
-                      height: 5,
+                      height: 10,
                     ),
                     const Text(
-                      'Container:',
-                      style: TextStyle(fontSize: 10),
+                      'Container',
+                      style: TextStyle(fontSize: 13),
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                      height: 62,
+                      height: 45,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
                         color: Colors.white,
+                        borderRadius: BorderRadius.circular(4.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color.fromARGB(255, 0, 0, 0)
+                                .withOpacity(0.7),
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                          ),
+                        ],
                       ),
                       child: DropdownButtonFormField<int>(
-                        decoration: const InputDecoration(labelText: ''),
+                        decoration: const InputDecoration(
+                            labelText: '', border: InputBorder.none),
                         value: _selectedContainerID,
                         items: _containerData.map((container) {
                           return DropdownMenuItem<int>(
@@ -130,7 +151,7 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
                       ),
                     ),
                     const SizedBox(
-                      height: 8,
+                      height: 12,
                     ),
                   ],
                 ),

@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:kairasahrl/models/container_model.dart';
 import 'package:kairasahrl/models/depense_model.dart';
+import 'package:kairasahrl/widget/button.dart';
 import 'package:kairasahrl/widget/customer.dart';
 import 'package:kairasahrl/widget/sizedtext.dart';
 
@@ -163,6 +164,18 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
       updatedAt: '2024-02-17',
     ),
     Expense(
+      id: 1,
+      article: 'Achat de fournitures',
+      slug: 'achat_fournitures_bureau',
+      total: 2000,
+      paid: 150,
+      containerID: 2,
+      createdBy: 1,
+      createdAt: '2024-02-17',
+      updatedBy: 1,
+      updatedAt: '2024-02-17',
+    ),
+    Expense(
       id: 2,
       article: 'Achat de fournitures',
       slug: 'achat_fournitures_bureau',
@@ -202,17 +215,17 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
     // Add more Container objects if needed
   ];
 
-  final double _width = 600; // Largeur initiale du conteneur
-  double _height = 110; // Hauteur initiale du conteneur
+  //final double _width = 600; // Largeur initiale du conteneur
+  double _height = 250; // Hauteur initiale du conteneur
   bool _isExpanded = false; // État de l'expansion du conteneur
 
   void _toggleSize() {
     setState(() {
       _isExpanded = !_isExpanded;
       if (_isExpanded) {
-        _height = 150; // Hauteur augmentée
+        _height = 460; // Hauteur augmentée
       } else {
-        _height = 110; // Hauteur réduite
+        _height = 250; // Hauteur réduite
       }
     });
   }
@@ -226,357 +239,346 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            CustomBackgroundContainer(
-              title: 'Container Detail',
-              leadingIcon: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Icon(Icons.arrow_back, color: Colors.white),
+      backgroundColor: Colors.grey.shade50,
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 1, 0, 66),
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: Center(
+          child: Text(
+            _isEditing ? 'Modifier' : 'Container detail',
+            style: const TextStyle(color: Colors.white, fontSize: 20),
+          ),
+        ),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _isEditing = !_isEditing;
+              });
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: HeroIcon(
+                _isEditing ? HeroIcons.check : HeroIcons.queueList,
+                size: 20,
+                color: Colors.white,
               ),
             ),
-            Container(
-              height: 600,
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 0.0),
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0, right: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        _isEditing
-                            ? GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _isEditing = false;
-                                  });
-                                },
-                                child: const HeroIcon(HeroIcons.check,
-                                    size: 20, color: Colors.white),
-                              )
-                            : GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _isEditing = true;
-                                  });
-                                },
-                                child: const HeroIcon(HeroIcons.queueList,
-                                    size: 20, color: Colors.white),
+                  GestureDetector(
+                    onPanUpdate: (details) {
+                      setState(() {
+                        _height += details.delta.dy;
+                      });
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      height: _height,
+                      color: Colors.indigo.shade50,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            _buildEditableField(
+                              label: 'Container Name',
+                              controller: _nameController,
+                            ),
+                            const SizedBox(height: 9),
+                            _buildEditableField(
+                              label: 'Customer',
+                              controller: _customerController,
+                            ),
+                            const SizedBox(height: 9),
+                            _buildEditableField(
+                              label: 'Customer Tel',
+                              controller: _customerTelController,
+                            ),
+                            const SizedBox(height: 9),
+                            _buildEditableField(
+                              label: 'Broker',
+                              controller: _brokerController,
+                            ),
+                            const SizedBox(height: 9),
+                            _buildEditableField(
+                              label: 'Broker Tel',
+                              controller: _brokerTelController,
+                            ),
+                            const SizedBox(height: 9),
+                            _buildEditableField(
+                              label: 'Amount',
+                              controller: _amountController,
+                            ),
+                            const SizedBox(height: 9),
+                            _buildEditableField(
+                              label: 'Ville ID',
+                              controller: _cityIDController,
+                            ),
+                            const SizedBox(height: 9),
+                            _buildEditableField(
+                              label: 'Statut',
+                              controller: _statusController,
+                            ),
+                            const SizedBox(height: 9),
+                            _buildEditableField(
+                              label: 'Type de container',
+                              controller: _contTypeIDController,
+                            ),
+                            const SizedBox(height: 9),
+                            _buildEditableField(
+                              label: 'New C',
+                              controller: _newCController,
+                            ),
+                            const SizedBox(height: 9),
+                            _buildEditableField(
+                              label: 'Container Details',
+                              controller: _contDetailsController,
+                            ),
+                            const SizedBox(height: 9),
+                            if (!_isEditing)
+                              _buildReadOnlyField(
+                                label: 'Date de creation',
+                                text: widget.container.createdAt,
                               ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 50.0),
-                    child: Column(
-                      children: [
-                        GestureDetector(
-                          onPanUpdate: (details) {
-                            setState(() {
-                              _height += details.delta.dy;
-                            });
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            width: _width,
-                            height: _height,
-                            color: Colors.indigo.shade50,
-                            child: SingleChildScrollView(
+                            const SizedBox(height: 15),
+                            Visibility(
+                              visible: _isEditing,
                               child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
                                 children: [
-                                  _buildEditableField(
-                                    label: 'Container Name:',
-                                    controller: _nameController,
-                                  ),
-                                  _buildEditableField(
-                                    label: 'Customer:',
-                                    controller: _customerController,
-                                  ),
-                                  _buildEditableField(
-                                    label: 'Customer Tel:',
-                                    controller: _customerTelController,
-                                  ),
-                                  _buildEditableField(
-                                    label: 'Broker:',
-                                    controller: _brokerController,
-                                  ),
-                                  _buildEditableField(
-                                    label: 'Broker Tel:',
-                                    controller: _brokerTelController,
-                                  ),
-                                  _buildEditableField(
-                                    label: 'Amount:',
-                                    controller: _amountController,
-                                  ),
-                                  _buildEditableField(
-                                    label: 'NewC:',
-                                    controller: _newCController,
-                                  ),
-                                  _buildEditableField(
-                                    label: 'Container Details:',
-                                    controller: _contDetailsController,
-                                  ),
-                                  _buildEditableField(
-                                    label: 'Ville ID:',
-                                    controller: _cityIDController,
-                                  ),
-                                  _buildEditableField(
-                                    label: 'Statut:',
-                                    controller: _statusController,
-                                  ),
-                                  _buildEditableField(
-                                    label: 'TypeC',
-                                    controller: _contTypeIDController,
-                                  ),
-                                  _buildReadOnlyField(
-                                    label: 'Created At:',
-                                    text: widget.container.createdAt,
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Visibility(
-                                    visible: _isEditing,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        ElevatedButton(
-                                          onPressed: _isEditing
-                                              ? _updateContainer
-                                              : null,
-                                          child: const Text(
-                                            'Update',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 2),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            widget
-                                                .onDelete(widget.container.id);
-                                            Navigator.pop(context);
-                                            Fluttertoast.showToast(
-                                              msg:
-                                                  'Container Deleted Successfully',
-                                              toastLength: Toast.LENGTH_SHORT,
-                                              gravity: ToastGravity.BOTTOM,
-                                              backgroundColor: Colors.green,
-                                              textColor: Colors.white,
-                                            );
-                                          },
-                                          child: const Text('Delete'),
-                                        ),
-                                      ],
+                                  ElevatedButton(
+                                    style: buttonPrimary,
+                                    onPressed:
+                                        _isEditing ? _updateContainer : null,
+                                    child: const Text(
+                                      'Mettre a jour',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  const SizedBox(height: 5),
+                                  const SizedBox(height: 8),
+                                  ElevatedButton(
+                                    style: buttonDelete,
+                                    onPressed: () {
+                                      widget.onDelete(widget.container.id);
+                                      Navigator.pop(context);
+                                      Fluttertoast.showToast(
+                                        msg: 'Supprimer avec succée',
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        backgroundColor: Colors.green,
+                                        textColor: Colors.white,
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Supprimer',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
-                          ),
+                            const SizedBox(height: 5),
+                          ],
                         ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Container(
-                          color: Colors.indigo.shade50,
-                          width: 400,
-                          height: 30,
-                          child: IconButton(
-                            color: const Color.fromARGB(255, 1, 1, 55),
-                            icon: _isExpanded
-                                ? const HeroIcon(HeroIcons.xMark)
-                                : const HeroIcon(HeroIcons.listBullet),
-                            onPressed: _toggleSize,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 5,
                   ),
                   Container(
                     color: Colors.indigo.shade50,
-                    margin: const EdgeInsets.only(right: 80),
-                    child: const Text(
-                      'Dépenses associées au container',
-                      style: TextStyle(fontSize: 14, color: Colors.black),
+                    width: 400,
+                    height: 45,
+                    child: IconButton(
+                      color: const Color.fromARGB(255, 1, 1, 55),
+                      icon: _isExpanded
+                          ? const HeroIcon(HeroIcons.xMark)
+                          : const HeroIcon(HeroIcons.listBullet),
+                      onPressed: _toggleSize,
                     ),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Container(
+              //color: Colors.indigo.shade50,
+              margin: const EdgeInsets.only(right: 80),
+              child: const Text(
+                'Dépenses associées au container',
+                style: TextStyle(fontSize: 14, color: Colors.black),
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 8),
+                Container(
+                  child: Column(
                     children: [
-                      const SizedBox(height: 8),
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.4,
-                        child: SingleChildScrollView(
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: _depenses != null
-                                ? _depenses
-                                    .where((depense) =>
-                                        depense.containerID ==
-                                        widget.container.id)
-                                    .length
-                                : 0,
-                            itemBuilder: (context, index) {
-                              if (_depenses != null) {
-                                List<Expense> depensesForContainer = _depenses
-                                    .where((depense) =>
-                                        depense.containerID ==
-                                        widget.container.id)
-                                    .toList();
-                                Expense depense = depensesForContainer[index];
-                                return Column(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        // Navigate to container details screen
-                                      },
-                                      child: Container(
-                                        margin: const EdgeInsets.symmetric(
-                                            vertical: 8.0, horizontal: 16.0),
-                                        decoration: BoxDecoration(
-                                          color: Colors.indigo.shade50,
-                                          borderRadius: const BorderRadius.only(
-                                              topRight: Radius.circular(5),
-                                              bottomRight: Radius.circular(5),
-                                              topLeft: Radius.circular(5),
-                                              bottomLeft: Radius.circular(5)),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                              color: Colors.white,
-                                              offset: Offset(5, 5),
-                                              spreadRadius: 5.0,
-                                              blurRadius: 10.0,
-                                            )
-                                          ],
-                                        ),
-                                        child: Container(
-                                          margin: const EdgeInsets.only(
-                                              top: 10, left: 18),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: _depenses != null
+                            ? _depenses
+                                .where((depense) =>
+                                    depense.containerID == widget.container.id)
+                                .length
+                            : 0,
+                        itemBuilder: (context, index) {
+                          if (_depenses != null) {
+                            List<Expense> depensesForContainer = _depenses
+                                .where((depense) =>
+                                    depense.containerID == widget.container.id)
+                                .toList();
+                            Expense depense = depensesForContainer[index];
+                            return Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    // Navigate to container details screen
+                                  },
+                                  child: Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 8.0, horizontal: 16.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.indigo.shade50,
+                                      borderRadius: const BorderRadius.only(
+                                          topRight: Radius.circular(5),
+                                          bottomRight: Radius.circular(5),
+                                          topLeft: Radius.circular(5),
+                                          bottomLeft: Radius.circular(5)),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          color: Colors.white,
+                                          offset: Offset(5, 5),
+                                          spreadRadius: 5.0,
+                                          blurRadius: 10.0,
+                                        )
+                                      ],
+                                    ),
+                                    child: Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 10, left: 18),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
                                             children: [
-                                              Column(
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Container(
-                                                            width: 200,
-                                                            child: Text(
-                                                              depense.article,
-                                                              style: const TextStyle(
-                                                                  fontSize: 16,
-                                                                  color: Color
-                                                                      .fromARGB(
-                                                                          255,
-                                                                          0,
-                                                                          0,
-                                                                          0),
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                            ),
-                                                          ),
-                                                          SizedText(
-                                                              text:
-                                                                  'creer le ${depense.createdAt}',
-                                                              color:
-                                                                  Colors.green)
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                ],
-                                              ),
                                               Row(
                                                 children: [
                                                   Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
                                                       Container(
-                                                        width: 70,
-                                                        height: 27,
-                                                        child: Center(
-                                                          child: Container(
-                                                            width: 200,
-                                                            child: Text(
-                                                              "${depense.total.toString()}FCFA",
-                                                              style: const TextStyle(
-                                                                  fontSize: 10,
-                                                                  color: Colors
-                                                                      .green,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                            ),
-                                                          ),
+                                                        width: 200,
+                                                        child: Text(
+                                                          depense.article,
+                                                          style: const TextStyle(
+                                                              fontSize: 16,
+                                                              color: Color
+                                                                  .fromARGB(255,
+                                                                      0, 0, 0),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
                                                         ),
-                                                      )
+                                                      ),
+                                                      SizedText(
+                                                          text:
+                                                              'creer le ${depense.createdAt}',
+                                                          color: Colors.green)
                                                     ],
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                height: 15,
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Column(
+                                                children: [
+                                                  Container(
+                                                    width: 70,
+                                                    height: 27,
+                                                    child: Center(
+                                                      child: Container(
+                                                        width: 200,
+                                                        child: Text(
+                                                          "${depense.total.toString()}FCFA",
+                                                          style: const TextStyle(
+                                                              fontSize: 10,
+                                                              color:
+                                                                  Colors.green,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      ),
+                                                    ),
                                                   )
                                                 ],
                                               )
                                             ],
-                                          ),
-                                        ),
+                                          )
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                );
-                              } else {
-                                return const Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons
-                                            .hourglass_empty, // Icone pour une liste vide
-                                        size: 48,
-                                        color: Color.fromARGB(255, 0, 0, 0),
-                                      ),
-                                      Text(
-                                        "Aucune dépense associée",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: Color.fromARGB(255, 0, 0, 0),
-                                        ),
-                                      ),
-                                    ],
                                   ),
-                                ); // ou tout autre widget vide si la liste de dépenses est null
-                              }
-                            },
-                          ),
-                        ),
+                                ),
+                              ],
+                            );
+                          } else {
+                            return const Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons
+                                        .hourglass_empty, // Icone pour une liste vide
+                                    size: 48,
+                                    color: Color.fromARGB(255, 0, 0, 0),
+                                  ),
+                                  Text(
+                                    "Aucune dépense associée",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Color.fromARGB(255, 0, 0, 0),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ); // ou tout autre widget vide si la liste de dépenses est null
+                          }
+                        },
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),
@@ -589,48 +591,39 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
     required TextEditingController controller,
   }) {
     return Container(
-      color: Colors.white,
+      color: Colors.indigo.shade50,
       padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 2),
       width: 400,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                flex: 4,
-                child: Container(
-                  padding: const EdgeInsets.only(top: 12),
-                  width: 130,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.indigo.shade50,
-                  ),
-                  child: Text(
-                    label,
-                    style: const TextStyle(fontSize: 13, color: Colors.black),
-                  ),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 13, color: Colors.black),
+          ),
+          Container(
+            height: 50,
+            decoration: BoxDecoration(
+              color: _isEditing ? Colors.white : Colors.indigo.shade50,
+              borderRadius: BorderRadius.circular(4.0),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.7),
+                  spreadRadius: 1,
+                  blurRadius: 1,
                 ),
-              ),
-              const SizedBox(width: 2),
-              Flexible(
-                flex: 7,
-                child: Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.indigo.shade50,
-                  ),
-                  child: TextField(
-                    controller: controller,
-                    enabled: _isEditing,
-                    style: const TextStyle(color: Colors.black, fontSize: 13),
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
+            child: TextField(
+              controller: controller,
+              enabled: _isEditing,
+              decoration: _isEditing
+                  ? null // Si _isEditing est vrai, n'incluez aucune décoration
+                  : const InputDecoration(
+                      border: InputBorder.none,
+                    ),
+              style: const TextStyle(color: Colors.black, fontSize: 16),
+            ),
           ),
         ],
       ),
@@ -642,48 +635,39 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
     required String text,
   }) {
     return Container(
-      color: Colors.white,
+      color: Colors.indigo.shade50,
       padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 2),
       width: 400,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                flex: 4,
-                child: Container(
-                  padding: const EdgeInsets.only(top: 12),
-                  width: 130,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.indigo.shade50,
-                  ),
-                  child: Text(
-                    label,
-                    style: const TextStyle(fontSize: 13, color: Colors.black),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 2),
-              Flexible(
-                flex: 7,
-                child: Container(
-                  width: 300,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.indigo.shade50,
-                  ),
-                  child: Text(
-                    text,
-                    style: const TextStyle(fontSize: 13, color: Colors.black),
-                  ),
-                ),
-              ),
-            ],
+          if (!_isEditing) // Ajoutez cette condition
+            Text(
+              label,
+              style: const TextStyle(fontSize: 13, color: Colors.black),
+            ),
+          Container(
+            height: 50,
+            width: 400,
+            decoration: BoxDecoration(
+              color: Colors.indigo.shade50,
+              borderRadius: BorderRadius.circular(4.0),
+              boxShadow: _isEditing
+                  ? null
+                  : [
+                      BoxShadow(
+                        color:
+                            const Color.fromARGB(255, 0, 0, 0).withOpacity(0.7),
+                        spreadRadius: 1,
+                        blurRadius: 1,
+                      ),
+                    ],
+            ),
+            child: Text(
+              text,
+              style: const TextStyle(fontSize: 13, color: Colors.black),
+            ),
           ),
         ],
       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:kairasahrl/models/depense_model.dart';
+import 'package:kairasahrl/widget/button.dart';
 import 'package:kairasahrl/widget/customer.dart';
 
 class DepenseUpScreen extends StatefulWidget {
@@ -55,109 +56,140 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.grey.shade50,
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 1, 0, 66),
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: Center(
+          child: Text(
+            _isEditing ? 'Modifier' : 'Dépense detail',
+            style: const TextStyle(color: Colors.white, fontSize: 20),
+          ),
+        ),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _isEditing = !_isEditing;
+              });
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: HeroIcon(
+                _isEditing ? HeroIcons.check : HeroIcons.queueList,
+                size: 20,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Stack(
           children: [
-            CustomBackgroundContainer(
-              title: 'Depense Detail',
-              leadingIcon: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Icon(Icons.arrow_back, color: Colors.white),
-              ),
-            ),
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 22.0, right: 10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      _isEditing
-                          ? GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _isEditing = false;
-                                });
-                              },
-                              child: const HeroIcon(HeroIcons.check,
-                                  size: 20, color: Colors.white),
-                            )
-                          : GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _isEditing = true;
-                                });
-                              },
-                              child: const HeroIcon(HeroIcons.queueList,
-                                  size: 20, color: Colors.white),
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5.0),
+                    child: Container(
+                      color: Colors.indigo.shade50,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            _buildTextFieldWithBorder(
+                              'Article',
+                              _nameController,
+                              _isEditing,
                             ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 60.0),
-                  child: Container(
-                    color: Colors.indigo.shade50,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _buildTextFieldWithBorder(
-                            'Article:',
-                            _nameController,
-                            _isEditing,
-                          ),
-                          _buildTextFieldWithBorder(
-                              'Total:', _totalController, _isEditing),
-                          _buildTextFieldWithBorder(
-                              'Paid:', _paidController, _isEditing),
-                          _buildTextFieldWithBorder('Container ID:',
-                              _containerIDController, _isEditing),
-                          _buildTextFieldWithBorder(
-                              'Created By:', _createdByController, false),
-                          _buildTextFieldWithBorder(
-                              'Created At:', _createdAtController, false),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Visibility(
-                            visible: _isEditing,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: _isUpdatingExpense
-                                      ? null
-                                      : _updateExpense,
-                                  child: const Text('Update'),
-                                ),
-                                const SizedBox(width: 10),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    widget.onDelete(widget.expense.id);
-                                    Navigator.pop(context);
-                                    Fluttertoast.showToast(
-                                      msg: 'Depense Deleted Successfully',
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      backgroundColor: Colors.green,
-                                      textColor: Colors.white,
-                                    );
-                                  },
-                                  child: const Text('Delete'),
-                                ),
-                              ],
+                            const SizedBox(
+                              height: 2,
                             ),
-                          ),
-                        ],
+                            _buildTextFieldWithBorder(
+                                'Total', _totalController, _isEditing),
+                            const SizedBox(
+                              height: 2,
+                            ),
+                            _buildTextFieldWithBorder(
+                                'Paid', _paidController, _isEditing),
+                            const SizedBox(
+                              height: 2,
+                            ),
+                            _buildTextFieldWithBorder('Container ID',
+                                _containerIDController, _isEditing),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            if (!_isEditing)
+                              _buildTextFieldWithBorder(
+                                  'Creér par', _createdByController, false),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            if (!_isEditing)
+                              _buildTextFieldWithBorder('Date de creation',
+                                  _createdAtController, false),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Visibility(
+                              visible: _isEditing,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Container(
+                                    width: 350,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(50)),
+                                    child: ElevatedButton(
+                                      style: buttonPrimary,
+                                      onPressed: _isUpdatingExpense
+                                          ? null
+                                          : _updateExpense,
+                                      child: const Text(
+                                        'Mettre a jour',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Container(
+                                    width: 350,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(50)),
+                                    child: ElevatedButton(
+                                      style: buttonDelete,
+                                      onPressed: () {
+                                        widget.onDelete(widget.expense.id);
+                                        Navigator.pop(context);
+                                        Fluttertoast.showToast(
+                                          msg: 'Depense supprimer avec succée',
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          backgroundColor: Colors.green,
+                                          textColor: Colors.white,
+                                        );
+                                      },
+                                      child: const Text(
+                                        'Supprimer',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
@@ -170,33 +202,34 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 2),
       padding: const EdgeInsets.symmetric(horizontal: 15),
-      width: 350,
-      color: Colors.indigo.shade50,
+      //color: Colors.indigo.shade50,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: const Color.fromARGB(255, 1, 0, 66),
-            ),
-            width: 110,
-            child: Center(
-              child: Text(
-                label,
-                style: const TextStyle(fontSize: 15, color: Colors.white),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 5,
+          Text(
+            label,
+            style: const TextStyle(fontSize: 13, color: Colors.black),
           ),
           Container(
-            height: 30,
+            height: 46,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10), color: Colors.white),
+              color: _isEditing ? Colors.white : Colors.indigo.shade50,
+              borderRadius: BorderRadius.circular(4.0),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.7),
+                  spreadRadius: 1,
+                  blurRadius: 1,
+                ),
+              ],
+            ),
             child: TextField(
               controller: controller,
+              decoration: _isEditing
+                  ? null // Si _isEditing est vrai, n'incluez aucune décoration
+                  : const InputDecoration(
+                      border: InputBorder.none,
+                    ),
               style: const TextStyle(color: Colors.black, fontSize: 16),
               enabled: enabled,
             ),

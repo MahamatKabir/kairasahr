@@ -44,17 +44,17 @@ class ProfilePic extends StatelessWidget {
                   "ibrahim mahamat",
                   style: TextStyle(
                       fontSize: 14,
-                      color: Colors.indigo,
+                      color: Colors.black,
                       fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(
                   height: 3,
                 ),
-                Text(
+                const Text(
                   "ibrahim@gmail.com",
                   style: TextStyle(
                       fontSize: 12,
-                      color: Colors.indigo.shade50,
+                      color: Colors.black,
                       fontWeight: FontWeight.bold),
                 ),
               ],

@@ -22,7 +22,7 @@ class ProfileMenu extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          backgroundColor: const Color(0xFFF5F6F9),
+          backgroundColor: Colors.indigo.shade50,
         ),
         onPressed: press,
         child: Row(
@@ -30,7 +30,7 @@ class ProfileMenu extends StatelessWidget {
             Icon(
               // Utilisez simplement Icon avec l'icône IconData
               icon, // Utilisez l'icône IconData
-              color: Colors.grey,
+              color: Colors.indigo.shade500,
               size: 22,
             ),
             const SizedBox(width: 20),

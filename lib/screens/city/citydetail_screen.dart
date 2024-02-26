@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:kairasahrl/models/city_model.dart';
+import 'package:kairasahrl/widget/button.dart';
 import 'package:kairasahrl/widget/customer.dart';
 
 class CityDetailScreenn extends StatefulWidget {
@@ -42,7 +43,7 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
           alignment: AlignmentDirectional.center,
           children: [
             CustomBackgroundContainer(
-              title: 'Detail City',
+              title: 'Ville detail',
               leadingIcon: GestureDetector(
                 onTap: () {
                   Navigator.of(context).pop();
@@ -92,17 +93,23 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           _buildTextFieldWithBorder(
-                              'Nom de la Ville:', _nameController),
+                              'Nom de la Ville', _nameController),
                           // _buildTextFieldWithBorder('Slug:', _slugController),
-                          _buildTextWithBorder(
-                              'Date de création: ${widget.city.createdAt}'),
+                          if (!_isEditing)
+                            _buildTextWithBorder(
+                                'Date de création: ${widget.city.createdAt}'),
                           // _buildTextWithBorder('ID: ${widget.city.id}'),
+
+                          const SizedBox(
+                            height: 20,
+                          ),
                           Visibility(
                             visible: _isEditing,
-                            child: Row(
+                            child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 ElevatedButton(
+                                  style: buttonPrimary,
                                   onPressed: () {
                                     // Action pour mettre à jour la ville
                                     widget.onUpdate(
@@ -119,10 +126,14 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
                                       textColor: Colors.white,
                                     );
                                   },
-                                  child: const Text('Mettre à jour'),
+                                  child: const Text(
+                                    'Mettre à jour',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 ),
-                                const SizedBox(width: 10),
+                                const SizedBox(height: 10),
                                 ElevatedButton(
+                                  style: buttonDelete,
                                   onPressed: () {
                                     // Appeler la fonction onDelete pour supprimer la ville
                                     // widget.onDelete();
@@ -138,7 +149,8 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
                                       textColor: Colors.white,
                                     );
                                   },
-                                  child: const Text('Supprimer'),
+                                  child: const Text('Supprimer',
+                                      style: TextStyle(color: Colors.white)),
                                 ),
                               ],
                             ),
@@ -166,32 +178,31 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: const Color.fromARGB(255, 1, 0, 66),
-            ),
-            width: 130,
-            child: Center(
-              child: Text(
-                label,
-                style: const TextStyle(fontSize: 15, color: Colors.white),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 8,
+          Text(
+            label,
+            style: const TextStyle(fontSize: 13, color: Colors.black),
           ),
           Container(
             height: 50,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10), color: Colors.white),
+              color: _isEditing ? Colors.white : Colors.indigo.shade50,
+              borderRadius: BorderRadius.circular(4.0),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.7),
+                  spreadRadius: 1,
+                  blurRadius: 1,
+                ),
+              ],
+            ),
             child: TextField(
               controller: controller,
-              style: const TextStyle(color: Colors.black),
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-              ),
+              decoration: _isEditing
+                  ? null // Si _isEditing est vrai, n'incluez aucune décoration
+                  : const InputDecoration(
+                      border: InputBorder.none,
+                    ),
+              style: const TextStyle(color: Colors.black, fontSize: 16),
               enabled: _isEditing,
             ),
           ),

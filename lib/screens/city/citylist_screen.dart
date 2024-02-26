@@ -96,9 +96,11 @@ class _CityListScreenState extends State<CityListScreen> {
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 1, 0, 66),
           iconTheme: const IconThemeData(color: Colors.white),
-          title: const Text(
-            'Liste des Containers',
-            style: TextStyle(color: Colors.white, fontSize: 20),
+          title: const Center(
+            child: Text(
+              'Liste des Villes',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
           ),
         ),
         body: Column(children: [
@@ -144,7 +146,9 @@ class _CityListScreenState extends State<CityListScreen> {
           Expanded(
               child: MediaQuery.removePadding(
             context: context,
+            removeTop: true, // Supprimer le padding du haut
             child: ListView.builder(
+              padding: const EdgeInsets.only(top: 0),
               itemCount: _cities.length,
               itemBuilder: (context, index) {
                 final city = _cities[index];
