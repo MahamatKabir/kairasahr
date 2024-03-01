@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:kairasahrl/models/depense_model.dart';
+import 'package:kairasahrl/screens/fetchapi.dart';
 import 'package:kairasahrl/widget/button.dart';
-import 'package:kairasahrl/widget/customer.dart';
 
 class DepenseUpScreen extends StatefulWidget {
   static const routeName = "/DepenseUpScreen";
@@ -47,16 +47,23 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
   bool _isUpdatingExpense = false;
   bool _isEditing = false;
 
+  // Define a list to hold dropdown items
+  List<DropdownMenuItem<String>> _dropdownItems = [];
+
+  // Define a variable to hold the selected dropdown value
+  String? _selectedContainerID;
+
   @override
   void initState() {
     super.initState();
     _initializeControllers();
+    _fetchContainerIDs(); // Fetch container IDs when the screen initializes
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 1, 0, 66),
         iconTheme: const IconThemeData(color: Colors.white),
@@ -93,7 +100,7 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
                   Padding(
                     padding: const EdgeInsets.only(top: 5.0),
                     child: Container(
-                      color: Colors.indigo.shade50,
+                      color: Colors.white,
                       child: SingleChildScrollView(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -116,8 +123,13 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
                             const SizedBox(
                               height: 2,
                             ),
-                            _buildTextFieldWithBorder('Container ID',
-                                _containerIDController, _isEditing),
+                            _isEditing
+                                ? _buildContainerDropdown()
+                                : _buildTextFieldWithBorder(
+                                    'Container ID',
+                                    _containerIDController,
+                                    _isEditing,
+                                  ),
                             const SizedBox(
                               height: 10,
                             ),
@@ -197,40 +209,105 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
     );
   }
 
+  Widget _buildContainerDropdown() {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Container ID',
+            style: TextStyle(
+              color: Colors.indigo.shade900,
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.0,
+            ),
+          ),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+            padding:
+                const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+            decoration: BoxDecoration(
+              color: _isEditing ? Colors.white : Colors.indigo.shade100,
+              borderRadius: BorderRadius.circular(10.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.indigo.withOpacity(0.4),
+                  spreadRadius: 4,
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            child: DropdownButtonFormField<String>(
+              value: _selectedContainerID,
+              items: _dropdownItems,
+              onChanged: (String? value) {
+                setState(() {
+                  _selectedContainerID = value;
+                });
+              },
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: '',
+                hintStyle: TextStyle(color: Colors.indigo.shade400),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildTextFieldWithBorder(
       String label, TextEditingController controller, bool enabled) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 2),
       padding: const EdgeInsets.symmetric(horizontal: 15),
-      //color: Colors.indigo.shade50,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             label,
-            style: const TextStyle(fontSize: 13, color: Colors.black),
+            style: TextStyle(
+              color: Colors.indigo.shade900,
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.0,
+            ),
           ),
-          Container(
-            height: 46,
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+            padding:
+                const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
             decoration: BoxDecoration(
-              color: _isEditing ? Colors.white : Colors.indigo.shade50,
-              borderRadius: BorderRadius.circular(4.0),
+              color: _isEditing ? Colors.white : Colors.indigo.shade100,
+              borderRadius: BorderRadius.circular(10.0),
               boxShadow: [
                 BoxShadow(
-                  color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.7),
-                  spreadRadius: 1,
-                  blurRadius: 1,
+                  color: Colors.indigo.withOpacity(0.4),
+                  spreadRadius: 4,
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
                 ),
               ],
             ),
+            height: 56,
             child: TextField(
               controller: controller,
-              decoration: _isEditing
-                  ? null // Si _isEditing est vrai, n'incluez aucune décoration
-                  : const InputDecoration(
-                      border: InputBorder.none,
-                    ),
-              style: const TextStyle(color: Colors.black, fontSize: 16),
+              style: TextStyle(
+                color: Colors.indigo.shade900,
+                fontSize: 14.0,
+              ),
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: 'Enter $label',
+                hintStyle: TextStyle(color: Colors.indigo.shade400),
+              ),
               enabled: enabled,
             ),
           ),
@@ -258,7 +335,7 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
       _slugController.text,
       int.parse(_totalController.text),
       int.parse(_paidController.text),
-      int.parse(_containerIDController.text),
+      int.parse(_selectedContainerID ?? _containerIDController.text),
       int.parse(_createdByController.text),
       _createdAtController.text,
       int.parse(_updatedByController.text),
@@ -271,6 +348,26 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
       backgroundColor: Colors.green,
       textColor: Colors.white,
     );
+  }
+
+  // Fetch Container IDs from API
+  void _fetchContainerIDs() async {
+    try {
+      // Make API call to fetch container IDs
+      List<String> containerIDs = await YourApi.fetchContainerIDs();
+
+      // Update dropdown items with fetched container IDs
+      setState(() {
+        _dropdownItems = containerIDs.map((String containerID) {
+          return DropdownMenuItem<String>(
+            value: containerID,
+            child: Text(containerID),
+          );
+        }).toList();
+      });
+    } catch (e) {
+      print("Error fetching container IDs: $e");
+    }
   }
 
   @override

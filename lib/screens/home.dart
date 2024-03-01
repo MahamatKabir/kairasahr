@@ -17,7 +17,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.indigo.shade50,
+      backgroundColor: Colors.indigo.shade100,
       body: SafeArea(
           child: Container(
         margin: const EdgeInsets.only(top: 18, left: 24, right: 24),
@@ -51,14 +51,14 @@ class _MyHomePageState extends State<MyHomePage> {
                           'Bienvenu',
                           style: TextStyle(
                               fontSize: 14,
-                              color: Colors.black,
+                              color: Colors.indigo,
                               fontWeight: FontWeight.bold),
                         ),
                         Text(
                           'Mahamat kabir',
                           style: TextStyle(
                               fontSize: 12,
-                              color: Colors.grey,
+                              color: Colors.black,
                               fontWeight: FontWeight.bold),
                         ),
                       ],
@@ -112,7 +112,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 const Text(
                   'SERVICES',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Colors.indigo,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(
                   height: 16,

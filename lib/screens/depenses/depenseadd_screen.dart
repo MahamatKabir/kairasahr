@@ -16,6 +16,8 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
   final TextEditingController _articleController = TextEditingController();
   final TextEditingController _totalController = TextEditingController();
   final TextEditingController _slugController = TextEditingController();
+  final TextEditingController _paidController =
+      TextEditingController(); // Nouveau contrôleur pour le montant payé
   int _selectedContainerID = 0;
   final List<Map<String, dynamic>> _containerData = [];
   bool _isAddingExpense = false;
@@ -25,149 +27,181 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
       body: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          color: Colors.indigo.shade50,
+          color: Colors.indigo.shade100,
         ),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Article',
-                      style: TextStyle(fontSize: 13),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      height: 45,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color.fromARGB(255, 0, 0, 0)
-                                .withOpacity(0.7),
-                            spreadRadius: 1,
-                            blurRadius: 1,
-                          ),
-                        ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Article',
+                        style: TextStyle(fontSize: 13),
                       ),
-                      child: TextField(
-                        controller: _articleController,
-                        decoration: const InputDecoration(
-                          labelText: '',
-                          border: InputBorder.none,
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        height: 45,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromARGB(255, 0, 0, 0)
+                                  .withOpacity(0.7),
+                              spreadRadius: 1,
+                              blurRadius: 1,
+                            ),
+                          ],
+                        ),
+                        child: TextField(
+                          controller: _articleController,
+                          decoration: const InputDecoration(
+                            labelText: '',
+                            border: InputBorder.none,
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 9),
-                    // const Text(
-                    //   'Slug:', // Nouvelle ligne ajoutée ici
-                    //   style: TextStyle(fontSize: 10),
-                    // ), // Nouvelle ligne ajoutée ici
-                    // Container(
-                    //   padding: const EdgeInsets.symmetric(horizontal: 10),
-                    //   height: 62,
-                    //   decoration: BoxDecoration(
-                    //     borderRadius: BorderRadius.circular(10),
-                    //     color: Colors.white,
-                    //   ),
-                    //   child: TextField(
-                    //     controller:
-                    //         _slugController, // Ajout d'un nouveau controller pour Slug
-                    //     decoration: const InputDecoration(
-                    //       labelText: '',
-                    //     ),
-                    //   ),
-                    // ),
+                      const SizedBox(height: 9),
+                      // const Text(
+                      //   'Slug:', // Nouvelle ligne ajoutée ici
+                      //   style: TextStyle(fontSize: 10),
+                      // ), // Nouvelle ligne ajoutée ici
+                      // Container(
+                      //   padding: const EdgeInsets.symmetric(horizontal: 10),
+                      //   height: 62,
+                      //   decoration: BoxDecoration(
+                      //     borderRadius: BorderRadius.circular(10),
+                      //     color: Colors.white,
+                      //   ),
+                      //   child: TextField(
+                      //     controller:
+                      //         _slugController, // Ajout d'un nouveau controller pour Slug
+                      //     decoration: const InputDecoration(
+                      //       labelText: '',
+                      //     ),
+                      //   ),
+                      // ),
 
-                    const Text(
-                      'Total',
-                      style: TextStyle(fontSize: 13),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      height: 45,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color.fromARGB(255, 0, 0, 0)
-                                .withOpacity(0.7),
-                            spreadRadius: 1,
-                            blurRadius: 1,
-                          ),
-                        ],
+                      const Text(
+                        'Total',
+                        style: TextStyle(fontSize: 13),
                       ),
-                      child: TextField(
-                        controller: _totalController,
-                        decoration: const InputDecoration(
-                            labelText: '', border: InputBorder.none),
-                        keyboardType: TextInputType.number,
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        height: 45,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromARGB(255, 0, 0, 0)
+                                  .withOpacity(0.7),
+                              spreadRadius: 1,
+                              blurRadius: 1,
+                            ),
+                          ],
+                        ),
+                        child: TextField(
+                          controller: _totalController,
+                          decoration: const InputDecoration(
+                              labelText: '', border: InputBorder.none),
+                          keyboardType: TextInputType.number,
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Text(
-                      'Container',
-                      style: TextStyle(fontSize: 13),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      height: 45,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color.fromARGB(255, 0, 0, 0)
-                                .withOpacity(0.7),
-                            spreadRadius: 1,
-                            blurRadius: 1,
-                          ),
-                        ],
+                      const SizedBox(
+                        height: 10,
                       ),
-                      child: DropdownButtonFormField<int>(
-                        decoration: const InputDecoration(
-                            labelText: '', border: InputBorder.none),
-                        value: _selectedContainerID,
-                        items: _containerData.map((container) {
-                          return DropdownMenuItem<int>(
-                            value: container['id'],
-                            child: Text(container[
-                                'name']), // Assuming 'name' field exists
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedContainerID = value!;
-                          });
-                        },
+
+                      const Text(
+                        'Paid', // Ajouter un champ pour le montant payé
+                        style: TextStyle(fontSize: 13),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                  ],
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        height: 45,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromARGB(255, 0, 0, 0)
+                                  .withOpacity(0.7),
+                              spreadRadius: 1,
+                              blurRadius: 1,
+                            ),
+                          ],
+                        ),
+                        child: TextField(
+                          controller: _paidController,
+                          decoration: const InputDecoration(
+                              labelText: '', border: InputBorder.none),
+                          keyboardType: TextInputType.number,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Text(
+                        'Container',
+                        style: TextStyle(fontSize: 13),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        height: 45,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromARGB(255, 0, 0, 0)
+                                  .withOpacity(0.7),
+                              spreadRadius: 1,
+                              blurRadius: 1,
+                            ),
+                          ],
+                        ),
+                        child: DropdownButtonFormField<int>(
+                          decoration: const InputDecoration(
+                              labelText: '', border: InputBorder.none),
+                          value: _selectedContainerID,
+                          items: _containerData.map((container) {
+                            return DropdownMenuItem<int>(
+                              value: container['id'],
+                              child: Text(container[
+                                  'name']), // Assuming 'name' field exists
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedContainerID = value!;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            ElevatedButton(
-              style: buttonPrimary,
-              onPressed: _isAddingExpense ? null : _addExpense,
-              child: _isAddingExpense
-                  ? const CircularProgressIndicator()
-                  : const Text(
-                      'Ajouter',
-                      style: TextStyle(color: Colors.white),
-                    ),
-            ),
-          ],
+              ElevatedButton(
+                style: buttonPrimary,
+                onPressed: _isAddingExpense ? null : _addExpense,
+                child: _isAddingExpense
+                    ? const CircularProgressIndicator()
+                    : const Text(
+                        'Ajouter',
+                        style: TextStyle(color: Colors.white),
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -180,8 +214,10 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
 
     final article = _articleController.text.trim();
     final total = int.tryParse(_totalController.text.trim()) ?? 0;
-    final slug =
-        _slugController.text.trim(); // Récupération de la valeur du slug
+    final slug = _slugController.text.trim();
+    // Récupération de la valeur du slug
+    final paid = int.tryParse(_paidController.text.trim()) ??
+        0; // Récupérer le montant payé
     final expenseId = _generateExpenseId(); // Automatically generate ID
     final createdAt = DateTime.now().toIso8601String();
 
@@ -194,6 +230,7 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
           'id': expenseId,
           'article': article,
           'total': total,
+          'paid': paid, // Ajouter le montant payé
           'slug': slug, // Ajout du slug dans les données envoyées
           // 'created_by': createdBy, // Passing createdBy ID
           'created_at': createdAt,

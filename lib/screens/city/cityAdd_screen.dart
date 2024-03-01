@@ -22,7 +22,7 @@ class _CityAddScreenState extends State<CityAddScreen> {
       body: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          color: Colors.indigo.shade50,
+          color: Colors.indigo.shade100,
         ),
         child: Column(
           children: [

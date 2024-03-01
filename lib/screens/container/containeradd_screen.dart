@@ -38,7 +38,7 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
         padding: const EdgeInsets.only(top: 10.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          color: Colors.indigo.shade50,
+          color: Colors.indigo.shade100,
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -397,7 +397,7 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
-                        height: 60,
+                        height: 70,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(4.0),
@@ -413,6 +413,7 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                         child: TextField(
                           controller: _newCController,
                           decoration: const InputDecoration(labelText: ''),
+                          maxLines: null,
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -422,7 +423,7 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
-                        height: 70,
+                        height: 100,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(4.0),

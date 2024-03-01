@@ -220,7 +220,7 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.indigo.shade50,
+        backgroundColor: Colors.indigo.shade100,
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 1, 0, 66),
           iconTheme: const IconThemeData(color: Colors.white),
@@ -291,6 +291,11 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
                               MaterialPageRoute(
                                 builder: (context) => ContainerUpScreen(
                                   container: containerdepense,
+                                  name: containerdepense.name,
+                                  customer: containerdepense.customer,
+                                  customerTel:
+                                      containerdepense.customerTel.toString(),
+                                  createdAt: containerdepense.createdAt,
                                   onDelete: deleteContainer,
                                   onUpdate: updateContainer,
                                 ),
@@ -298,25 +303,17 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
                             );
                           },
                           child: Container(
-                            height: 106,
+                            height: 100,
 
                             margin: const EdgeInsets.symmetric(
                                 vertical: 8.0, horizontal: 8.0),
                             decoration: const BoxDecoration(
-                              color: Colors.white,
+                              color: Color.fromARGB(248, 255, 254, 254),
                               borderRadius: BorderRadius.only(
                                   topRight: Radius.circular(10),
                                   bottomRight: Radius.circular(10),
                                   topLeft: Radius.circular(10),
                                   bottomLeft: Radius.circular(10)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.white,
-                                  offset: Offset(1, 1),
-                                  spreadRadius: 1.0,
-                                  blurRadius: 1.0,
-                                )
-                              ],
                             ),
                             child: Container(
                               margin: const EdgeInsets.only(
@@ -452,7 +449,7 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
                                         child: const Center(
                                           child: HeroIcon(
                                             HeroIcons.chevronRight,
-                                            size: 16,
+                                            size: 22,
                                             color: Colors.indigo,
                                           ),
                                         ),

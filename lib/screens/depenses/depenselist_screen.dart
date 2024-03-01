@@ -221,7 +221,7 @@ class _DepenseListScreenState extends State<DepenseListScreen> {
                         margin: const EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 16.0),
                         decoration: BoxDecoration(
-                          color: Colors.indigo.shade50,
+                          color: Colors.indigo.shade100,
                           borderRadius: const BorderRadius.only(
                               topRight: Radius.circular(5),
                               bottomRight: Radius.circular(5),

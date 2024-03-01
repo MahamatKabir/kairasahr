@@ -2,8 +2,8 @@ class Expense {
   int id;
   String article;
   String slug;
-  int total;
-  int paid;
+  int? total;
+  int? paid;
   int containerID;
   int createdBy;
   String createdAt;
@@ -14,8 +14,8 @@ class Expense {
     required this.id,
     required this.article,
     required this.slug,
-    required this.total,
-    required this.paid,
+    this.total,
+    this.paid,
     required this.containerID,
     required this.createdBy,
     required this.createdAt,

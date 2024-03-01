@@ -198,90 +198,147 @@ import 'package:flutter/material.dart';
 //     );
 //   }
 // }
-class AnimatedTextFieldDemo extends StatefulWidget {
+// class AnimatedTextFieldDemo extends StatefulWidget {
+//   @override
+//   _AnimatedTextFieldDemoState createState() => _AnimatedTextFieldDemoState();
+// }
+
+// class _AnimatedTextFieldDemoState extends State<AnimatedTextFieldDemo>
+//     with SingleTickerProviderStateMixin {
+//   late TextEditingController _textController;
+//   late AnimationController _animationController;
+//   late Animation<double> _scaleAnimation;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     _textController = TextEditingController();
+//     _animationController =
+//         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+//     _scaleAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
+//       CurvedAnimation(
+//         parent: _animationController,
+//         curve: Curves.easeInOut,
+//       ),
+//     );
+
+//     _textController.addListener(() {
+//       if (_textController.text.isNotEmpty) {
+//         _animationController.forward();
+//       } else {
+//         _animationController.reverse();
+//       }
+//     });
+//   }
+
+//   @override
+//   void dispose() {
+//     _textController.dispose();
+//     _animationController.dispose();
+//     super.dispose();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Chic Animated TextField'),
+//       ),
+//       body: Center(
+//         child: Padding(
+//           padding: const EdgeInsets.all(20.0),
+//           child: AnimatedBuilder(
+//             animation: _animationController,
+//             builder: (context, child) {
+//               return Transform.scale(
+//                 scale: _scaleAnimation.value,
+//                 child: child,
+//               );
+//             },
+//             child: Container(
+//               padding: EdgeInsets.symmetric(horizontal: 16.0),
+//               decoration: BoxDecoration(
+//                 color: Colors.indigo.shade50,
+//                 borderRadius: BorderRadius.circular(8.0),
+//                 boxShadow: [
+//                   BoxShadow(
+//                     color: Colors.indigo.withOpacity(0.3),
+//                     spreadRadius: 1,
+//                     blurRadius: 1,
+//                     offset: Offset(0, 0), // changes position of shadow
+//                   ),
+//                 ],
+//               ),
+//               child: TextField(
+//                 controller: _textController,
+//                 style: const TextStyle(color: Colors.black),
+//                 decoration: const InputDecoration(
+//                   hintText: 'Enter your text',
+//                   border: InputBorder.none,
+//                 ),
+//               ),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+class FlightAnimationPage extends StatefulWidget {
   @override
-  _AnimatedTextFieldDemoState createState() => _AnimatedTextFieldDemoState();
+  _FlightAnimationPageState createState() => _FlightAnimationPageState();
 }
 
-class _AnimatedTextFieldDemoState extends State<AnimatedTextFieldDemo>
+class _FlightAnimationPageState extends State<FlightAnimationPage>
     with SingleTickerProviderStateMixin {
-  late TextEditingController _textController;
-  late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
+  late AnimationController _controller;
+  late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
-    _textController = TextEditingController();
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeInOut,
-      ),
-    );
+    _controller = AnimationController(
+      duration: Duration(seconds: 5),
+      vsync: this,
+    )..forward();
 
-    _textController.addListener(() {
-      if (_textController.text.isNotEmpty) {
-        _animationController.forward();
-      } else {
-        _animationController.reverse();
+    _animation = Tween(begin: 0.0, end: 1.0).animate(_controller);
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        // Navigate to detail page or next screen
       }
     });
-  }
-
-  @override
-  void dispose() {
-    _textController.dispose();
-    _animationController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chic Animated TextField'),
+        title: Text('Flight Animation'),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: AnimatedBuilder(
-            animation: _animationController,
-            builder: (context, child) {
-              return Transform.scale(
-                scale: _scaleAnimation.value,
-                child: child,
-              );
-            },
+      body: AnimatedBuilder(
+        animation: _animation,
+        builder: (context, child) {
+          // Your animation logic goes here
+          return Transform.translate(
+            offset: Offset(
+                0.0, MediaQuery.of(context).size.height * _animation.value),
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              decoration: BoxDecoration(
-                color: Colors.indigo.shade50,
-                borderRadius: BorderRadius.circular(8.0),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.indigo.withOpacity(0.3),
-                    spreadRadius: 1,
-                    blurRadius: 1,
-                    offset: Offset(0, 0), // changes position of shadow
-                  ),
-                ],
-              ),
-              child: TextField(
-                controller: _textController,
-                style: const TextStyle(color: Colors.black),
-                decoration: const InputDecoration(
-                  hintText: 'Enter your text',
-                  border: InputBorder.none,
-                ),
-              ),
+              // Your airplane widget goes here
+              width: 100,
+              height: 100,
+              color: Colors.blue,
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }
 // class FuturisticTextFieldDemo extends StatefulWidget {
@@ -581,3 +638,289 @@ class _AnimatedTextFieldDemoState extends State<AnimatedTextFieldDemo>
 //     );
 //   }
 // }
+
+
+
+///vvcbşkldfmvdklvd//
+  
+            // Column(
+            //   crossAxisAlignment: CrossAxisAlignment.start,
+            //   children: [
+            //     const SizedBox(height: 8),
+            //     Container(
+            //       child: Column(
+            //         children: [
+            //           ListView.builder(
+            //             shrinkWrap: true,
+            //             itemCount: _depenses != null
+            //                 ? _depenses
+            //                     .where((depense) =>
+            //                         depense.containerID == widget.container.id)
+            //                     .length
+            //                 : 0,
+            //             itemBuilder: (context, index) {
+            //               if (_depenses != null) {
+            //                 List<Expense> depensesForContainer = _depenses
+            //                     .where((depense) =>
+            //                         depense.containerID == widget.container.id)
+            //                     .toList();
+            //                 Expense depense = depensesForContainer[index];
+            //                 return Column(
+            //                   children: [
+            //                     GestureDetector(
+            //                       onTap: () {
+            //                         // Navigate to container details screen
+            //                       },
+            //                       child: Container(
+            //                         margin: const EdgeInsets.symmetric(
+            //                             vertical: 8.0, horizontal: 16.0),
+            //                         decoration: BoxDecoration(
+            //                           color: Colors.indigo.shade50,
+            //                           borderRadius: const BorderRadius.only(
+            //                               topRight: Radius.circular(5),
+            //                               bottomRight: Radius.circular(5),
+            //                               topLeft: Radius.circular(5),
+            //                               bottomLeft: Radius.circular(5)),
+            //                           boxShadow: const [
+            //                             BoxShadow(
+            //                               color: Colors.white,
+            //                               offset: Offset(5, 5),
+            //                               spreadRadius: 5.0,
+            //                               blurRadius: 10.0,
+            //                             )
+            //                           ],
+            //                         ),
+            //                         child: Container(
+            //                           margin: const EdgeInsets.only(
+            //                               top: 10, left: 18),
+            //                           child: Row(
+            //                             mainAxisAlignment:
+            //                                 MainAxisAlignment.spaceBetween,
+            //                             children: [
+            //                               Column(
+            //                                 children: [
+            //                                   Row(
+            //                                     children: [
+            //                                       Column(
+            //                                         crossAxisAlignment:
+            //                                             CrossAxisAlignment
+            //                                                 .start,
+            //                                         children: [
+            //                                           Container(
+            //                                             width: 200,
+            //                                             child: Text(
+            //                                               depense.article,
+            //                                               style: const TextStyle(
+            //                                                   fontSize: 16,
+            //                                                   color: Color
+            //                                                       .fromARGB(255,
+            //                                                           0, 0, 0),
+            //                                                   fontWeight:
+            //                                                       FontWeight
+            //                                                           .bold),
+            //                                               overflow: TextOverflow
+            //                                                   .ellipsis,
+            //                                             ),
+            //                                           ),
+            //                                           SizedText(
+            //                                               text:
+            //                                                   'creer le ${depense.createdAt}',
+            //                                               color: Colors.green)
+            //                                         ],
+            //                                       ),
+            //                                     ],
+            //                                   ),
+            //                                   const SizedBox(
+            //                                     height: 15,
+            //                                   ),
+            //                                 ],
+            //                               ),
+            //                               Row(
+            //                                 children: [
+            //                                   Column(
+            //                                     children: [
+            //                                       Container(
+            //                                         width: 70,
+            //                                         height: 27,
+            //                                         child: Center(
+            //                                           child: Container(
+            //                                             width: 200,
+            //                                             child: Text(
+            //                                               "${depense.total.toString()}FCFA",
+            //                                               style: const TextStyle(
+            //                                                   fontSize: 10,
+            //                                                   color:
+            //                                                       Colors.green,
+            //                                                   fontWeight:
+            //                                                       FontWeight
+            //                                                           .bold),
+            //                                               overflow: TextOverflow
+            //                                                   .ellipsis,
+            //                                             ),
+            //                                           ),
+            //                                         ),
+            //                                       )
+            //                                     ],
+            //                                   )
+            //                                 ],
+            //                               )
+            //                             ],
+            //                           ),
+            //                         ),
+            //                       ),
+            //                     ),
+            //                   ],
+            //                 );
+            //               } else {
+            //                 return const Center(
+            //                   child: Column(
+            //                     mainAxisAlignment: MainAxisAlignment.center,
+            //                     children: [
+            //                       Icon(
+            //                         Icons
+            //                             .hourglass_empty, // Icone pour une liste vide
+            //                         size: 48,
+            //                         color: Color.fromARGB(255, 0, 0, 0),
+            //                       ),
+            //                       Text(
+            //                         "Aucune dépense associée",
+            //                         style: TextStyle(
+            //                           fontSize: 16,
+            //                           color: Color.fromARGB(255, 0, 0, 0),
+            //                         ),
+            //                       ),
+            //                     ],
+            //                   ),
+            //                 ); // ou tout autre widget vide si la liste de dépenses est null
+            //               }
+            //             },
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ],
+            // ),
+
+
+            //edi//////
+
+            // Widget _buildEditableField({
+  //   required String label,
+  //   required TextEditingController controller,
+  //   bool isMultiline =
+  //       false, // Ajout du paramètre isMultiline avec une valeur par défaut false
+  // }) {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Text(
+  //         label,
+  //         style: TextStyle(
+  //           color: Colors.indigo,
+  //           fontSize: 16.0,
+  //           fontWeight: FontWeight.bold,
+  //         ),
+  //       ),
+  //       SizedBox(height: 8.0),
+  //       Container(
+  //         padding: EdgeInsets.all(8.0),
+  //         decoration: BoxDecoration(
+  //           color: Colors.indigo.shade50,
+  //           borderRadius: BorderRadius.circular(8.0),
+  //         ),
+  //         child: isMultiline
+  //             ? // Vérifie si le champ est multiligne
+  //             TextField(
+  //                 controller: controller,
+  //                 enabled: _isEditing,
+  //                 maxLines: null, // Permet un nombre illimité de lignes
+  //                 style: TextStyle(
+  //                   color: Colors.black,
+  //                 ),
+  //                 decoration: InputDecoration(
+  //                   border: InputBorder.none,
+  //                 ),
+  //               )
+  //             : TextField(
+  //                 controller: controller,
+  //                 enabled: _isEditing,
+  //                 style: TextStyle(
+  //                   color: Colors.black,
+  //                 ),
+  //                 decoration: InputDecoration(
+  //                   border: InputBorder.none,
+  //                 ),
+  //               ),
+  //       ),
+  //       SizedBox(height: 16.0),
+  //     ],
+  //   );
+  // }
+
+  // Widget _buildEditableField({
+  //   required String label,
+  //   required TextEditingController controller,
+  //   bool isMultiline = false,
+  // }) {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Text(
+  //         label,
+  //         style: TextStyle(
+  //           color: Colors.indigo.shade900,
+  //           fontSize: 20.0,
+  //           fontWeight: FontWeight.bold,
+  //           letterSpacing: 1.5,
+  //         ),
+  //       ),
+  //       SizedBox(height: 16.0),
+  //       Container(
+  //         padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+  //         decoration: BoxDecoration(
+  //           color: Colors.indigo.shade100,
+  //           borderRadius: BorderRadius.circular(20.0),
+  //           boxShadow: [
+  //             BoxShadow(
+  //               color: Colors.indigo.withOpacity(0.3),
+  //               spreadRadius: 3,
+  //               blurRadius: 7,
+  //               offset: Offset(0, 3),
+  //             ),
+  //           ],
+  //         ),
+  //         child: isMultiline
+  //             ? TextField(
+  //                 controller: controller,
+  //                 enabled: _isEditing,
+  //                 maxLines: null,
+  //                 style: TextStyle(
+  //                   color: Colors.indigo.shade900,
+  //                   fontSize: 18.0,
+  //                 ),
+  //                 decoration: InputDecoration(
+  //                   border: InputBorder.none,
+  //                   hintText: 'Enter $label',
+  //                   hintStyle: TextStyle(color: Colors.indigo.shade400),
+  //                 ),
+  //               )
+  //             : TextField(
+  //                 controller: controller,
+  //                 enabled: _isEditing,
+  //                 style: TextStyle(
+  //                   color: Colors.indigo.shade900,
+  //                   fontSize: 18.0,
+  //                 ),
+  //                 decoration: InputDecoration(
+  //                   border: InputBorder.none,
+  //                   hintText: 'Enter $label',
+  //                   hintStyle: TextStyle(color: Colors.indigo.shade400),
+  //                 ),
+  //               ),
+  //       ),
+  //       SizedBox(height: 24.0),
+  //     ],
+  //   );
+  // }
+  //edit son///
+          

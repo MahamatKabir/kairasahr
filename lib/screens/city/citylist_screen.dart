@@ -5,6 +5,7 @@ import 'package:kairasahrl/screens/addscreen.dart';
 import 'package:kairasahrl/screens/btm_bar.dart';
 import 'package:kairasahrl/screens/city/citydetail_screen.dart';
 import 'package:kairasahrl/screens/profile/profile_screen.dart';
+import 'package:kairasahrl/screens/utils/color.dart';
 
 import '../../models/city_model.dart';
 
@@ -19,8 +20,8 @@ class _CityListScreenState extends State<CityListScreen> {
   final TextEditingController _searchTextController = TextEditingController();
   final FocusNode _searchTextFocusNode = FocusNode();
   final List<City> _cities = [
-    City(
-        name: 'Ndjamena ville', slug: 'city_1', createdAt: '2024-02-06', id: 1),
+    City(name: 'Ndjamena ', slug: 'city_1', createdAt: '2024-02-06', id: 1),
+    City(name: 'Samsung', slug: 'city_1', createdAt: '2024-02-06', id: 1),
     City(name: 'Sahr', slug: 'city_2', createdAt: '2024-02-07', id: 2),
     City(name: 'Mondou', slug: 'city_1', createdAt: '2024-02-06', id: 1),
     City(name: 'Koumra', slug: 'city_2', createdAt: '2024-02-07', id: 2),
@@ -32,11 +33,32 @@ class _CityListScreenState extends State<CityListScreen> {
     // Ajoutez d'autres villes fictives si nécessaire
   ];
 
+  List<City> _filteredCities = []; // Liste filtrée de villes
+  @override
+  void initState() {
+    super.initState();
+    _filteredCities
+        .addAll(_cities); // Initialiser la liste filtrée avec toutes les villes
+  }
+
   @override
   void dispose() {
     _searchTextController.dispose();
-    _searchTextFocusNode.dispose();
+    //_searchTextFocusNode.dispose();
     super.dispose();
+  }
+
+  void _filterCities(String searchText) {
+    _filteredCities.clear(); // Effacer la liste filtrée actuelle
+
+    // Parcourir toutes les villes et ajouter celles qui correspondent au critère de recherche
+    for (City city in _cities) {
+      if (city.name.toLowerCase().startsWith(searchText.toLowerCase())) {
+        _filteredCities.add(city);
+      }
+    }
+    setState(
+        () {}); // Mettre à jour l'interface utilisateur avec les villes filtrées
   }
 
   void deleteCity(int id) {
@@ -92,14 +114,15 @@ class _CityListScreenState extends State<CityListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.indigo.shade50,
+        backgroundColor: Colors.indigo.shade100,
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 1, 0, 66),
-          iconTheme: const IconThemeData(color: Colors.white),
+          backgroundColor: AppColors.appbar,
+          iconTheme: const IconThemeData(color: AppColors.textFieldBackground),
           title: const Center(
             child: Text(
               'Liste des Villes',
-              style: TextStyle(color: Colors.white, fontSize: 20),
+              style:
+                  TextStyle(color: AppColors.textFieldBackground, fontSize: 20),
             ),
           ),
         ),
@@ -109,27 +132,30 @@ class _CityListScreenState extends State<CityListScreen> {
             child: SizedBox(
               height: kBottomNavigationBarHeight,
               child: TextField(
-                focusNode: _searchTextFocusNode,
+                //focusNode: _searchTextFocusNode,
                 controller: _searchTextController,
-                onChanged: (valuee) {
-                  setState(() {});
+                onChanged: (value) {
+                  _filterCities(
+                      value); // Appeler la fonction de filtrage lors de la saisie de texte
                 },
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide:
-                        const BorderSide(color: Colors.indigo, width: 1),
+                        const BorderSide(color: AppColors.appbar, width: 1),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide:
-                        const BorderSide(color: Colors.indigo, width: 1),
+                        const BorderSide(color: AppColors.appbar, width: 1),
                   ),
                   hintText: "Vous recherchez ? ",
                   prefixIcon: const Icon(Icons.search),
                   suffix: IconButton(
                     onPressed: () {
                       _searchTextController.clear();
+                      _searchTextFocusNode.unfocus();
+                      _filterCities('');
                       _searchTextFocusNode.unfocus();
                     },
                     icon: Icon(
@@ -149,9 +175,9 @@ class _CityListScreenState extends State<CityListScreen> {
             removeTop: true, // Supprimer le padding du haut
             child: ListView.builder(
               padding: const EdgeInsets.only(top: 0),
-              itemCount: _cities.length,
+              itemCount: _filteredCities.length,
               itemBuilder: (context, index) {
-                final city = _cities[index];
+                final city = _filteredCities[index];
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -169,7 +195,7 @@ class _CityListScreenState extends State<CityListScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Card(
-                      color: Colors.white,
+                      color: AppColors.textFieldBackground,
                       child: ListTile(
                         title: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -177,13 +203,13 @@ class _CityListScreenState extends State<CityListScreen> {
                             Text(
                               city.name,
                               style: const TextStyle(
-                                  fontSize: 20, color: Colors.black),
+                                  fontSize: 20, color: AppColors.textColor),
                               overflow: TextOverflow.ellipsis,
                             ),
                             const HeroIcon(
                               HeroIcons.chevronRight,
                               size: 16,
-                              color: Colors.indigo,
+                              color: AppColors.appbar,
                             ),
                           ],
                         ),
@@ -201,7 +227,7 @@ class _CityListScreenState extends State<CityListScreen> {
           height: 54,
           width: 54,
           child: FloatingActionButton(
-            backgroundColor: Colors.white,
+            backgroundColor: AppColors.textFieldBackground,
             elevation: 0,
             onPressed: () {
               Navigator.push(
@@ -210,23 +236,23 @@ class _CityListScreenState extends State<CityListScreen> {
               );
             },
             shape: RoundedRectangleBorder(
-              side: const BorderSide(width: 3, color: Colors.indigo),
+              side: const BorderSide(width: 3, color: AppColors.appbar),
               borderRadius: BorderRadius.circular(150),
             ),
             child: const Icon(
               Icons.add,
-              color: Colors.indigo,
+              color: AppColors.appbar,
             ),
           ),
         ),
         bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.textFieldBackground,
           type: BottomNavigationBarType.fixed,
           showSelectedLabels: false,
           showUnselectedLabels: false,
           currentIndex: _selectedIndex,
           unselectedItemColor: Colors.black12,
-          selectedItemColor: Colors.indigo,
+          selectedItemColor: AppColors.appbar,
           onTap: _onItemTapped,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(

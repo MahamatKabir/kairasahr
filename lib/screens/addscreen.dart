@@ -17,7 +17,7 @@ class _AddScreenneState extends State<AddScreenne> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        backgroundColor: Colors.indigo.shade50,
+        backgroundColor: Colors.indigo.shade100,
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 4, 2, 95),
           iconTheme: const IconThemeData(color: Colors.white),
@@ -43,7 +43,7 @@ class _AddScreenneState extends State<AddScreenne> {
                   borderRadius: BorderRadius.circular(5.0),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.indigo.shade200.withOpacity(0.8),
+                      color: Colors.indigo.shade100,
                       spreadRadius: 1,
                       blurRadius: 1,
                       offset: const Offset(0, 1),
