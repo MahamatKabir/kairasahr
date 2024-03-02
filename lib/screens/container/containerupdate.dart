@@ -153,19 +153,28 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons
-                    .hourglass_empty, // Icône représentant l'absence de dépenses
-                size: 64.0, // Taille de l'icône
-                color: Colors.grey, // Couleur de l'icône
-              ),
-              SizedBox(height: 16.0), // Espacement entre l'icône et le texte
-              Text(
-                'Aucune dépense disponible',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w500,
-                ),
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Opacity(
+                    opacity: 0.2, // Opacité de l'image
+                    child: Image(
+                      image: AssetImage(
+                        "assets/images/expense.png", // Chemin de l'image
+                      ),
+                      width: 100, // Largeur de l'image
+                      height: 100, // Hauteur de l'image
+                    ),
+                  ),
+                  Text(
+                    'Aucune dépense disponible', // Texte indiquant l'absence de dépenses
+                    style: TextStyle(
+                      fontSize: 16.0, // Taille de la police du texte
+                      color: Colors.black, // Couleur du texte
+                    ),
+                    textAlign: TextAlign.center, // Alignement du texte
+                  ),
+                ],
               ),
             ],
           ),
@@ -174,18 +183,16 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
     } else {
       return Column(
         children: [
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Depense lieé au container',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 15,
-                  color: Colors.black,
-                ),
+          const Center(
+            child: Text(
+              'Depense lieé au conteneur',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: Colors.indigo,
+                fontStyle: FontStyle.normal,
               ),
-            ],
+            ),
           ),
           const SizedBox(height: 10),
           Column(
@@ -273,19 +280,22 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
               decoration: const BoxDecoration(
                 color: AppColors.appbar,
                 borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
+                  bottomLeft: Radius.circular(5),
+                  bottomRight: Radius.circular(5),
                 ),
               ),
               child: Stack(
                 children: [
                   Positioned(
-                    top: 10,
-                    left: 290,
+                    top: MediaQuery.of(context).size.height *
+                        0.013, // 10% de la hauteur de l'écran à partir du haut
+                    left: MediaQuery.of(context).size.width *
+                        0.811, // 81.1% de la largeur de l'écran à partir de la gauche
                     child: ClipRRect(
                       child: Container(
-                        height: 35,
-                        width: 70,
+                        height: MediaQuery.of(context).size.height *
+                            0.06, // 4.3% de la hauteur de l'écran
+                        width: MediaQuery.of(context).size.width * 0.2,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                             color: AppColors.background),
@@ -308,7 +318,7 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
                             );
                           },
                           child: const Text(
-                            'Edit',
+                            'Éditer',
                             style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -344,11 +354,15 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
           ],
         ),
         Positioned(
-          top: 100,
-          left: 18,
+          top: MediaQuery.of(context).size.height *
+              0.2, // 10% de la hauteur de l'écran à partir du haut
+          left: MediaQuery.of(context).size.width *
+              0.056, // 5.6% de la largeur de l'écran à partir de la gauche
           child: Container(
-            height: 150,
-            width: 320,
+            height: MediaQuery.of(context).size.height *
+                0.43, // 23% de la hauteur de l'écran
+            width: MediaQuery.of(context).size.width * 0.89,
+
             decoration: BoxDecoration(
               color: Colors.indigo.shade100,
               borderRadius: BorderRadius.circular(15.0),
@@ -369,13 +383,16 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Center(
-                        child: Text(
-                          widget.name, // Utilisez le nom du widget
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: Colors.indigo.shade900,
+                      Container(
+                        alignment: Alignment.center,
+                        child: Center(
+                          child: Text(
+                            widget.name, // Utilisez le nom du widget
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.indigo.shade900,
+                            ),
                           ),
                         ),
                       ),

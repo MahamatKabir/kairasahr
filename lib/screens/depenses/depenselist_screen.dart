@@ -149,7 +149,7 @@ class _DepenseListScreenState extends State<DepenseListScreen> {
           backgroundColor: const Color.fromARGB(255, 1, 0, 66),
           iconTheme: const IconThemeData(color: Colors.white),
           title: const Text(
-            'Liste des Depenses',
+            'Liste des Dépenses',
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
         ),

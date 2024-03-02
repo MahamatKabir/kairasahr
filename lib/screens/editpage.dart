@@ -115,7 +115,7 @@ class _EditPageState extends State<EditPage> {
         iconTheme: const IconThemeData(color: Colors.white),
         title: Center(
           child: Text(
-            _isEditing ? 'Modifier' : 'Container detail',
+            _isEditing ? 'Modifier' : 'Detail du Conteneur',
             style: const TextStyle(color: Colors.white, fontSize: 20),
           ),
         ),
@@ -126,15 +126,18 @@ class _EditPageState extends State<EditPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _buildEditableField(
-                label: 'Container Name', controller: _nameController),
+                label: 'Nom du conteneur', controller: _nameController),
             // _buildEditableField(label: 'Slug', controller: _slugController),
             _buildEditableField(
-                label: 'Customer', controller: _customerController),
+                label: 'Client(e)', controller: _customerController),
             _buildEditableField(
-                label: 'Customer Tel', controller: _customerTelController),
-            _buildEditableField(label: 'Broker', controller: _brokerController),
+                label: 'Téléphone du client',
+                controller: _customerTelController),
             _buildEditableField(
-                label: 'Broker Tel', controller: _brokerTelController),
+                label: 'Courtièr(e)', controller: _brokerController),
+            _buildEditableField(
+                label: 'Téléphone du courtièr',
+                controller: _brokerTelController),
             Row(
               mainAxisAlignment:
                   MainAxisAlignment.spaceBetween, // Ajustez selon vos besoins
@@ -142,7 +145,7 @@ class _EditPageState extends State<EditPage> {
                 Expanded(
                   flex: 5, // Ajustez selon vos besoins
                   child: _buildEditableField(
-                    label: 'Amount',
+                    label: 'Mountant',
                     controller: _amountController,
                   ),
                 ),
@@ -151,7 +154,7 @@ class _EditPageState extends State<EditPage> {
                 Expanded(
                   flex: 5, // Ajustez selon vos besoins
                   child: _buildDropdownButton(
-                    label: 'City',
+                    label: 'Ville',
                     value: _selectedCity,
                     onChanged: _onCityChanged(),
                     items: _buildDropdownItems('City'),
@@ -162,9 +165,10 @@ class _EditPageState extends State<EditPage> {
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  flex: 5,
+                  flex: 6,
                   child: _buildDropdownButton(
                     label: 'Status',
                     value: _statusValue ?? 0,
@@ -173,26 +177,28 @@ class _EditPageState extends State<EditPage> {
                   ),
                 ),
                 const SizedBox(
-                    width: 10), // Ajouter un espacement entre les dropdowns
+                    width: 1), // Ajouter un espacement entre les dropdowns
                 Expanded(
-                  flex: 5,
-                  child: _buildDropdownButton(
-                    label: 'Container Type',
-                    value: _containerTypeValue ?? 0,
-                    onChanged: _updateContainerType,
-                    items: [],
+                  flex: 6,
+                  child: Container(
+                    child: _buildDropdownButton(
+                      label: 'Type de Conteneur',
+                      value: _containerTypeValue,
+                      onChanged: _updateContainerType,
+                      items: [],
+                    ),
                   ),
                 ),
               ],
             ),
 
             _buildEditableField(
-              label: 'New C',
+              label: 'Nouveau C',
               controller: _newCController,
               isMultiline: true, // Rend le champ multiligne
             ),
             _buildEditableField(
-              label: 'Container Details',
+              label: 'Détails du conteneur',
               controller: _contDetailsController,
               isMultiline: true, // Rend le champ multiligne
             ),
@@ -286,7 +292,7 @@ class _EditPageState extends State<EditPage> {
           label,
           style: TextStyle(
             color: Colors.indigo.shade900,
-            fontSize: 16.0,
+            fontSize: 18.0,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -318,7 +324,7 @@ class _EditPageState extends State<EditPage> {
                   ),
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: 'Enter $label',
+                    hintText: 'Entrer $label',
                     hintStyle: TextStyle(color: Colors.indigo.shade400),
                   ),
                 )
@@ -331,7 +337,7 @@ class _EditPageState extends State<EditPage> {
                   ),
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: 'Enter $label',
+                    hintText: 'Entrer $label',
                     hintStyle: TextStyle(color: Colors.indigo.shade400),
                   ),
                 ),
@@ -354,9 +360,8 @@ class _EditPageState extends State<EditPage> {
           label,
           style: TextStyle(
             color: Colors.indigo.shade900,
-            fontSize: 18.0,
+            fontSize: 16.0,
             fontWeight: FontWeight.bold,
-            letterSpacing: 1.0,
           ),
         ),
         const SizedBox(height: 10.0),
@@ -401,23 +406,23 @@ class _EditPageState extends State<EditPage> {
           child: Text("Actif"),
         ),
       ];
-    } else if (label == 'City') {
+    } else if (label == 'Ville') {
       return selectedCities.map((city) {
-        return DropdownMenuItem<City>(
-          value: city,
+        return DropdownMenuItem<int>(
+          value: city.id,
           child: Text(city.name),
         );
       }).toList();
-    } else if (label == 'Container Type') {
+    } else if (label == 'Type de Conteneur') {
       return [
-        const DropdownMenuItem(
-          value: 0,
-          child: Text("2 pieds   "),
-        ),
-        const DropdownMenuItem(
-          value: 1,
-          child: Text("40 pieds   "),
-        ),
+        // const DropdownMenuItem(
+        //   value: 0,
+        //   child: Text("20 pieds   "),
+        // ),
+        // const DropdownMenuItem(
+        //   value: 1,
+        //   child: Text("40 pieds   "),
+        // ),
       ];
     }
     return [];
@@ -465,7 +470,49 @@ class _EditPageState extends State<EditPage> {
     _statusController.text = widget.container.status.toString();
   }
 
+  bool _isNumeric(String str) {
+    if (str == null) {
+      return false;
+    }
+    return double.tryParse(str) != null;
+  }
+
   void _updateContainer() {
+    // Vérifier si tous les champs obligatoires sont remplis
+    if (_nameController.text.isEmpty ||
+        _customerController.text.isEmpty ||
+        _customerTelController.text.isEmpty ||
+        _amountController.text.isEmpty ||
+        _selectedCity == null || // Vérifier si une ville est sélectionnée
+        _statusValue == null || // Vérifier si un statut est sélectionné
+        _containerTypeValue == null) {
+      // Vérifier si un type de conteneur est sélectionné
+      // Afficher un message d'erreur si un champ obligatoire est vide
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Veuillez remplir tous les champs obligatoires.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // Vérifier si les champs de montant, téléphone client et téléphone courtier contiennent des lettres
+    if (!_isNumeric(_customerTelController.text) ||
+        !_isNumeric(_brokerTelController.text) ||
+        !_isNumeric(_amountController.text)) {
+      // Afficher un message d'erreur si l'un des champs contient une lettre
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+              'Le montant, le téléphone client et le téléphone du courtier ne doivent contenir que des chiffres.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // Mettre à jour le conteneur s'il n'y a pas d'erreurs
     widget.updateContainer(
       widget.container.id,
       _nameController.text,
@@ -475,16 +522,23 @@ class _EditPageState extends State<EditPage> {
       _brokerController.text,
       int.parse(_brokerTelController.text),
       double.parse(_amountController.text),
-      int.parse(_cityIDController.text),
-      _containerTypeValue ??
-          0, // Utilisation de la valeur sélectionnée pour Container Type
-      _statusValue ?? 0, // Utilisation de la valeur sélectionnée pour Status
+      _selectedCity!.id, // Utiliser l'ID de la ville sélectionnée
+      _containerTypeValue!,
+      _statusValue!,
       _newCController.text,
       _contDetailsController.text,
       widget.container.createdAt,
     );
 
-    // Vous pouvez ajouter ici une logique pour revenir à la page précédente
+    // Afficher un message de succès
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('La mise à jour a été effectuée avec succès.'),
+        backgroundColor: Colors.green,
+      ),
+    );
+
+    // Retourner à l'écran précédent
     Navigator.pop(context);
   }
 }

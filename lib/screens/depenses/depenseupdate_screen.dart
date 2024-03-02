@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:kairasahrl/models/depense_model.dart';
 import 'package:kairasahrl/screens/fetchapi.dart';
+import 'package:kairasahrl/screens/utils/color.dart';
 import 'package:kairasahrl/widget/button.dart';
 
 class DepenseUpScreen extends StatefulWidget {
@@ -44,7 +45,6 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
   final TextEditingController _updatedByController = TextEditingController();
   final TextEditingController _updatedAtController = TextEditingController();
 
-  bool _isUpdatingExpense = false;
   bool _isEditing = false;
 
   // Define a list to hold dropdown items
@@ -82,10 +82,29 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: HeroIcon(
-                _isEditing ? HeroIcons.check : HeroIcons.queueList,
-                size: 20,
-                color: Colors.white,
+              child: Container(
+                height: 35,
+                width: 60,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: AppColors.background),
+                child: TextButton(
+                  onPressed: () {
+                    if (_isEditing) {
+                      _updateExpense(); // Mise à jour si en mode édition
+                    } else {
+                      setState(() {
+                        _isEditing = !_isEditing; // Inverser l'état d'édition
+                      });
+                    }
+                  },
+                  child: Text(
+                    _isEditing ? 'Save' : 'Edit',
+                    style: TextStyle(
+                      color: _isEditing ? Colors.green : Colors.white,
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
@@ -151,22 +170,6 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
-                                  Container(
-                                    width: 350,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(50)),
-                                    child: ElevatedButton(
-                                      style: buttonPrimary,
-                                      onPressed: _isUpdatingExpense
-                                          ? null
-                                          : _updateExpense,
-                                      child: const Text(
-                                        'Mettre a jour',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ),
-                                  ),
                                   const SizedBox(height: 20),
                                   Container(
                                     width: 350,
@@ -265,8 +268,8 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
   Widget _buildTextFieldWithBorder(
       String label, TextEditingController controller, bool enabled) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 2),
-      padding: const EdgeInsets.symmetric(horizontal: 15),
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 11),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -296,7 +299,6 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
                 ),
               ],
             ),
-            height: 56,
             child: TextField(
               controller: controller,
               style: TextStyle(
@@ -308,7 +310,7 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
                 hintText: 'Enter $label',
                 hintStyle: TextStyle(color: Colors.indigo.shade400),
               ),
-              enabled: enabled,
+              enabled: _isEditing,
             ),
           ),
         ],
@@ -329,18 +331,77 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
   }
 
   void _updateExpense() {
+    // Vérifier que le champ "Article" n'est pas vide
+    if (_nameController.text.isEmpty) {
+      Fluttertoast.showToast(
+        msg: 'Article field cannot be empty',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      return; // Sortir de la fonction si le champ est vide
+    }
+
+    // Vérifier que les champs total et paid ne sont ni nulls ni vides
+    if (_totalController.text.isEmpty || _paidController.text.isEmpty) {
+      Fluttertoast.showToast(
+        msg: 'Total and Paid fields cannot be empty',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      return; // Sortir de la fonction si les champs sont vides
+    }
+
+    // Vérifier que les valeurs de total et paid ne sont pas inférieures à 0
+    int? total = int.tryParse(_totalController.text);
+    int? paid = int.tryParse(_paidController.text);
+
+    if (total == null || paid == null || total < 0 || paid < 0) {
+      Fluttertoast.showToast(
+        msg: 'Total and Paid values must be valid positive integers',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      return; // Sortir de la fonction si les valeurs sont invalides
+    }
+
+    // Vérifier si le champ containerID est null ou vide
+    String containerID = _selectedContainerID ?? _containerIDController.text;
+    if (containerID.isEmpty) {
+      Fluttertoast.showToast(
+        msg: 'Container ID cannot be empty',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      return; // Sortir de la fonction si le champ est invalide
+    }
+
+    // Mettre à jour l'Expense
     widget.onUpdate(
       widget.expense.id,
       _nameController.text,
       _slugController.text,
-      int.parse(_totalController.text),
-      int.parse(_paidController.text),
-      int.parse(_selectedContainerID ?? _containerIDController.text),
-      int.parse(_createdByController.text),
+      total,
+      paid,
+      int.parse(containerID),
+      int.tryParse(_createdByController.text) ?? 0,
       _createdAtController.text,
-      int.parse(_updatedByController.text),
+      int.tryParse(_updatedByController.text) ?? 0,
       _updatedAtController.text,
     );
+
+    // Si la mise à jour s'est déroulée avec succès, inverser l'état d'édition
+    setState(() {
+      _isEditing = !_isEditing;
+    });
+
     Fluttertoast.showToast(
       msg: 'Updated Successfully',
       toastLength: Toast.LENGTH_SHORT,

@@ -1,13 +1,12 @@
-import 'dart:convert';
-
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:kairasahrl/screens/fetchapi.dart';
+import 'package:kairasahrl/screens/utils/costomeProgress.dart';
 import 'package:kairasahrl/widget/button.dart';
-import 'package:http/http.dart' as http;
-import 'package:uuid/uuid.dart';
+// Importez le widget personnalisé
 
 class CityAddScreen extends StatefulWidget {
-  const CityAddScreen({super.key});
+  const CityAddScreen({Key? key}) : super(key: key);
 
   @override
   State<CityAddScreen> createState() => _CityAddScreenState();
@@ -16,6 +15,16 @@ class CityAddScreen extends StatefulWidget {
 class _CityAddScreenState extends State<CityAddScreen> {
   final TextEditingController _nameController = TextEditingController();
   bool _isAddingCity = false;
+  bool _isFieldEmpty = false;
+  late Timer _timer;
+
+  @override
+  void dispose() {
+    _timer
+        .cancel(); // Assurez-vous d'annuler le timer lors de la suppression de l'écran
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,55 +32,96 @@ class _CityAddScreenState extends State<CityAddScreen> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
           color: Colors.indigo.shade100,
+          boxShadow: [
+            BoxShadow(
+              color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.7),
+              spreadRadius: 1,
+              blurRadius: 1,
+            ),
+          ],
         ),
         child: Column(
           children: [
             Padding(
               padding: const EdgeInsets.all(10),
               child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 6,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 6,
+                  ),
+                  const Text(
+                    'Nom du Ville',
+                    style: TextStyle(fontSize: 13),
+                  ),
+                  const SizedBox(
+                    height: 3,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    height: 45,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(4.0),
+                      border: _isFieldEmpty
+                          ? Border.all(color: Colors.red, width: 2.0)
+                          : null,
                     ),
-                    const Text(
-                      'Nom de la ville',
-                      style: TextStyle(fontSize: 13),
-                    ),
-                    const SizedBox(
-                      height: 3,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      height: 45,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color.fromARGB(255, 0, 0, 0)
-                                .withOpacity(0.7),
-                            spreadRadius: 1,
-                            blurRadius: 1,
-                          ),
-                        ],
+                    child: TextField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                        labelText: '',
+                        border: InputBorder.none,
+                        errorText: _isFieldEmpty
+                            ? 'Veuillez remplir tous les champs'
+                            : null,
                       ),
-                      child: TextField(
-                        controller: _nameController,
-                        decoration: const InputDecoration(
-                            labelText: '', border: InputBorder.none),
+                      onChanged: (value) {
+                        setState(() {
+                          _isFieldEmpty = value.isEmpty;
+                        });
+                      },
+                    ),
+                  ),
+                  if (_isFieldEmpty)
+                    const Padding(
+                      padding: EdgeInsets.only(left: 10, top: 4),
+                      child: Text(
+                        'Veuillez remplir tous les champs',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 12,
+                        ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 14,
-                    ),
-                  ]),
+                  const SizedBox(
+                    height: 14,
+                  ),
+                ],
+              ),
             ),
             ElevatedButton(
               style: buttonPrimary,
-              onPressed: _isAddingCity ? null : _addCity,
+              onPressed: _isAddingCity || _isFieldEmpty
+                  ? null
+                  : () {
+                      _timer = Timer(Duration(seconds: 5), () {
+                        setState(() {
+                          _isAddingCity = false;
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content:
+                                  Text('Délai dépassé. Veuillez réessayer.')),
+                        );
+                      });
+                      setState(() {
+                        _isAddingCity = true;
+                      });
+                      _addCity(_nameController.text);
+                    },
               child: _isAddingCity
-                  ? const CircularProgressIndicator()
+                  ? CustomProgressIndicator() // Utilisez le widget personnalisé ici
                   : const Text(
                       'Ajouter',
                       style: TextStyle(color: Colors.white),
@@ -83,52 +133,29 @@ class _CityAddScreenState extends State<CityAddScreen> {
     );
   }
 
-  void _addCity() async {
-    setState(() {
-      _isAddingCity = true;
-    });
-
-    final cityName = _nameController.text.trim();
-    final cityId = _generateCityId(); // Génération automatique de l'ID
-    final createdAt = DateTime.now().toIso8601String();
-
-    if (cityName.isNotEmpty) {
-      final response = await http.post(
-        Uri.parse('https://votre-api-url/cities'),
-        body: json.encode({
-          'id': cityId,
-          'name': cityName,
-          'created_at': createdAt,
-        }),
-        headers: {'Content-Type': 'application/json'},
-      );
-      if (response.statusCode == 200) {
-        Fluttertoast.showToast(
-          msg: 'Ville ajoutée avec succès',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-        );
-        Navigator.pop(context);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Échec de l\'ajout de la ville')),
-        );
-      }
-    } else {
+  void _addCity(String cityName) async {
+    if (cityName.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Veuillez remplir tous les champs')),
       );
+      return;
     }
+
+    final success = await CityService.addCity(cityName);
 
     setState(() {
       _isAddingCity = false;
     });
-  }
 
-  String _generateCityId() {
-    const uuid = Uuid();
-    return uuid.v4(); // Génère un UUID v4 aléatoire
+    _timer.cancel(); // Annuler le timer si la réponse est reçue avant le délai
+    if (success == 'success') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Ville ajoutée avec succès')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Échec de l'ajout de la ville")),
+      );
+    }
   }
 }

@@ -21,14 +21,14 @@ class _CityListScreenState extends State<CityListScreen> {
   final FocusNode _searchTextFocusNode = FocusNode();
   final List<City> _cities = [
     City(name: 'Ndjamena ', slug: 'city_1', createdAt: '2024-02-06', id: 1),
-    City(name: 'Samsung', slug: 'city_1', createdAt: '2024-02-06', id: 1),
-    City(name: 'Sahr', slug: 'city_2', createdAt: '2024-02-07', id: 2),
-    City(name: 'Mondou', slug: 'city_1', createdAt: '2024-02-06', id: 1),
-    City(name: 'Koumra', slug: 'city_2', createdAt: '2024-02-07', id: 2),
-    City(name: 'Doba', slug: 'city_1', createdAt: '2024-02-06', id: 1),
-    City(name: 'Bongore', slug: 'city_2', createdAt: '2024-02-07', id: 2),
-    City(name: 'Léré', slug: 'city_1', createdAt: '2024-02-06', id: 1),
-    City(name: 'Amdjarass', slug: 'city_2', createdAt: '2024-02-07', id: 2),
+    City(name: 'Samsung', slug: 'city_1', createdAt: '2024-02-06', id: 2),
+    City(name: 'Sahr', slug: 'city_2', createdAt: '2024-02-07', id: 3),
+    City(name: 'Mondou', slug: 'city_1', createdAt: '2024-02-06', id: 4),
+    City(name: 'Koumra', slug: 'city_2', createdAt: '2024-02-07', id: 5),
+    City(name: 'Doba', slug: 'city_1', createdAt: '2024-02-06', id: 6),
+    City(name: 'Bongore', slug: 'city_2', createdAt: '2024-02-07', id: 7),
+    City(name: 'Léré', slug: 'city_1', createdAt: '2024-02-06', id: 8),
+    City(name: 'Amdjarass', slug: 'city_2', createdAt: '2024-02-07', id: 8),
 
     // Ajoutez d'autres villes fictives si nécessaire
   ];
@@ -66,25 +66,31 @@ class _CityListScreenState extends State<CityListScreen> {
     setState(() {
       // Mettez à jour la liste des villes après la suppression
       _cities.removeWhere((city) => city.id == id);
+      _filteredCities.removeWhere(
+          (city) => city.id == id); // Supprimer de la liste filtrée également
     });
   }
 
-  void updateCity(int id, String newName, String newSlug, String newCreatedAt) {
-    setState(() {
-      // Recherchez la ville avec l'ID spécifié dans la liste
-      for (int i = 0; i < _cities.length; i++) {
-        if (_cities[i].id == id) {
-          // Mettez à jour les détails de la ville
-          _cities[i] = City(
+  void updateCity(int id, String newName) {
+    // Recherchez la ville avec l'ID spécifié dans la liste
+    for (int i = 0; i < _cities.length; i++) {
+      if (_cities[i].id == id) {
+        // Mettez à jour le nom de la ville
+        _cities[i] = City(
             id: id,
             name: newName,
-            slug: newSlug,
-            createdAt: newCreatedAt,
-          );
-          break; // Arrêtez la boucle une fois la mise à jour effectuée
-        }
+            slug: _cities[i].slug,
+            createdAt: _cities[i].createdAt);
+        _filteredCities[i] = City(
+            id: id,
+            name: newName,
+            slug: _filteredCities[i].slug,
+            createdAt: _filteredCities[i]
+                .createdAt); // Mettre à jour également dans la liste filtrée
+        break; // Arrêtez la boucle une fois la mise à jour effectuée
       }
-    });
+    }
+    setState(() {}); // Mettre à jour l'interface utilisateur
   }
 
   int _selectedIndex = 0;
@@ -187,7 +193,8 @@ class _CityListScreenState extends State<CityListScreen> {
                           city: city,
                           onDelete:
                               deleteCity, // Passer la fonction de suppression
-                          onUpdate: updateCity,
+                          onUpdate:
+                              updateCity, // Passer la fonction de mise à jour
                         ),
                       ),
                     );

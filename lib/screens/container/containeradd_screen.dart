@@ -2,19 +2,20 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:kairasahrl/screens/fetchapi.dart';
 import 'package:kairasahrl/widget/button.dart';
-import 'package:uuid/uuid.dart';
+import 'package:kairasahrl/widget/custometext.dart';
 import 'package:http/http.dart' as http;
 
 class ContainerAddScreen extends StatefulWidget {
-  const ContainerAddScreen({super.key});
+  const ContainerAddScreen({Key? key});
 
   @override
   State<ContainerAddScreen> createState() => _ContainerAddScreenState();
 }
 
 class _ContainerAddScreenState extends State<ContainerAddScreen> {
-  final TextEditingController _nameControllere = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _customerController = TextEditingController();
   final TextEditingController _customerTelController = TextEditingController();
   final TextEditingController _brokerController = TextEditingController();
@@ -24,13 +25,36 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
   final TextEditingController _contDetailsController = TextEditingController();
   bool _isAddingContainer = false;
   int _selectedStatus = 0; // 0: Inactif, 1: Actif
-  int _selectedContSizeID = 1;
+  int? _selectedContSizeID;
   int _selectedCityID = 0;
   List<Map<String, dynamic>> _cityData = [];
   final List<Map<String, dynamic>> _contSizeData = [
-    {"id": 1, "name": "20 pieds"},
-    {"id": 2, "name": "40 pieds"},
+    {"id": 0, "name": "20 pieds"},
+    {"id": 1, "name": "40 pieds"},
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCityData();
+  }
+
+  Future<void> _fetchCityData() async {
+    try {
+      final List<Map<String, dynamic>> cities =
+          await ApiService.fetchCityData();
+      setState(() {
+        _cityData = cities;
+        if (_cityData.isNotEmpty) _selectedCityID = _cityData[0]['id'];
+      });
+    } catch (e) {
+      print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to load city data')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,99 +74,30 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Nom du Container',
-                        style: TextStyle(
-                          fontSize: 13,
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6),
-                        height: 45,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color.fromARGB(255, 0, 0, 0)
-                                  .withOpacity(0.7),
-                              spreadRadius: 1,
-                              blurRadius: 1,
-                            ),
-                          ],
-                        ),
-                        child: TextField(
-                          controller: _nameControllere,
-                          decoration: const InputDecoration(
-                            labelText: '',
-                            border: InputBorder.none,
-                          ),
-                        ),
+                      CustomTextField(
+                        labelText: 'Nom du Conteneur',
+                        controller: _nameController,
                       ),
                       const SizedBox(height: 9),
-                      const Text(
-                        'Client',
-                        style: TextStyle(fontSize: 13),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        height: 45,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color.fromARGB(255, 0, 0, 0)
-                                  .withOpacity(0.7),
-                              spreadRadius: 1,
-                              blurRadius: 1,
-                            ),
-                          ],
-                        ),
-                        child: TextField(
-                          controller: _customerController,
-                          decoration: const InputDecoration(
-                              labelText: '', border: InputBorder.none),
-                        ),
+                      CustomTextField(
+                        labelText: 'Client(e)',
+                        controller: _customerController,
                       ),
                       const SizedBox(height: 9),
                       Row(
                         children: [
                           Expanded(
-                              child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Téléphone',
-                                style: TextStyle(fontSize: 13),
-                              ),
-                              Container(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                height: 45,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(4.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: const Color.fromARGB(255, 0, 0, 0)
-                                          .withOpacity(0.7),
-                                      spreadRadius: 1,
-                                      blurRadius: 1,
-                                    ),
-                                  ],
-                                ),
-                                child: TextField(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomTextField(
+                                  labelText: 'Téléphone',
                                   controller: _customerTelController,
-                                  decoration: const InputDecoration(
-                                      labelText: '', border: InputBorder.none),
                                 ),
-                              ),
-                            ],
-                          )),
-                          const SizedBox(
-                            width: 12,
+                              ],
+                            ),
                           ),
+                          const SizedBox(width: 12),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -178,16 +133,15 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                                     items: const [
                                       DropdownMenuItem<int>(
                                         value: 0,
-                                        child: Text('Inactif'),
+                                        child: Text('Passif'),
                                       ),
                                       DropdownMenuItem<int>(
                                         value: 1,
                                         child: Text('Actif'),
                                       ),
                                     ],
-                                    decoration: const InputDecoration(
-                                        labelText: '',
-                                        border: InputBorder.none),
+                                    decoration:
+                                        const InputDecoration(labelText: ''),
                                   ),
                                 ),
                               ],
@@ -196,101 +150,36 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                         ],
                       ),
                       const SizedBox(height: 12),
-                      const Text(
-                        'Courtier',
-                        style: TextStyle(fontSize: 13),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        height: 45,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color.fromARGB(255, 0, 0, 0)
-                                  .withOpacity(0.7),
-                              spreadRadius: 1,
-                              blurRadius: 1,
-                            ),
-                          ],
-                        ),
-                        child: TextField(
-                          controller: _brokerController,
-                          decoration: const InputDecoration(
-                              labelText: '', border: InputBorder.none),
-                        ),
+                      CustomTextField(
+                        labelText: 'Courtier(e)',
+                        controller: _brokerController,
                       ),
                       const SizedBox(height: 6),
                       Row(
                         children: [
                           Expanded(
-                              child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Téléphone du Courtier',
-                                style: TextStyle(fontSize: 13),
-                              ),
-                              Container(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                height: 45,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(4.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: const Color.fromARGB(255, 0, 0, 0)
-                                          .withOpacity(0.7),
-                                      spreadRadius: 1,
-                                      blurRadius: 1,
-                                    ),
-                                  ],
-                                ),
-                                child: TextField(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomTextField(
+                                  labelText: 'Téléphone du Courtier',
                                   controller: _brokerTelController,
-                                  decoration: const InputDecoration(
-                                      labelText: '', border: InputBorder.none),
                                 ),
-                              ),
-                            ],
-                          )),
-                          const SizedBox(
-                            width: 8,
+                              ],
+                            ),
                           ),
+                          const SizedBox(width: 8),
                           Expanded(
-                              child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Montant',
-                                style: TextStyle(fontSize: 13),
-                              ),
-                              Container(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                height: 45,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(4.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: const Color.fromARGB(255, 0, 0, 0)
-                                          .withOpacity(0.7),
-                                      spreadRadius: 1,
-                                      blurRadius: 1,
-                                    ),
-                                  ],
-                                ),
-                                child: TextField(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomTextField(
+                                  labelText: 'Montant',
                                   controller: _amountController,
-                                  decoration: const InputDecoration(
-                                      labelText: '', border: InputBorder.none),
                                 ),
-                              ),
-                            ],
-                          ))
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 12),
@@ -301,7 +190,7 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  'Ville:',
+                                  'Ville',
                                   style: TextStyle(fontSize: 13),
                                 ),
                                 Container(
@@ -341,15 +230,13 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                               ],
                             ),
                           ),
-                          const SizedBox(
-                            width: 12,
-                          ),
+                          const SizedBox(width: 12),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  'Type de Container:',
+                                  'Type de Conteneur',
                                   style: TextStyle(fontSize: 13),
                                 ),
                                 Container(
@@ -373,7 +260,7 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                                     value: _selectedContSizeID,
                                     onChanged: (value) {
                                       setState(() {
-                                        _selectedContSizeID = value!;
+                                        _selectedContSizeID = value;
                                       });
                                     },
                                     items: _contSizeData.map((contSize) {
@@ -391,56 +278,16 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                           ),
                         ],
                       ),
-                      const Text(
-                        'Nouveau C',
-                        style: TextStyle(fontSize: 13),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        height: 70,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color.fromARGB(255, 0, 0, 0)
-                                  .withOpacity(0.7),
-                              spreadRadius: 1,
-                              blurRadius: 1,
-                            ),
-                          ],
-                        ),
-                        child: TextField(
-                          controller: _newCController,
-                          decoration: const InputDecoration(labelText: ''),
-                          maxLines: null,
-                        ),
+                      CustomTextField(
+                        labelText: 'Nouveau C',
+                        controller: _newCController,
+                        maxLines: 2,
                       ),
                       const SizedBox(height: 12),
-                      const Text(
-                        'Détails du Container',
-                        style: TextStyle(fontSize: 13),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color.fromARGB(255, 0, 0, 0)
-                                  .withOpacity(0.7),
-                              spreadRadius: 1,
-                              blurRadius: 1,
-                            ),
-                          ],
-                        ),
-                        child: TextField(
-                          controller: _contDetailsController,
-                          decoration: const InputDecoration(labelText: ''),
-                          maxLines: null,
-                        ),
+                      CustomTextField(
+                        labelText: 'Détails du Conteneur',
+                        controller: _contDetailsController,
+                        maxLines: 3,
                       ),
                       const SizedBox(height: 12),
                     ],
@@ -449,7 +296,6 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
               ),
               Container(
                 width: 350,
-                //color: const Color.fromARGB(255, 1, 1, 55),
                 decoration: BoxDecoration(
                     color: const Color.fromARGB(255, 1, 1, 55),
                     borderRadius: BorderRadius.circular(50)),
@@ -476,12 +322,12 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
       _isAddingContainer = true;
     });
 
-    final containerName = _nameControllere.text.trim();
+    final containerName = _nameController.text.trim();
     final customer = _customerController.text.trim();
-    final customerTel = int.parse(_customerTelController.text.trim());
+    final customerTel = int.tryParse(_customerTelController.text.trim()) ?? 0;
     final broker = _brokerController.text.trim();
-    final brokerTel = int.parse(_brokerTelController.text.trim());
-    final amount = double.parse(_amountController.text.trim());
+    final brokerTel = int.tryParse(_brokerTelController.text.trim()) ?? 0;
+    final amount = double.tryParse(_amountController.text.trim()) ?? 0;
     final newC = _newCController.text.trim();
     final contDetails = _contDetailsController.text.trim();
     final createdAt = DateTime.now().toIso8601String();
@@ -490,7 +336,8 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
         customer.isNotEmpty &&
         broker.isNotEmpty &&
         newC.isNotEmpty &&
-        contDetails.isNotEmpty) {
+        contDetails.isNotEmpty &&
+        amount > 0) {
       final response = await http.post(
         Uri.parse('https://votre-api-url/containers'),
         body: json.encode({
@@ -503,8 +350,7 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
           'newC': newC,
           'contDetails': contDetails,
           'cityID': _selectedCityID,
-          'contTypeID':
-              _selectedContSizeID, // Utilise _selectedContSizeID pour l'ID du type de conteneur sélectionné
+          'contTypeID': _selectedContSizeID,
           'status': _selectedStatus,
           'created_at': createdAt,
         }),
@@ -533,26 +379,5 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
     setState(() {
       _isAddingContainer = false;
     });
-  }
-
-  void _fetchCityAndContType() async {
-    final cityResponse =
-        await http.get(Uri.parse('https://votre-api-url/cities'));
-    final contTypeResponse =
-        await http.get(Uri.parse('https://votre-api-url/contTypes'));
-
-    if (cityResponse.statusCode == 200 && contTypeResponse.statusCode == 200) {
-      _cityData =
-          List<Map<String, dynamic>>.from(json.decode(cityResponse.body));
-
-      setState(() {
-        if (_cityData.isNotEmpty) _selectedCityID = _cityData[0]['id'];
-      });
-    }
-  }
-
-  String _generateContainerId() {
-    const uuid = Uuid();
-    return uuid.v4();
   }
 }

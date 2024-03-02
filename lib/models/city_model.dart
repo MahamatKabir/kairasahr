@@ -22,6 +22,20 @@ class City {
       createdAt: json['createdAt'],
     );
   }
+
+  City copyWith({
+    int? id,
+    String? name,
+    String? slug,
+    String? createdAt,
+  }) {
+    return City(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      slug: slug ?? this.slug,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }
 
 Future<List<City>> fetchCities() async {

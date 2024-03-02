@@ -92,8 +92,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 Center(
                     child: Image.asset(
                   'assets/images/airplane.png',
-                  height: 190,
-                  scale: 1,
+                  width: 500,
+                  height: 205,
+                  scale: 2,
                 )),
                 const SizedBox(
                   height: 1,

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:heroicons/heroicons.dart';
 import 'package:kairasahrl/models/city_model.dart';
+import 'package:kairasahrl/screens/utils/color.dart';
 import 'package:kairasahrl/widget/button.dart';
-import 'package:kairasahrl/widget/customer.dart';
 
 class CityDetailScreenn extends StatefulWidget {
   final City city;
   final Function(int) onDelete; // Fonction de suppression par ID
-  final Function(int, String, String, String) onUpdate;
+  final Function(int, String) onUpdate;
 
   const CityDetailScreenn({
     Key? key,
@@ -41,9 +40,11 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
         backgroundColor: const Color.fromARGB(255, 1, 0, 66),
         iconTheme: const IconThemeData(color: Colors.white),
         title: Center(
-          child: Text(
-            _isEditing ? 'Modifier' : 'ville detail',
-            style: const TextStyle(color: Colors.white, fontSize: 20),
+          child: Center(
+            child: Text(
+              _isEditing ? 'Modifier' : 'Details du ville',
+              style: const TextStyle(color: Colors.white, fontSize: 20),
+            ),
           ),
         ),
         actions: [
@@ -55,10 +56,32 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: HeroIcon(
-                _isEditing ? HeroIcons.check : HeroIcons.queueList,
-                size: 20,
-                color: Colors.white,
+              child: Container(
+                height: 35,
+                width: 60,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: AppColors.background),
+                child: TextButton(
+                  onPressed: () {
+                    setState(() {
+                      if (_isEditing) {
+                        // Si nous sommes en mode édition, effectuez la mise à jour
+                        _updateCity(
+                          widget.city.id,
+                          _nameController.text,
+                        );
+                      }
+                      _isEditing = !_isEditing; // Inverser l'état d'édition
+                    });
+                  },
+                  child: Text(
+                    _isEditing ? 'Save' : 'Editer',
+                    style: TextStyle(
+                      color: _isEditing ? Colors.green : Colors.white,
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
@@ -96,7 +119,7 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildTextFieldWithBorder('Nom de la Ville', _nameController),
+              _buildTextFieldWithBorder('Nom du  Ville', _nameController),
               if (!_isEditing)
                 _buildTextWithBorder(
                     'Date de création: ${widget.city.createdAt}'),
@@ -154,7 +177,7 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
               ),
               decoration: InputDecoration(
                 border: InputBorder.none,
-                hintText: 'Enter $label',
+                hintText: 'Entrer $label',
                 hintStyle: TextStyle(color: Colors.indigo.shade400),
               ),
               enabled: _isEditing,
@@ -182,16 +205,6 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        ElevatedButton(
-          style: buttonPrimary,
-          onPressed: () {
-            _updateCity();
-          },
-          child: const Text(
-            'Mettre à jour',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
         const SizedBox(height: 10),
         ElevatedButton(
           style: buttonDelete,
@@ -204,13 +217,8 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
     );
   }
 
-  void _updateCity() {
-    widget.onUpdate(
-      widget.city.id,
-      _nameController.text,
-      _slugController.text,
-      widget.city.createdAt,
-    );
+  void _updateCity(int id, String newName) {
+    widget.onUpdate(id, newName);
     Fluttertoast.showToast(
       msg: ' Mise à jour avec succès',
       toastLength: Toast.LENGTH_SHORT,
