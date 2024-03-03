@@ -133,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     const ContainerListScreen()),
                           );
                         },
-                        title: 'CONTAINERS',
+                        title: 'CONTENEURS',
                         icon: 'assets/images/conta.jpeg'),
                     const SizedBox(
                       width: 15,
@@ -159,7 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     _cardMenu(
                         onTap: () {},
-                        title: 'UTILISATEUR',
+                        title: 'UTILISATEURS',
                         icon: 'assets/images/utilisateur.jpeg'),
                     const SizedBox(
                       width: 15,

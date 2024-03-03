@@ -74,33 +74,35 @@ class _EditPageState extends State<EditPage> {
   bool _isEditing = false;
   int? _containerTypeValue;
   int? _statusValue;
-  final List<City> selectedCities = [
-    City(id: 1, name: 'New York', slug: '', createdAt: ''),
-    City(id: 2, name: 'Paris', slug: '', createdAt: ''),
-    City(id: 3, name: 'Tokyo', slug: '', createdAt: ''),
-    // Ajoutez d'autres villes si nécessaire
-  ];
   City? _selectedCity;
+  List<City> africanCities = [
+    City(id: 1, name: 'Lagos'),
+    City(id: 2, name: 'Le Caire'),
+    City(id: 3, name: 'Johannesburg'),
+  ];
+  List<City> _cities = [];
 
   @override
   void initState() {
     super.initState();
     _initializeControllers();
     _isEditing = widget.isEditing;
-    // Initialiser les valeurs de Status et Container Type
-    _statusValue = widget.initialStatusValue ??
-        0; // Utilisation de la valeur initiale ou 0 par défaut
-    _containerTypeValue = widget.initialContainerTypeValue ??
-        0; // Utilisation de la valeur initiale ou 0 par défaut
-// Utilisez la liste de villes sélectionnées
+    _statusValue = widget.initialStatusValue ?? 0;
+    _containerTypeValue = widget.initialContainerTypeValue ?? 0;
+    // Chargez les villes depuis l'API
+    _cities = africanCities;
+    //_loadCities();
   }
 
   // Future<void> _loadCities() async {
   //   try {
-  //     final cities = await fetchCities();
+  //     final cities =
+  //         await fetchCities(); // Appel à l'API pour récupérer les villes
   //     setState(() {
   //       _cities = cities;
-  //       _selectedCity = _cities.isNotEmpty ? _cities[0] : null;
+  //       // Sélectionnez la ville par défaut en fonction de l'ID de la ville dans Containere
+  //       _selectedCity =
+  //           _cities.firstWhere((city) => city.id == widget.container.cityID);
   //     });
   //   } catch (e) {
   //     print('Failed to load cities: $e');
@@ -143,20 +145,22 @@ class _EditPageState extends State<EditPage> {
                   MainAxisAlignment.spaceBetween, // Ajustez selon vos besoins
               children: [
                 Expanded(
-                  flex: 5, // Ajustez selon vos besoins
+                  flex: 4, // Ajustez selon vos besoins
                   child: _buildEditableField(
                     label: 'Mountant',
                     controller: _amountController,
                   ),
                 ),
                 const SizedBox(
-                    width: 10), // Ajoutez un espacement entre les champs
+                    width: 8), // Ajoutez un espacement entre les champs
                 Expanded(
-                  flex: 5, // Ajustez selon vos besoins
+                  flex: 6, // Ajustez selon vos besoins
                   child: _buildDropdownButton(
                     label: 'Ville',
                     value: _selectedCity,
-                    onChanged: _onCityChanged(),
+                    onChanged: (newValue) {
+                      _onCityChanged(newValue);
+                    },
                     items: _buildDropdownItems('City'),
                   ),
                 ),
@@ -168,7 +172,7 @@ class _EditPageState extends State<EditPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  flex: 6,
+                  flex: 4,
                   child: _buildDropdownButton(
                     label: 'Status',
                     value: _statusValue ?? 0,
@@ -177,7 +181,7 @@ class _EditPageState extends State<EditPage> {
                   ),
                 ),
                 const SizedBox(
-                    width: 1), // Ajouter un espacement entre les dropdowns
+                    width: 8), // Ajouter un espacement entre les dropdowns
                 Expanded(
                   flex: 6,
                   child: Container(
@@ -185,7 +189,7 @@ class _EditPageState extends State<EditPage> {
                       label: 'Type de Conteneur',
                       value: _containerTypeValue,
                       onChanged: _updateContainerType,
-                      items: [],
+                      items: _buildDropdownItems('Type de Conteneur'),
                     ),
                   ),
                 ),
@@ -395,35 +399,65 @@ class _EditPageState extends State<EditPage> {
   }
 
   List<DropdownMenuItem<dynamic>> _buildDropdownItems(String label) {
-    if (label == 'Status') {
-      return [
-        const DropdownMenuItem(
-          value: 0,
-          child: Text("Passif       "),
-        ),
-        const DropdownMenuItem(
-          value: 1,
-          child: Text("Actif"),
-        ),
-      ];
-    } else if (label == 'Ville') {
-      return selectedCities.map((city) {
-        return DropdownMenuItem<int>(
-          value: city.id,
-          child: Text(city.name),
-        );
-      }).toList();
-    } else if (label == 'Type de Conteneur') {
-      return [
-        // const DropdownMenuItem(
-        //   value: 0,
-        //   child: Text("20 pieds   "),
-        // ),
-        // const DropdownMenuItem(
-        //   value: 1,
-        //   child: Text("40 pieds   "),
-        // ),
-      ];
+    if (_isEditing) {
+      // Vérifiez si l'édition est activée
+      if (label == 'Status') {
+        return [
+          const DropdownMenuItem(
+            value: 0,
+            child: Text("Passif"),
+          ),
+          const DropdownMenuItem(
+            value: 1,
+            child: Text("Actif"),
+          ),
+        ];
+      } else if (label == 'Ville') {
+        return _cities.map((city) {
+          return DropdownMenuItem<City>(
+            value: city,
+            child: Text(city.name ??
+                ' '), // Utilisez l'opérateur de navigation de nullité pour accéder à la propriété name
+          );
+        }).toList();
+      } else if (label == 'Type de Conteneur') {
+        return [
+          const DropdownMenuItem(
+            value: 0,
+            child: Text("20 pieds        "),
+          ),
+          const DropdownMenuItem(
+            value: 1,
+            child: Text("40 pieds        "),
+          ),
+        ];
+      }
+    } else {
+      // Si l'édition est désactivée
+      if (label == 'Status') {
+        return [
+          DropdownMenuItem(
+            value: _statusValue,
+            child: Text(_statusValue == 0 ? "Passif" : "Actif"),
+          ),
+        ];
+      } else if (label == 'Ville') {
+        return [
+          DropdownMenuItem<City>(
+            value: _selectedCity,
+            child: Text(_selectedCity?.name ?? 'Ville            '),
+            // Utilisez ! pour garantir que _selectedCity n'est pas null
+          ),
+        ];
+      } else if (label == 'Type de Conteneur') {
+        return [
+          DropdownMenuItem(
+            value: _containerTypeValue,
+            child: Text(
+                _containerTypeValue == 0 ? "20 pieds      " : "40 pieds      "),
+          ),
+        ];
+      }
     }
     return [];
   }
@@ -438,15 +472,17 @@ class _EditPageState extends State<EditPage> {
   void _updateCity(City? city) {
     setState(() {
       _selectedCity = city;
+      if (city != null) {
+        // Mettre à jour la valeur par défaut du dropdown
+        _cityIDController.text = city.id.toString();
+      }
     });
   }
 
-  dynamic Function(dynamic) _onCityChanged() {
-    return (dynamic newValue) {
-      if (newValue is City) {
-        _updateCity(newValue);
-      }
-    };
+  void _onCityChanged(City? city) {
+    setState(() {
+      _selectedCity = city;
+    });
   }
 
   void _updateContainerType(dynamic newValue) {
@@ -471,13 +507,12 @@ class _EditPageState extends State<EditPage> {
   }
 
   bool _isNumeric(String str) {
-    if (str == null) {
-      return false;
-    }
     return double.tryParse(str) != null;
   }
 
   void _updateContainer() {
+    // Supprimer le conteneur
+    widget.onDelete(widget.container.id);
     // Vérifier si tous les champs obligatoires sont remplis
     if (_nameController.text.isEmpty ||
         _customerController.text.isEmpty ||

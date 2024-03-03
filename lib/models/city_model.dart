@@ -4,14 +4,14 @@ import 'package:http/http.dart' as http;
 class City {
   int id;
   String name;
-  String slug;
-  String createdAt;
+  String? slug;
+  String? createdAt;
 
   City({
     required this.id,
     required this.name,
-    required this.slug,
-    required this.createdAt,
+    this.slug,
+    this.createdAt,
   });
 
   factory City.fromJson(Map<String, dynamic> json) {

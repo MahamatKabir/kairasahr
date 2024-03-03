@@ -41,6 +41,8 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     Timer(const Duration(seconds: 4), () {
       if (_showSplash) {
+        Get.off(_buildSplashScreen());
+      } else {
         Get.off(const BottomBarScreen());
       }
     });

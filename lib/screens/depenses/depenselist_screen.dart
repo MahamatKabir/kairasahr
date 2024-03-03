@@ -21,7 +21,7 @@ class _DepenseListScreenState extends State<DepenseListScreen> {
   final List<Expense> _expense = [
     Expense(
       id: 1,
-      article: 'Achat de fournitures',
+      article: 'Achat de papeterie',
       slug: 'achat_fournitures_bureau',
       total: 2000,
       paid: 150,
@@ -33,7 +33,7 @@ class _DepenseListScreenState extends State<DepenseListScreen> {
     ),
     Expense(
       id: 2,
-      article: 'Achat de fournitures',
+      article: 'Achat de mobilier de bureau',
       slug: 'achat_fournitures_bureau',
       total: 90000,
       paid: 150,
@@ -45,7 +45,7 @@ class _DepenseListScreenState extends State<DepenseListScreen> {
     ),
     Expense(
       id: 3,
-      article: 'Achat de fournitures de l ambasssade de france',
+      article: 'Achat de fournitures de l\'ambassade de France',
       slug: 'achat_fournitures_bureau',
       total: 700000,
       paid: 150,
@@ -57,7 +57,7 @@ class _DepenseListScreenState extends State<DepenseListScreen> {
     ),
     Expense(
       id: 3,
-      article: 'Achat de fournitures de l ambasssade de france',
+      article: 'Achat de matériel informatique',
       slug: 'achat_fournitures_bureau',
       total: 3000000,
       paid: 150,
@@ -71,11 +71,41 @@ class _DepenseListScreenState extends State<DepenseListScreen> {
     // Add more Container objects if needed
   ];
 
+  List<Expense> _filteredExpenses = []; // Liste filtrée de dépenses
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredExpenses.addAll(
+        _expense); // Initialiser la liste filtrée avec toutes les dépenses
+  }
+
   @override
   void dispose() {
     _searchTextController.dispose();
     _searchTextFocusNode.dispose();
     super.dispose();
+  }
+
+  void _filterExpenses(String searchText) {
+    setState(() {
+      _filteredExpenses.clear(); // Effacer la liste filtrée actuelle
+
+      // Parcourir toutes les dépenses et ajouter celles qui correspondent au critère de recherche
+      for (Expense expense in _expense) {
+        if (expense.article.toLowerCase().contains(searchText.toLowerCase()) ||
+            expense.total
+                .toString()
+                .toLowerCase()
+                .contains(searchText.toLowerCase()) ||
+            expense.paid
+                .toString()
+                .toLowerCase()
+                .contains(searchText.toLowerCase())) {
+          _filteredExpenses.add(expense);
+        }
+      }
+    });
   }
 
   void deleteExpense(int id) {
@@ -162,9 +192,7 @@ class _DepenseListScreenState extends State<DepenseListScreen> {
                 child: TextField(
                   focusNode: _searchTextFocusNode,
                   controller: _searchTextController,
-                  onChanged: (valuee) {
-                    setState(() {});
-                  },
+                  onChanged: _filterExpenses,
                   decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -182,6 +210,7 @@ class _DepenseListScreenState extends State<DepenseListScreen> {
                       onPressed: () {
                         _searchTextController.clear();
                         _searchTextFocusNode.unfocus();
+                        _filterExpenses('');
                       },
                       icon: Icon(
                         Icons.close,
@@ -198,114 +227,127 @@ class _DepenseListScreenState extends State<DepenseListScreen> {
               child: MediaQuery.removePadding(
                 context: context,
                 removeTop: true,
-                child: ListView.builder(
-                  itemCount: _expense.length,
-                  itemBuilder: (context, index) {
-                    final expenses = _expense[index];
-                    return GestureDetector(
-                      onTap: () {
-                        // Navigate to container details screen
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DepenseUpScreen(
-                              expense: expenses,
-                              onDelete: deleteExpense,
-                              onUpdate: updateExpense,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        height: 71,
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 16.0),
-                        decoration: BoxDecoration(
-                          color: Colors.indigo.shade100,
-                          borderRadius: const BorderRadius.only(
-                              topRight: Radius.circular(5),
-                              bottomRight: Radius.circular(5),
-                              topLeft: Radius.circular(5),
-                              bottomLeft: Radius.circular(5)),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.white,
-                              offset: Offset(5, 5),
-                              spreadRadius: 5.0,
-                              blurRadius: 10.0,
-                            )
-                          ],
-                        ),
-                        child: Container(
-                          margin: const EdgeInsets.only(top: 10, left: 18),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            width: 200,
-                                            child: Text(
-                                              expenses.article,
-                                              style: const TextStyle(
-                                                  fontSize: 16,
-                                                  color: Color.fromARGB(
-                                                      255, 0, 0, 0),
-                                                  fontWeight: FontWeight.bold),
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                          SizedText(
-                                              text:
-                                                  'creer le ${expenses.createdAt}',
-                                              color: Colors.green)
-                                        ],
-                                      ),
-                                    ],
+                child: _filteredExpenses.isNotEmpty
+                    ? ListView.builder(
+                        itemCount: _filteredExpenses.length,
+                        itemBuilder: (context, index) {
+                          final expenses = _filteredExpenses[index];
+                          return GestureDetector(
+                            onTap: () {
+                              // Navigate to container details screen
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DepenseUpScreen(
+                                    expense: expenses,
+                                    onDelete: deleteExpense,
+                                    onUpdate: updateExpense,
                                   ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Column(
-                                    children: [
-                                      Container(
-                                        width: 70,
-                                        height: 27,
-                                        child: Center(
-                                          child: Container(
-                                            width: 200,
-                                            child: Text(
-                                              "${expenses.total.toString()}FCFA",
-                                              style: const TextStyle(
-                                                  fontSize: 10,
-                                                  color: Colors.green,
-                                                  fontWeight: FontWeight.bold),
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
+                                ),
+                              );
+                            },
+                            child: Container(
+                              height: 71,
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 8.0, horizontal: 16.0),
+                              decoration: BoxDecoration(
+                                color: Colors.indigo.shade100,
+                                borderRadius: const BorderRadius.only(
+                                    topRight: Radius.circular(5),
+                                    bottomRight: Radius.circular(5),
+                                    topLeft: Radius.circular(5),
+                                    bottomLeft: Radius.circular(5)),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.white,
+                                    offset: Offset(5, 5),
+                                    spreadRadius: 5.0,
+                                    blurRadius: 10.0,
                                   )
                                 ],
-                              )
-                            ],
-                          ),
+                              ),
+                              child: Container(
+                                margin:
+                                    const EdgeInsets.only(top: 10, left: 18),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  width: 200,
+                                                  child: Text(
+                                                    expenses.article,
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Color.fromARGB(
+                                                            255, 0, 0, 0),
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                                SizedText(
+                                                    text:
+                                                        'creer le ${expenses.createdAt}',
+                                                    color: Colors.green)
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Container(
+                                              width: 70,
+                                              height: 27,
+                                              child: Center(
+                                                child: Container(
+                                                  width: 200,
+                                                  child: Text(
+                                                    "${expenses.total.toString()}FCFA",
+                                                    style: const TextStyle(
+                                                        fontSize: 10,
+                                                        color: Colors.green,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : const Center(
+                        child: Text(
+                          'Aucun résultat trouvé',
+                          style: TextStyle(fontSize: 18),
                         ),
                       ),
-                    );
-                  },
-                ),
               ),
             ),
           ],

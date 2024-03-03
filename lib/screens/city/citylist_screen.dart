@@ -44,7 +44,7 @@ class _CityListScreenState extends State<CityListScreen> {
   @override
   void dispose() {
     _searchTextController.dispose();
-    //_searchTextFocusNode.dispose();
+    _searchTextFocusNode.dispose();
     super.dispose();
   }
 
@@ -179,53 +179,62 @@ class _CityListScreenState extends State<CityListScreen> {
               child: MediaQuery.removePadding(
             context: context,
             removeTop: true, // Supprimer le padding du haut
-            child: ListView.builder(
-              padding: const EdgeInsets.only(top: 0),
-              itemCount: _filteredCities.length,
-              itemBuilder: (context, index) {
-                final city = _filteredCities[index];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CityDetailScreenn(
-                          city: city,
-                          onDelete:
-                              deleteCity, // Passer la fonction de suppression
-                          onUpdate:
-                              updateCity, // Passer la fonction de mise à jour
-                        ),
-                      ),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Card(
-                      color: AppColors.textFieldBackground,
-                      child: ListTile(
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              city.name,
-                              style: const TextStyle(
-                                  fontSize: 20, color: AppColors.textColor),
-                              overflow: TextOverflow.ellipsis,
+            child: _filteredCities.isNotEmpty
+                ? ListView.builder(
+                    padding: const EdgeInsets.only(top: 0),
+                    itemCount: _filteredCities.length,
+                    itemBuilder: (context, index) {
+                      final city = _filteredCities[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CityDetailScreenn(
+                                city: city,
+                                onDelete:
+                                    deleteCity, // Passer la fonction de suppression
+                                onUpdate:
+                                    updateCity, // Passer la fonction de mise à jour
+                              ),
                             ),
-                            const HeroIcon(
-                              HeroIcons.chevronRight,
-                              size: 16,
-                              color: AppColors.appbar,
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Card(
+                            color: AppColors.textFieldBackground,
+                            child: ListTile(
+                              title: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    city.name,
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        color: AppColors.textColor),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const HeroIcon(
+                                    HeroIcons.chevronRight,
+                                    size: 16,
+                                    color: AppColors.appbar,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ],
+                          ),
                         ),
-                      ),
+                      );
+                    },
+                  )
+                : const Center(
+                    child: Text(
+                      'Aucun résultat trouvé',
+                      style: TextStyle(fontSize: 18),
                     ),
                   ),
-                );
-              },
-            ),
           )),
         ]),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

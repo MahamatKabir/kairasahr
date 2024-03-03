@@ -355,23 +355,23 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
         ),
         Positioned(
           top: MediaQuery.of(context).size.height *
-              0.2, // 10% de la hauteur de l'écran à partir du haut
+              0.15, // 10% de la hauteur de l'écran à partir du haut
           left: MediaQuery.of(context).size.width *
               0.056, // 5.6% de la largeur de l'écran à partir de la gauche
           child: Container(
             height: MediaQuery.of(context).size.height *
-                0.43, // 23% de la hauteur de l'écran
+                0.30, // 23% de la hauteur de l'écran
             width: MediaQuery.of(context).size.width * 0.89,
 
             decoration: BoxDecoration(
               color: Colors.indigo.shade100,
-              borderRadius: BorderRadius.circular(15.0),
+              borderRadius: BorderRadius.circular(30.0),
               boxShadow: [
                 BoxShadow(
                   color: Colors.indigo.withOpacity(0.4),
                   spreadRadius: 4,
-                  blurRadius: 10,
-                  offset: const Offset(0, 5),
+                  blurRadius: 1,
+                  offset: const Offset(0, 1),
                 ),
               ],
             ),
@@ -424,21 +424,14 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
                   ),
                 ),
                 const SizedBox(height: 5),
-                Padding(
-                  padding: const EdgeInsets.only(left: 100),
-                  child: Row(
-                    children: [
-                      Center(
-                        child: Text(
-                          widget.customer, // Utilisez total
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 13,
-                            color: Colors.indigo.shade900,
-                          ),
-                        ),
-                      ),
-                    ],
+                Center(
+                  child: Text(
+                    widget.customer, // Utilisez total
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15,
+                      color: Colors.indigo.shade900,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 25),

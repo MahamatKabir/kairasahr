@@ -18,6 +18,7 @@ class ContainerListScreen extends StatefulWidget {
 
 class _ContainerListScreenState extends State<ContainerListScreen> {
   final TextEditingController _searchTextController = TextEditingController();
+
   final FocusNode _searchTextFocusNode = FocusNode();
   final List<Containere> _containers = [
     Containere(
@@ -49,7 +50,7 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
       brokerTel: 1234567890,
       amount: 75000.0,
       cityID: 2,
-      contTypeID: 2,
+      contTypeID: 0,
       status: 1,
       newC: '5678',
       contDetails: 'Details about the container...',
@@ -68,7 +69,7 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
       brokerTel: 3334445555,
       amount: 100000.0,
       cityID: 3,
-      contTypeID: 3,
+      contTypeID: 1,
       status: 1,
       newC: '9876',
       contDetails: 'Details about the container...',
@@ -87,7 +88,7 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
       brokerTel: 9998887777,
       amount: 60000.0,
       cityID: 1,
-      contTypeID: 4,
+      contTypeID: 0,
       status: 0,
       newC: '2468',
       contDetails: 'Details about the container...',
@@ -106,7 +107,7 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
       brokerTel: 6665554444,
       amount: 80000.0,
       cityID: 2,
-      contTypeID: 5,
+      contTypeID: 1,
       status: 1,
       newC: '1357',
       contDetails: 'Details about the container...',
@@ -125,10 +126,11 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
       brokerTel: 2223334444,
       amount: 90000.0,
       cityID: 3,
-      contTypeID: 6,
+      contTypeID: 1,
       status: 0,
       newC: '3691',
-      contDetails: 'Details about the container...',
+      contDetails:
+          'Réaction chimique, catalyseur, équilibre, molécules, réactifs, produits, température, pression, cinétique, énergie, liaison, électrons.',
       createdBy: null,
       createdAt: '2024-02-28',
       updatedBy: null,
@@ -136,11 +138,39 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
     ),
   ];
 
+  List<Containere> _filteredContainers = [];
+  @override
+  void initState() {
+    super.initState();
+    _filteredContainers.addAll(
+        _containers); // Initialiser la liste filtrée avec tous les conteneurs
+  }
+
   @override
   void dispose() {
     _searchTextController.dispose();
     _searchTextFocusNode.dispose();
     super.dispose();
+  }
+
+  void _filterContainers(String searchText) {
+    _filteredContainers.clear(); // Effacer la liste filtrée actuelle
+
+    // Parcourir tous les conteneurs et ajouter ceux qui correspondent au critère de recherche
+    for (Containere container in _containers) {
+      if (container.name.toLowerCase().contains(searchText.toLowerCase()) ||
+          container.customer.toLowerCase().contains(searchText.toLowerCase())) {
+        _filteredContainers.add(container);
+      }
+    }
+    setState(
+        () {}); // Mettre à jour l'interface utilisateur avec les conteneurs filtrés
+  }
+
+  void _clearSearch() {
+    _searchTextController.clear(); // Effacer le texte de recherche
+    _filterContainers(
+        ' '); // Réinitialiser la liste filtrée pour afficher tous les conteneurs
   }
 
   void deleteContainer(int id) {
@@ -240,8 +270,8 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
                     child: TextField(
                       focusNode: _searchTextFocusNode,
                       controller: _searchTextController,
-                      onChanged: (valuee) {
-                        setState(() {});
+                      onChanged: (value) {
+                        _filterContainers(value);
                       },
                       decoration: InputDecoration(
                         focusedBorder: OutlineInputBorder(
@@ -260,16 +290,9 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
                           color: Colors.indigo,
                         ),
                         suffix: IconButton(
-                          onPressed: () {
-                            _searchTextController.clear();
-                            _searchTextFocusNode.unfocus();
-                          },
-                          icon: Icon(
-                            Icons.close,
-                            color: _searchTextFocusNode.hasFocus
-                                ? Colors.red
-                                : Colors.black,
-                          ),
+                          icon: const Icon(Icons.close),
+                          onPressed:
+                              _clearSearch, // Appeler la fonction pour effacer la recherche
                         ),
                       ),
                     ),
@@ -279,208 +302,228 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
                   child: MediaQuery.removePadding(
                     context: context,
                     removeTop: true,
-                    child: ListView.builder(
-                      itemCount: _containers.length,
-                      itemBuilder: (context, index) {
-                        final containerdepense = _containers[index];
-                        return GestureDetector(
-                          onTap: () {
-                            // Navigate to container details screen
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ContainerUpScreen(
-                                  container: containerdepense,
-                                  name: containerdepense.name,
-                                  customer: containerdepense.customer,
-                                  customerTel:
-                                      containerdepense.customerTel.toString(),
-                                  createdAt: containerdepense.createdAt,
-                                  onDelete: deleteContainer,
-                                  onUpdate: updateContainer,
-                                ),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            height: 100,
+                    child: _filteredContainers.isNotEmpty
+                        ? ListView.builder(
+                            itemCount: _filteredContainers.length,
+                            itemBuilder: (context, index) {
+                              final containerdepense =
+                                  _filteredContainers[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  // Navigate to container details screen
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ContainerUpScreen(
+                                        container: containerdepense,
+                                        name: containerdepense.name,
+                                        customer: containerdepense.customer,
+                                        customerTel: containerdepense
+                                            .customerTel
+                                            .toString(),
+                                        createdAt: containerdepense.createdAt,
+                                        onDelete: deleteContainer,
+                                        onUpdate: updateContainer,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  height: 100,
 
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 8.0, horizontal: 8.0),
-                            decoration: const BoxDecoration(
-                              color: Color.fromARGB(248, 255, 254, 254),
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(10),
-                                  bottomRight: Radius.circular(10),
-                                  topLeft: Radius.circular(10),
-                                  bottomLeft: Radius.circular(10)),
-                            ),
-                            child: Container(
-                              margin: const EdgeInsets.only(
-                                top: 10,
-                                left: 10,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Container(
-                                            height: 70,
-                                            width: 70,
-                                            decoration: BoxDecoration(
+                                  margin: const EdgeInsets.symmetric(
+                                      vertical: 8.0, horizontal: 8.0),
+                                  decoration: const BoxDecoration(
+                                    color: Color.fromARGB(248, 255, 254, 254),
+                                    borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(10),
+                                        bottomRight: Radius.circular(10),
+                                        topLeft: Radius.circular(10),
+                                        bottomLeft: Radius.circular(10)),
+                                  ),
+                                  child: Container(
+                                    margin: const EdgeInsets.only(
+                                      top: 10,
+                                      left: 10,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  height: 70,
+                                                  width: 70,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      border: Border.all(
+                                                        width: 3,
+                                                        color: Colors
+                                                            .indigo.shade50,
+                                                      ),
+                                                      image: const DecorationImage(
+                                                          fit: BoxFit.cover,
+                                                          image: AssetImage(
+                                                              "assets/images/cont.png"))),
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      containerdepense.name,
+                                                      style: const TextStyle(
+                                                          fontSize: 16,
+                                                          color: Color.fromARGB(
+                                                              255, 0, 0, 0),
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        const HeroIcon(
+                                                          HeroIcons
+                                                              .viewColumns, // Choisissez l'icône que vous souhaitez afficher
+                                                          size:
+                                                              10, // Taille de l'icône
+                                                          color: Colors
+                                                              .indigo, // Couleur de l'icône
+                                                        ),
+                                                        const SizedBox(
+                                                            width: 2),
+                                                        Text(
+                                                          containerdepense
+                                                              .customer,
+                                                          style: const TextStyle(
+                                                              fontSize: 10,
+                                                              color: Colors
+                                                                  .black38,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        const HeroIcon(
+                                                          HeroIcons
+                                                              .phoneArrowUpRight, // Choisissez l'icône que vous souhaitez afficher
+                                                          size:
+                                                              10, // Taille de l'icône
+                                                          color: Colors
+                                                              .indigo, // Couleur de l'icône
+                                                        ),
+                                                        const SizedBox(
+                                                            width: 2),
+                                                        Text(
+                                                          containerdepense
+                                                              .customerTel
+                                                              .toString(),
+                                                          style: const TextStyle(
+                                                              fontSize: 10,
+                                                              color: Colors
+                                                                  .black38,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedText(
+                                                        text: containerdepense
+                                                            .createdAt,
+                                                        color: Colors.green)
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(
+                                              height: 15,
+                                            ),
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            Container(
+                                              width: 45,
+                                              decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(10),
-                                                border: Border.all(
-                                                  width: 3,
-                                                  color: Colors.indigo.shade50,
+                                                color:
+                                                    containerdepense.status == 1
+                                                        ? Colors.green
+                                                        : Colors.red,
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  containerdepense.status == 1
+                                                      ? 'Active'
+                                                      : 'Passive',
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 10,
+                                                  ),
                                                 ),
-                                                image: const DecorationImage(
-                                                    fit: BoxFit.cover,
-                                                    image: AssetImage(
-                                                        "assets/images/cont.png"))),
-                                          ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                containerdepense.name,
-                                                style: const TextStyle(
-                                                    fontSize: 16,
-                                                    color: Color.fromARGB(
-                                                        255, 0, 0, 0),
-                                                    fontWeight:
-                                                        FontWeight.bold),
                                               ),
-                                              Row(
-                                                children: [
-                                                  const HeroIcon(
-                                                    HeroIcons
-                                                        .viewColumns, // Choisissez l'icône que vous souhaitez afficher
-                                                    size:
-                                                        10, // Taille de l'icône
-                                                    color: Colors
-                                                        .indigo, // Couleur de l'icône
-                                                  ),
-                                                  const SizedBox(width: 2),
-                                                  Text(
-                                                    containerdepense.customer,
-                                                    style: const TextStyle(
-                                                        fontSize: 10,
-                                                        color: Colors.black38,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  const HeroIcon(
-                                                    HeroIcons
-                                                        .phoneArrowUpRight, // Choisissez l'icône que vous souhaitez afficher
-                                                    size:
-                                                        10, // Taille de l'icône
-                                                    color: Colors
-                                                        .indigo, // Couleur de l'icône
-                                                  ),
-                                                  const SizedBox(width: 2),
-                                                  Text(
-                                                    containerdepense.customerTel
-                                                        .toString(),
-                                                    style: const TextStyle(
-                                                        fontSize: 10,
-                                                        color: Colors.black38,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                ],
-                                              ),
-                                              SizedText(
-                                                  text: containerdepense
-                                                      .createdAt,
-                                                  color: Colors.green)
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 15,
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    children: [
-                                      Container(
-                                        width: 45,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: containerdepense.status == 1
-                                              ? Colors.green
-                                              : Colors.red,
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            containerdepense.status == 1
-                                                ? 'Active'
-                                                : 'Passive',
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 10,
                                             ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.only(
-                                            bottom: 20, left: 20),
-                                        width: 40,
-                                        height: 30,
-                                        child: const Center(
-                                          child: HeroIcon(
-                                            HeroIcons.chevronRight,
-                                            size: 22,
-                                            color: Colors.indigo,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Container(
+                                              margin: const EdgeInsets.only(
+                                                  bottom: 20, left: 20),
+                                              width: 40,
+                                              height: 30,
+                                              child: const Center(
+                                                child: HeroIcon(
+                                                  HeroIcons.chevronRight,
+                                                  size: 22,
+                                                  color: Colors.indigo,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  // child: Padding(
+                                  //   padding: const EdgeInsets.all(16.0),
+                                  //   child: Column(
+                                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                                  //     children: [
+                                  //       Text(
+                                  //         container.name,
+                                  //         style: const TextStyle(
+                                  //           fontFamily: 'Varela',
+                                  //           fontSize: 20,
+                                  //           color: Color.fromARGB(255, 10, 2, 52),
+                                  //         ),
+                                  //       ),
+                                  //       Text(container.slug),
+                                  //       const Icon(Icons.arrow_forward_ios),
+                                  //     ],
+                                  //   ),
+                                  // ),
+                                ),
+                              );
+                            },
+                          )
+                        : const Center(
+                            child: Text(
+                              'Aucun résultat trouvé',
+                              style: TextStyle(fontSize: 18),
                             ),
-                            // child: Padding(
-                            //   padding: const EdgeInsets.all(16.0),
-                            //   child: Column(
-                            //     crossAxisAlignment: CrossAxisAlignment.start,
-                            //     children: [
-                            //       Text(
-                            //         container.name,
-                            //         style: const TextStyle(
-                            //           fontFamily: 'Varela',
-                            //           fontSize: 20,
-                            //           color: Color.fromARGB(255, 10, 2, 52),
-                            //         ),
-                            //       ),
-                            //       Text(container.slug),
-                            //       const Icon(Icons.arrow_forward_ios),
-                            //     ],
-                            //   ),
-                            // ),
                           ),
-                        );
-                      },
-                    ),
                   ),
                 ),
               ],

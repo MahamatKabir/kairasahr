@@ -58,7 +58,7 @@ class _AddScreenneState extends State<AddScreenne> {
                         HeroIcons.viewColumns,
                         color: Color.fromARGB(255, 4, 2, 95),
                       ),
-                      text: 'Container',
+                      text: 'Conteneur',
                     ),
                   ),
                   Container(
