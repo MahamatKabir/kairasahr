@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kairasahrl/screens/fetchapi.dart';
+import 'package:kairasahrl/screens/utils/costomeProgress.dart';
 import 'package:kairasahrl/widget/button.dart';
 import 'package:kairasahrl/widget/custometext.dart';
 import 'package:http/http.dart' as http;
@@ -27,6 +28,7 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
   int _selectedStatus = 0; // 0: Inactif, 1: Actif
   int? _selectedContSizeID;
   int _selectedCityID = 0;
+  bool _isFieldEmpty = false; // Initialement, le champ n'est pas vide
   List<Map<String, dynamic>> _cityData = [];
   final List<Map<String, dynamic>> _contSizeData = [
     {"id": 0, "name": "20 pieds"},
@@ -57,260 +59,340 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.only(top: 10.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          color: Colors.indigo.shade100,
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomTextField(
-                        labelText: 'Nom du Conteneur',
-                        controller: _nameController,
-                      ),
-                      const SizedBox(height: 9),
-                      CustomTextField(
-                        labelText: 'Client(e)',
-                        controller: _customerController,
-                      ),
-                      const SizedBox(height: 9),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CustomTextField(
-                                  labelText: 'Téléphone',
-                                  controller: _customerTelController,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Statut',
-                                  style: TextStyle(fontSize: 13),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15),
-                                  height: 45,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(4.0),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color:
-                                            const Color.fromARGB(255, 0, 0, 0)
-                                                .withOpacity(0.7),
-                                        spreadRadius: 1,
-                                        blurRadius: 1,
-                                      ),
-                                    ],
-                                  ),
-                                  child: DropdownButtonFormField<int>(
-                                    value: _selectedStatus,
+    return GestureDetector(
+      onTap: () {
+        // Fermez le clavier virtuel lorsque l'utilisateur clique en dehors du champ de texte
+        FocusScope.of(context).unfocus();
+        // Vérifie si le champ de texte est vide lorsqu'on clique en dehors du champ
+        if (_nameController.text.isEmpty) {
+          setState(() {
+            _isFieldEmpty = false;
+          });
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.indigo.shade100,
+        body: Container(
+          padding: const EdgeInsets.only(top: 10.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: Colors.indigo.shade100,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomTextField(
+                          labelText: 'Nom du Conteneur',
+                          controller: _nameController,
+                          isFieldEmpty: _isFieldEmpty,
+                          onChanged: (value) {
+                            setState(() {
+                              if (value.isEmpty) {
+                                _isFieldEmpty =
+                                    false; // Set _isFieldEmpty to false if the field becomes empty
+                              } else {
+                                _isFieldEmpty = value.isEmpty;
+                              }
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 9),
+                        CustomTextField(
+                          labelText: 'Client(e)',
+                          controller: _customerController,
+                          isFieldEmpty: _isFieldEmpty,
+                          onChanged: (value) {
+                            setState(() {
+                              if (value.isEmpty) {
+                                _isFieldEmpty =
+                                    false; // Set _isFieldEmpty to false if the field becomes empty
+                              } else {
+                                _isFieldEmpty = value.isEmpty;
+                              }
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 9),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CustomTextField(
+                                    labelText: 'Téléphone',
+                                    controller: _customerTelController,
+                                    isFieldEmpty: _isFieldEmpty,
                                     onChanged: (value) {
                                       setState(() {
-                                        _selectedStatus = value!;
+                                        if (value.isEmpty) {
+                                          _isFieldEmpty =
+                                              false; // Set _isFieldEmpty to false if the field becomes empty
+                                        } else {
+                                          _isFieldEmpty = value.isEmpty;
+                                        }
                                       });
                                     },
-                                    items: const [
-                                      DropdownMenuItem<int>(
-                                        value: 0,
-                                        child: Text('Passif'),
-                                      ),
-                                      DropdownMenuItem<int>(
-                                        value: 1,
-                                        child: Text('Actif'),
-                                      ),
-                                    ],
-                                    decoration:
-                                        const InputDecoration(labelText: ''),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      CustomTextField(
-                        labelText: 'Courtier(e)',
-                        controller: _brokerController,
-                      ),
-                      const SizedBox(height: 6),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CustomTextField(
-                                  labelText: 'Téléphone du Courtier',
-                                  controller: _brokerTelController,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CustomTextField(
-                                  labelText: 'Montant',
-                                  controller: _amountController,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Ville',
-                                  style: TextStyle(fontSize: 13),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15),
-                                  height: 45,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(4.0),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color:
-                                            const Color.fromARGB(255, 0, 0, 0)
-                                                .withOpacity(0.7),
-                                        spreadRadius: 1,
-                                        blurRadius: 1,
-                                      ),
-                                    ],
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Statut',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.indigo.shade900,
+                                    ),
                                   ),
-                                  child: DropdownButtonFormField<int>(
-                                    value: _selectedCityID,
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15),
+                                    height: 45,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(4.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color:
+                                              const Color.fromARGB(255, 0, 0, 0)
+                                                  .withOpacity(0.7),
+                                          spreadRadius: 1,
+                                          blurRadius: 1,
+                                        ),
+                                      ],
+                                    ),
+                                    child: DropdownButtonFormField<int>(
+                                      value: _selectedStatus,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _selectedStatus = value!;
+                                        });
+                                      },
+                                      items: const [
+                                        DropdownMenuItem<int>(
+                                          value: 0,
+                                          child: Text('Passif'),
+                                        ),
+                                        DropdownMenuItem<int>(
+                                          value: 1,
+                                          child: Text('Actif'),
+                                        ),
+                                      ],
+                                      decoration:
+                                          const InputDecoration(labelText: ''),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        CustomTextField(
+                          labelText: 'Courtier(e)',
+                          controller: _brokerController,
+                        ),
+                        const SizedBox(height: 6),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CustomTextField(
+                                    labelText: 'Téléphone du Courtier',
+                                    controller: _brokerTelController,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CustomTextField(
+                                    labelText: 'Montant',
+                                    controller: _amountController,
+                                    isFieldEmpty: _isFieldEmpty,
                                     onChanged: (value) {
                                       setState(() {
-                                        _selectedCityID = value!;
+                                        if (value.isEmpty) {
+                                          _isFieldEmpty =
+                                              false; // Set _isFieldEmpty to false if the field becomes empty
+                                        } else {
+                                          _isFieldEmpty = value.isEmpty;
+                                        }
                                       });
                                     },
-                                    items: _cityData.map((city) {
-                                      return DropdownMenuItem<int>(
-                                        value: city['id'],
-                                        child: Text(city['name']),
-                                      );
-                                    }).toList(),
-                                    decoration:
-                                        const InputDecoration(labelText: ''),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Type de Conteneur',
-                                  style: TextStyle(fontSize: 13),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15),
-                                  height: 45,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(4.0),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color:
-                                            const Color.fromARGB(255, 0, 0, 0)
-                                                .withOpacity(0.7),
-                                        spreadRadius: 1,
-                                        blurRadius: 1,
-                                      ),
-                                    ],
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Ville',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.indigo.shade900,
+                                    ),
                                   ),
-                                  child: DropdownButtonFormField<int>(
-                                    value: _selectedContSizeID,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _selectedContSizeID = value;
-                                      });
-                                    },
-                                    items: _contSizeData.map((contSize) {
-                                      return DropdownMenuItem<int>(
-                                        value: contSize['id'],
-                                        child: Text(contSize['name']),
-                                      );
-                                    }).toList(),
-                                    decoration:
-                                        const InputDecoration(labelText: ''),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15),
+                                    height: 45,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(4.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color:
+                                              const Color.fromARGB(255, 0, 0, 0)
+                                                  .withOpacity(0.7),
+                                          spreadRadius: 1,
+                                          blurRadius: 1,
+                                        ),
+                                      ],
+                                    ),
+                                    child: DropdownButtonFormField<int>(
+                                      value: _selectedCityID,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _selectedCityID = value!;
+                                        });
+                                      },
+                                      items: _cityData.map((city) {
+                                        return DropdownMenuItem<int>(
+                                          value: city['id'],
+                                          child: Text(city['name']),
+                                        );
+                                      }).toList(),
+                                      decoration:
+                                          const InputDecoration(labelText: ''),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      CustomTextField(
-                        labelText: 'Nouveau C',
-                        controller: _newCController,
-                        maxLines: 2,
-                      ),
-                      const SizedBox(height: 12),
-                      CustomTextField(
-                        labelText: 'Détails du Conteneur',
-                        controller: _contDetailsController,
-                        maxLines: 3,
-                      ),
-                      const SizedBox(height: 12),
-                    ],
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Type de Conteneur',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.indigo.shade900,
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15),
+                                    height: 45,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(4.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color:
+                                              const Color.fromARGB(255, 0, 0, 0)
+                                                  .withOpacity(0.7),
+                                          spreadRadius: 1,
+                                          blurRadius: 1,
+                                        ),
+                                      ],
+                                    ),
+                                    child: DropdownButtonFormField<int>(
+                                      value: _selectedContSizeID,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _selectedContSizeID = value;
+                                        });
+                                      },
+                                      items: _contSizeData.map((contSize) {
+                                        return DropdownMenuItem<int>(
+                                          value: contSize['id'],
+                                          child: Text(contSize['name']),
+                                        );
+                                      }).toList(),
+                                      decoration:
+                                          const InputDecoration(labelText: ''),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        CustomTextField(
+                          labelText: 'Nouveau C',
+                          controller: _newCController,
+                          maxLines: 2,
+                        ),
+                        const SizedBox(height: 12),
+                        CustomTextField(
+                          labelText: 'Détails du Conteneur',
+                          controller: _contDetailsController,
+                          maxLines: 2,
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                width: 350,
-                decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 1, 1, 55),
-                    borderRadius: BorderRadius.circular(50)),
-                child: ElevatedButton(
-                  style: buttonPrimary,
-                  onPressed: _isAddingContainer ? null : _addContainer,
-                  child: _isAddingContainer
-                      ? const CircularProgressIndicator()
-                      : const Text(
-                          'Ajouter',
-                          style: TextStyle(color: Colors.white),
-                        ),
+                Container(
+                  width: 350,
+                  decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 1, 1, 55),
+                      borderRadius: BorderRadius.circular(50)),
+                  child: ElevatedButton(
+                    style: buttonPrimary,
+                    onPressed: () {
+                      setState(() {
+                        _isFieldEmpty = _nameController.text.isEmpty ||
+                            _customerController.text.isEmpty ||
+                            _customerTelController.text.isEmpty ||
+                            _selectedStatus == null ||
+                            _amountController.text.isEmpty ||
+                            _selectedCityID == null ||
+                            _selectedContSizeID == null;
+                      });
+                      if (!_isFieldEmpty) {
+                        _addContainer();
+                      }
+                    },
+                    child: _isAddingContainer
+                        ? const CustomProgressIndicator()
+                        : const Text(
+                            'Ajouter',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

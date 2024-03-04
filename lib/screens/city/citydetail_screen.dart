@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kairasahrl/models/city_model.dart';
-import 'package:kairasahrl/screens/utils/color.dart';
 import 'package:kairasahrl/widget/button.dart';
 
 class CityDetailScreenn extends StatefulWidget {
@@ -55,13 +54,8 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
               });
             },
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 5.0),
               child: Container(
-                height: 35,
-                width: 60,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: AppColors.background),
                 child: TextButton(
                   onPressed: () {
                     setState(() {
@@ -108,7 +102,7 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
 
   Widget _buildCityDetails() {
     return Padding(
-      padding: const EdgeInsets.only(top: 0),
+      padding: const EdgeInsets.only(top: 20),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -119,10 +113,8 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildTextFieldWithBorder('Nom du  Ville', _nameController),
-              if (!_isEditing)
-                _buildTextWithBorder(
-                    'Date de création: ${widget.city.createdAt}'),
+              _buildTextFieldWithBorder('Nom du Ville', _nameController),
+              if (!_isEditing) _buildTextWithBorder('Date de création'),
               const SizedBox(height: 20),
               Visibility(
                 visible: _isEditing,
@@ -138,9 +130,8 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
   Widget _buildTextFieldWithBorder(
       String label, TextEditingController controller) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      padding: const EdgeInsets.symmetric(horizontal: 11),
-      width: 400,
+      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 11),
+      width: MediaQuery.of(context).size.width, // Utilisation de MediaQuery
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -153,6 +144,9 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
             ),
           ),
           AnimatedContainer(
+            height: 65,
+            width:
+                MediaQuery.of(context).size.width, // Utilisation de MediaQuery
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeInOut,
             padding:
@@ -191,12 +185,46 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
   Widget _buildTextWithBorder(String text) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 11),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10), color: Colors.white),
-      width: 400,
-      child: Text(
-        text,
-        style: const TextStyle(fontSize: 16, color: Colors.black),
+      width: MediaQuery.of(context).size.width, // Utilisation de MediaQuery
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            text,
+            style: TextStyle(
+              color: Colors.indigo.shade900,
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          AnimatedContainer(
+            width:
+                MediaQuery.of(context).size.width, // Utilisation de MediaQuery
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+            padding:
+                const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+            decoration: BoxDecoration(
+              color: Colors.indigo.shade100,
+              borderRadius: BorderRadius.circular(10.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.indigo.withOpacity(0.4),
+                  spreadRadius: 4,
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            child: Text(
+              widget.city.createdAt!,
+              style: TextStyle(
+                color: Colors.indigo.shade900,
+                fontSize: 14.0,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

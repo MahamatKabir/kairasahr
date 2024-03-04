@@ -112,6 +112,7 @@ class _EditPageState extends State<EditPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: !_isEditing ? Colors.indigo.shade100 : Colors.white,
       appBar: AppBar(
         backgroundColor: AppColors.appbar,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -141,20 +142,23 @@ class _EditPageState extends State<EditPage> {
                 label: 'Téléphone du courtièr',
                 controller: _brokerTelController),
             Row(
-              mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween, // Ajustez selon vos besoins
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment:
+                  CrossAxisAlignment.start, // Ajustez selon vos besoins
               children: [
                 Expanded(
-                  flex: 4, // Ajustez selon vos besoins
+                  flex: 5, // Ajustez selon vos besoins
                   child: _buildEditableField(
                     label: 'Mountant',
                     controller: _amountController,
                   ),
                 ),
                 const SizedBox(
-                    width: 8), // Ajoutez un espacement entre les champs
+                  width: 9,
+                ),
+                // Ajoutez un espacement entre les champs
                 Expanded(
-                  flex: 6, // Ajustez selon vos besoins
+                  flex: 5, // Ajustez selon vos besoins
                   child: _buildDropdownButton(
                     label: 'Ville',
                     value: _selectedCity,
@@ -172,7 +176,7 @@ class _EditPageState extends State<EditPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  flex: 4,
+                  flex: 5,
                   child: _buildDropdownButton(
                     label: 'Status',
                     value: _statusValue ?? 0,
@@ -181,9 +185,11 @@ class _EditPageState extends State<EditPage> {
                   ),
                 ),
                 const SizedBox(
-                    width: 8), // Ajouter un espacement entre les dropdowns
+                  width: 9,
+                ),
+                // Ajouter un espacement entre les dropdowns
                 Expanded(
-                  flex: 6,
+                  flex: 5,
                   child: Container(
                     child: _buildDropdownButton(
                       label: 'Type de Conteneur',
@@ -296,24 +302,24 @@ class _EditPageState extends State<EditPage> {
           label,
           style: TextStyle(
             color: Colors.indigo.shade900,
-            fontSize: 18.0,
+            fontSize: 15.0,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 10.0),
+        const SizedBox(height: 5.0),
         AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeInOut,
-          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
           decoration: BoxDecoration(
             color: _isEditing ? Colors.white : Colors.indigo.shade100,
             borderRadius: BorderRadius.circular(10.0),
             boxShadow: [
               BoxShadow(
-                color: Colors.indigo.withOpacity(0.4),
-                spreadRadius: 4,
+                color: Colors.indigo.withOpacity(0.5),
+                spreadRadius: 1,
                 blurRadius: 10,
-                offset: const Offset(0, 5),
+                offset: const Offset(4, 4),
               ),
             ],
           ),
@@ -346,7 +352,7 @@ class _EditPageState extends State<EditPage> {
                   ),
                 ),
         ),
-        const SizedBox(height: 30.0),
+        const SizedBox(height: 20.0),
       ],
     );
   }
@@ -364,24 +370,25 @@ class _EditPageState extends State<EditPage> {
           label,
           style: TextStyle(
             color: Colors.indigo.shade900,
-            fontSize: 16.0,
+            fontSize: 15.0,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 10.0),
+        const SizedBox(height: 5.0),
         AnimatedContainer(
+          width: MediaQuery.of(context).size.width / 2,
           duration: const Duration(milliseconds: 500),
           curve: Curves.easeInOut,
-          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
           decoration: BoxDecoration(
             color: _isEditing ? Colors.white : Colors.indigo.shade100,
             borderRadius: BorderRadius.circular(10.0),
             boxShadow: [
               BoxShadow(
-                color: Colors.indigo.withOpacity(0.4),
-                spreadRadius: 4,
+                color: Colors.indigo.withOpacity(0.5),
+                spreadRadius: 1,
                 blurRadius: 10,
-                offset: const Offset(0, 5),
+                offset: const Offset(4, 4),
               ),
             ],
           ),
@@ -403,32 +410,61 @@ class _EditPageState extends State<EditPage> {
       // Vérifiez si l'édition est activée
       if (label == 'Status') {
         return [
-          const DropdownMenuItem(
+          DropdownMenuItem(
             value: 0,
-            child: Text("Passif"),
+            child: Text(
+              "Passif              ",
+              style: TextStyle(
+                color: Colors.indigo.shade400,
+                fontSize: 14.0,
+              ),
+            ),
           ),
-          const DropdownMenuItem(
+          DropdownMenuItem(
             value: 1,
-            child: Text("Actif"),
+            child: Text(
+              "Actif             ",
+              style: TextStyle(
+                color: Colors.indigo.shade900,
+                fontSize: 14.0,
+              ),
+            ),
           ),
         ];
       } else if (label == 'Ville') {
         return _cities.map((city) {
           return DropdownMenuItem<City>(
             value: city,
-            child: Text(city.name ??
-                ' '), // Utilisez l'opérateur de navigation de nullité pour accéder à la propriété name
+            child: Text(
+              city.name,
+              style: TextStyle(
+                color: Colors.indigo.shade900,
+                fontSize: 14.0,
+              ),
+            ), // Utilisez l'opérateur de navigation de nullité pour accéder à la propriété name
           );
         }).toList();
       } else if (label == 'Type de Conteneur') {
         return [
-          const DropdownMenuItem(
+          DropdownMenuItem(
             value: 0,
-            child: Text("20 pieds        "),
+            child: Text(
+              "20 pieds         ",
+              style: TextStyle(
+                color: Colors.indigo.shade900,
+                fontSize: 14.0,
+              ),
+            ),
           ),
-          const DropdownMenuItem(
+          DropdownMenuItem(
             value: 1,
-            child: Text("40 pieds        "),
+            child: Text(
+              "40 pieds          ",
+              style: TextStyle(
+                color: Colors.indigo.shade900,
+                fontSize: 14.0,
+              ),
+            ),
           ),
         ];
       }
@@ -511,8 +547,6 @@ class _EditPageState extends State<EditPage> {
   }
 
   void _updateContainer() {
-    // Supprimer le conteneur
-    widget.onDelete(widget.container.id);
     // Vérifier si tous les champs obligatoires sont remplis
     if (_nameController.text.isEmpty ||
         _customerController.text.isEmpty ||

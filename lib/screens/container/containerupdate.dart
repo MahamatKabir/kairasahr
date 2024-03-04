@@ -125,7 +125,44 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: Colors.grey.shade100,
+      appBar: AppBar(
+        backgroundColor: AppColors.appbar,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Text(
+          '',
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditPage(
+                    container: widget.container,
+                    onDelete: widget.onDelete,
+                    onUpdate: widget.onUpdate,
+                    isEditing: true,
+                    updateContainer: widget.onUpdate,
+                    initialStatusValue: widget.container.status,
+                    initialContainerTypeValue: widget.container.contTypeID,
+                  ),
+                ),
+              );
+            },
+            child: const Text(
+              'Éditer',
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textFieldBackground
+                  // Vous pouvez ajuster d'autres styles ici selon vos préférences
+                  ),
+            ),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
@@ -148,7 +185,7 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
             .where((depense) => depense.containerID == widget.container.id)
             .isEmpty) {
       return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 10.0),
+        padding: EdgeInsets.symmetric(vertical: 50.0),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -276,7 +313,7 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
           children: [
             Container(
               width: double.infinity,
-              height: 200,
+              height: 140,
               decoration: const BoxDecoration(
                 color: AppColors.appbar,
                 borderRadius: BorderRadius.only(
@@ -284,83 +321,17 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
                   bottomRight: Radius.circular(5),
                 ),
               ),
-              child: Stack(
-                children: [
-                  Positioned(
-                    top: MediaQuery.of(context).size.height *
-                        0.013, // 10% de la hauteur de l'écran à partir du haut
-                    left: MediaQuery.of(context).size.width *
-                        0.811, // 81.1% de la largeur de l'écran à partir de la gauche
-                    child: ClipRRect(
-                      child: Container(
-                        height: MediaQuery.of(context).size.height *
-                            0.06, // 4.3% de la hauteur de l'écran
-                        width: MediaQuery.of(context).size.width * 0.2,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: AppColors.background),
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditPage(
-                                  container: widget.container,
-                                  onDelete: widget.onDelete,
-                                  onUpdate: widget.onUpdate,
-                                  isEditing: true,
-                                  updateContainer: widget.onUpdate,
-                                  initialStatusValue: widget.container.status,
-                                  initialContainerTypeValue:
-                                      widget.container.contTypeID,
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Text(
-                            'Éditer',
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.textColor
-                                // Vous pouvez ajuster d'autres styles ici selon vos préférences
-                                ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, left: 8),
-                    child: ClipRRect(
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: AppColors.background),
-                        height: 35,
-                        width: 40,
-                        child: IconButton(
-                          icon: const Icon(Icons.arrow_back),
-                          onPressed: () {
-                            Navigator.pop(context); // Navigate back
-                          },
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
             ),
           ],
         ),
         Positioned(
           top: MediaQuery.of(context).size.height *
-              0.15, // 10% de la hauteur de l'écran à partir du haut
+              0.05, // 10% de la hauteur de l'écran à partir du haut
           left: MediaQuery.of(context).size.width *
               0.056, // 5.6% de la largeur de l'écran à partir de la gauche
           child: Container(
             height: MediaQuery.of(context).size.height *
-                0.30, // 23% de la hauteur de l'écran
+                0.33, // 23% de la hauteur de l'écran
             width: MediaQuery.of(context).size.width * 0.89,
 
             decoration: BoxDecoration(
@@ -377,53 +348,60 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
             ),
             child: Column(
               children: [
-                const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.only(left: 80),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        alignment: Alignment.center,
-                        child: Center(
-                          child: Text(
-                            widget.name, // Utilisez le nom du widget
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Colors.indigo.shade900,
-                            ),
+                const SizedBox(height: 1),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      child: Center(
+                        child: Text(
+                          '', // Utilisez le nom du widget
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.indigo.shade900,
                           ),
                         ),
                       ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.chevron_right,
-                          color: Colors.white,
-                          size: 33,
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EditPage(
-                                container: widget.container,
-                                onDelete: widget.onDelete,
-                                onUpdate: widget.onUpdate,
-                                isEditing: false,
-                                updateContainer: widget.onUpdate,
-                                initialStatusValue: widget.container.status,
-                                initialContainerTypeValue:
-                                    widget.container.contTypeID,
-                              ),
-                            ),
-                          );
-                        },
+                    ),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.chevron_right,
+                        color: Colors.white,
+                        size: 33,
                       ),
-                    ],
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditPage(
+                              container: widget.container,
+                              onDelete: widget.onDelete,
+                              onUpdate: widget.onUpdate,
+                              isEditing: false,
+                              updateContainer: widget.onUpdate,
+                              initialStatusValue: widget.container.status,
+                              initialContainerTypeValue:
+                                  widget.container.contTypeID,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                Center(
+                  child: Text(
+                    widget.name, // Utilisez le nom du widget
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Colors.indigo.shade900,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 10),
                 Center(
                   child: Text(
                     widget.customer, // Utilisez total

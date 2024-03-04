@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kairasahrl/screens/fetchapi.dart';
+import 'package:kairasahrl/screens/utils/costomeProgress.dart';
 import 'package:kairasahrl/widget/button.dart';
 import '../../widget/custometext.dart';
 
@@ -13,11 +14,11 @@ class DepenseAddScreen extends StatefulWidget {
 class _DepenseAddScreenState extends State<DepenseAddScreen> {
   final TextEditingController _articleController = TextEditingController();
   final TextEditingController _totalController = TextEditingController();
-  final TextEditingController _slugController = TextEditingController();
   final TextEditingController _paidController = TextEditingController();
   int? _selectedContainerID;
   List<Map<String, dynamic>> _containerData = [];
   bool _isAddingExpense = false;
+  bool _isFieldEmpty = false; // Initialement, le champ n'est pas vide
 
   @override
   void initState() {
@@ -39,6 +40,7 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.indigo.shade100,
       body: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
@@ -57,6 +59,17 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
                       CustomTextField(
                         labelText: 'Article',
                         controller: _articleController,
+                        isFieldEmpty: _isFieldEmpty,
+                        onChanged: (value) {
+                          setState(() {
+                            if (value.isEmpty) {
+                              _isFieldEmpty =
+                                  false; // Set _isFieldEmpty to false if the field becomes empty
+                            } else {
+                              _isFieldEmpty = value.isEmpty;
+                            }
+                          });
+                        },
                       ),
                       const SizedBox(height: 9),
                       CustomTextField(
@@ -71,9 +84,12 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
                         keyboardType: TextInputType.number,
                       ),
                       const SizedBox(height: 9),
-                      const Text(
+                      Text(
                         'Conteneur',
-                        style: TextStyle(fontSize: 13),
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.indigo.shade900,
+                        ),
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -83,8 +99,10 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
                           borderRadius: BorderRadius.circular(4.0),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color.fromARGB(255, 0, 0, 0)
-                                  .withOpacity(0.7),
+                              color: _isFieldEmpty
+                                  ? Colors.red.withOpacity(0.7)
+                                  : const Color.fromARGB(255, 0, 0, 0)
+                                      .withOpacity(0.7),
                               spreadRadius: 1,
                               blurRadius: 1,
                             ),
@@ -92,7 +110,9 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
                         ),
                         child: DropdownButtonFormField<int>(
                           decoration: const InputDecoration(
-                              labelText: '', border: InputBorder.none),
+                            labelText: '',
+                            border: InputBorder.none,
+                          ),
                           value: _selectedContainerID,
                           items: _containerData.map((container) {
                             return DropdownMenuItem<int>(
@@ -103,6 +123,7 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
                           onChanged: (value) {
                             setState(() {
                               _selectedContainerID = value;
+                              _isFieldEmpty = _selectedContainerID == null;
                             });
                           },
                         ),
@@ -116,9 +137,20 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
               ),
               ElevatedButton(
                 style: buttonPrimary,
-                onPressed: _isAddingExpense ? null : _addExpense,
+                onPressed: () {
+                  setState(() {
+                    _isFieldEmpty = _articleController.text.isEmpty ||
+                        _selectedContainerID == null;
+                  });
+                  if (!_isFieldEmpty) {
+                    _addExpense(
+                      article: _articleController.text.trim(),
+                      selectedContainerID: _selectedContainerID!,
+                    );
+                  }
+                },
                 child: _isAddingExpense
-                    ? const CircularProgressIndicator()
+                    ? const CustomProgressIndicator()
                     : const Text(
                         'Ajouter',
                         style: TextStyle(color: Colors.white),
@@ -131,17 +163,34 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
     );
   }
 
-  void _addExpense() async {
+  void _addExpense({
+    required String article,
+    int? total,
+    int? paid,
+    String? slug,
+    int? selectedContainerID,
+  }) async {
     setState(() {
       _isAddingExpense = true;
     });
+    if (article.isEmpty || selectedContainerID == null) {
+      setState(() {
+        _isAddingExpense = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Article et Conteneur sont obligatoires.'),
+        ),
+      );
+      return;
+    }
     // Appel de la méthode addExpense() de la classe AddExpenseService
     await AddExpenseService.addExpense(
-      article: _articleController.text.trim(),
-      total: int.tryParse(_totalController.text.trim()) ?? 0,
-      paid: int.tryParse(_paidController.text.trim()) ?? 0,
-      slug: _slugController.text.trim(),
-      selectedContainerID: _selectedContainerID,
+      article: article,
+      total: total ?? 0,
+      paid: paid ?? 0,
+      slug: slug ?? '',
+      selectedContainerID: selectedContainerID,
       context: context,
     );
 

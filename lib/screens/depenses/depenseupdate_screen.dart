@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:heroicons/heroicons.dart';
 import 'package:kairasahrl/models/depense_model.dart';
 import 'package:kairasahrl/screens/fetchapi.dart';
-import 'package:kairasahrl/screens/utils/color.dart';
 import 'package:kairasahrl/widget/button.dart';
 
 class DepenseUpScreen extends StatefulWidget {
@@ -63,31 +61,25 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: !_isEditing ? Colors.indigo.shade100 : Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 1, 0, 66),
-        iconTheme: const IconThemeData(color: Colors.white),
-        title: Center(
-          child: Text(
-            _isEditing ? 'Modifier' : 'Dépense detail',
-            style: const TextStyle(color: Colors.white, fontSize: 20),
+          backgroundColor: const Color.fromARGB(255, 1, 0, 66),
+          iconTheme: const IconThemeData(color: Colors.white),
+          title: Center(
+            child: Text(
+              _isEditing ? 'Modifier' : 'Dépense detail',
+              style: const TextStyle(color: Colors.white, fontSize: 20),
+            ),
           ),
-        ),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                _isEditing = !_isEditing;
-              });
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Container(
-                height: 35,
-                width: 60,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: AppColors.background),
+          actions: [
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  _isEditing = !_isEditing;
+                });
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5.0),
                 child: TextButton(
                   onPressed: () {
                     if (_isEditing) {
@@ -99,17 +91,16 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
                     }
                   },
                   child: Text(
-                    _isEditing ? 'Save' : 'Edit',
+                    _isEditing ? 'Save' : 'Éditer',
                     style: TextStyle(
+                      fontSize: 15,
                       color: _isEditing ? Colors.green : Colors.white,
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
+          ]),
       body: SafeArea(
         child: Stack(
           children: [
@@ -119,7 +110,8 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
                   Padding(
                     padding: const EdgeInsets.only(top: 5.0),
                     child: Container(
-                      color: Colors.white,
+                      color:
+                          !_isEditing ? Colors.indigo.shade100 : Colors.white,
                       child: SingleChildScrollView(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -138,14 +130,14 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
                               height: 2,
                             ),
                             _buildTextFieldWithBorder(
-                                'Paid', _paidController, _isEditing),
+                                'Payé', _paidController, _isEditing),
                             const SizedBox(
                               height: 2,
                             ),
                             _isEditing
                                 ? _buildContainerDropdown()
                                 : _buildTextFieldWithBorder(
-                                    'Container ID',
+                                    'Conteneur',
                                     _containerIDController,
                                     _isEditing,
                                   ),
@@ -220,10 +212,10 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Container ID',
+            'Conteneur',
             style: TextStyle(
               color: Colors.indigo.shade900,
-              fontSize: 18.0,
+              fontSize: 15.0,
               fontWeight: FontWeight.bold,
               letterSpacing: 1.0,
             ),
@@ -277,7 +269,7 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
             label,
             style: TextStyle(
               color: Colors.indigo.shade900,
-              fontSize: 18.0,
+              fontSize: 15.0,
               fontWeight: FontWeight.bold,
               letterSpacing: 1.0,
             ),
