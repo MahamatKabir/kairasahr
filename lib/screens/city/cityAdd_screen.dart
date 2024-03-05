@@ -57,11 +57,23 @@ class _CityAddScreenState extends State<CityAddScreen> {
                       const SizedBox(
                         height: 6,
                       ),
-                      Text(
-                        'Nom du Ville',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.indigo.shade900,
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Nom du ville', // Texte de l'étiquette
+                              style: TextStyle(
+                                  fontSize: 13, color: Colors.indigo.shade900),
+                            ),
+                            const TextSpan(
+                              text:
+                                  ' *', // Ajoute une étoile pour indiquer que le champ est requis
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors
+                                      .red), // Couleur rouge pour l'étoile
+                            ),
+                          ],
                         ),
                       ),
                       const SizedBox(
@@ -75,7 +87,7 @@ class _CityAddScreenState extends State<CityAddScreen> {
                           boxShadow: [
                             BoxShadow(
                               color: _isFieldEmpty
-                                  ? Colors.red.withOpacity(0.01)
+                                  ? Colors.red.withOpacity(0.7)
                                   : const Color.fromARGB(255, 0, 0, 0)
                                       .withOpacity(0.7),
                               spreadRadius: 1,
@@ -84,7 +96,9 @@ class _CityAddScreenState extends State<CityAddScreen> {
                           ],
                           borderRadius: BorderRadius.circular(4.0),
                           border: _isFieldEmpty
-                              ? Border.all(color: Colors.red, width: 2.0)
+                              ? Border.all(
+                                  color: Color.fromARGB(255, 249, 228, 226),
+                                  width: 2.0)
                               : null,
                         ),
                         child: TextField(
@@ -93,7 +107,7 @@ class _CityAddScreenState extends State<CityAddScreen> {
                             labelText: '',
                             border: InputBorder.none,
                             errorText: _isFieldEmpty
-                                ? 'Veuillez remplir tous les champs'
+                                ? 'Ce champ est obligatoire'
                                 : null,
                           ),
                           onChanged: (value) {
@@ -101,7 +115,6 @@ class _CityAddScreenState extends State<CityAddScreen> {
                               if (value.isEmpty) {
                                 _isFieldEmpty =
                                     false; // Set _isFieldEmpty to false if the field becomes empty
-// Update _boxShadowColor
                               } else {
                                 _isFieldEmpty = value.isEmpty;
                               }

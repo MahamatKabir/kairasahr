@@ -3,21 +3,43 @@ import 'package:flutter/material.dart';
 class CustomTextField extends StatefulWidget {
   final String labelText;
   final TextEditingController controller;
+  final bool
+      isRequired; // Nouvelle propriété pour contrôler l'affichage de l'étoile
   final TextInputType keyboardType;
-  final bool? isFieldEmpty; // Déclarer comme nullable
+  final bool? isFieldEmpty;
+  final bool isArticleField;
+  final bool isContainerNameField;
+  final bool isCustomerField;
+  final bool isCustomerTelField;
+  final bool isStatusField;
+  final bool isAmountField;
+  final bool isCityField;
+  final bool isContSizeField;
   final bool obscureText;
   final int maxLines;
   final ValueChanged<String>? onChanged;
+  final VoidCallback? onButtonPressed;
 
   const CustomTextField({
     Key? key,
     required this.labelText,
     required this.controller,
+    this.isRequired =
+        false, // Défaut à false, l'étoile ne sera pas affichée par défaut
     this.keyboardType = TextInputType.text,
-    this.isFieldEmpty, // Rendre facultatif
+    this.isFieldEmpty,
+    this.isArticleField = false,
+    this.isContainerNameField = false,
+    this.isCustomerField = false,
+    this.isCustomerTelField = false,
+    this.isStatusField = false,
+    this.isAmountField = false,
+    this.isCityField = false,
+    this.isContSizeField = false,
     this.obscureText = false,
     this.maxLines = 1,
     this.onChanged,
+    this.onButtonPressed,
   }) : super(key: key);
 
   @override
@@ -30,20 +52,34 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.labelText,
-          style: TextStyle(fontSize: 13, color: Colors.indigo.shade900),
+        Text.rich(
+          TextSpan(
+            children: [
+              TextSpan(
+                text: widget.labelText, // Texte de l'étiquette
+                style: TextStyle(fontSize: 13, color: Colors.indigo.shade900),
+              ),
+              if (widget.isRequired) // Vérifie si le champ est requis
+                TextSpan(
+                  text:
+                      ' *', // Ajoute une étoile pour indiquer que le champ est requis
+                  style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.red), // Couleur rouge pour l'étoile
+                ),
+            ],
+          ),
         ),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 6),
           height: widget.maxLines * 45.0,
           decoration: BoxDecoration(
-            color: Colors.white, // Vérifier si isFieldEmpty est null
+            color: Colors.white,
             borderRadius: BorderRadius.circular(4.0),
             boxShadow: [
               BoxShadow(
                 color: widget.isFieldEmpty ?? false
-                    ? Colors.red
+                    ? Colors.red.withOpacity(0.7)
                     : const Color.fromARGB(255, 0, 0, 0).withOpacity(0.7),
                 spreadRadius: 1,
                 blurRadius: 1,
@@ -55,12 +91,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
             keyboardType: widget.keyboardType,
             obscureText: widget.obscureText,
             maxLines: widget.maxLines,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               labelText: '',
               border: InputBorder.none,
+              errorText: widget.isFieldEmpty ?? false
+                  ? 'Ce champ est obligatoire'
+                  : null,
             ),
             onChanged: (value) {
-              widget.onChanged?.call(value); // Utiliser onChanged
+              widget.onChanged?.call(value);
             },
           ),
         ),

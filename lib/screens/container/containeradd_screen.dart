@@ -5,8 +5,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kairasahrl/screens/fetchapi.dart';
 import 'package:kairasahrl/screens/utils/costomeProgress.dart';
 import 'package:kairasahrl/widget/button.dart';
-import 'package:kairasahrl/widget/custometext.dart';
 import 'package:http/http.dart' as http;
+import 'package:kairasahrl/widget/custometext.dart';
 
 class ContainerAddScreen extends StatefulWidget {
   const ContainerAddScreen({Key? key});
@@ -34,6 +34,7 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
     {"id": 0, "name": "20 pieds"},
     {"id": 1, "name": "40 pieds"},
   ];
+  final RegExp _numericRegex = RegExp(r'^[0-9]+$');
 
   @override
   void initState() {
@@ -63,12 +64,10 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
       onTap: () {
         // Fermez le clavier virtuel lorsque l'utilisateur clique en dehors du champ de texte
         FocusScope.of(context).unfocus();
-        // Vérifie si le champ de texte est vide lorsqu'on clique en dehors du champ
-        if (_nameController.text.isEmpty) {
-          setState(() {
-            _isFieldEmpty = false;
-          });
-        }
+        // Vérifiez si les champs nécessaires sont vides lorsque l'utilisateur clique en dehors
+        setState(() {
+          _isFieldEmpty = false;
+        });
       },
       child: Scaffold(
         backgroundColor: Colors.indigo.shade100,
@@ -95,19 +94,22 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                           onChanged: (value) {
                             setState(() {
                               if (value.isEmpty) {
-                                _isFieldEmpty =
-                                    false; // Set _isFieldEmpty to false if the field becomes empty
+                                _isFieldEmpty = false;
                               } else {
                                 _isFieldEmpty = value.isEmpty;
                               }
                             });
                           },
+                          isContainerNameField: true,
+                          isRequired:
+                              true, // Ajoutez cette ligne pour indiquer que le champ est requis
                         ),
                         const SizedBox(height: 9),
                         CustomTextField(
                           labelText: 'Client(e)',
                           controller: _customerController,
                           isFieldEmpty: _isFieldEmpty,
+                          isRequired: true,
                           onChanged: (value) {
                             setState(() {
                               if (value.isEmpty) {
@@ -118,6 +120,7 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                               }
                             });
                           },
+                          isCustomerField: true,
                         ),
                         const SizedBox(height: 9),
                         Row(
@@ -130,6 +133,7 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                                     labelText: 'Téléphone',
                                     controller: _customerTelController,
                                     isFieldEmpty: _isFieldEmpty,
+                                    isRequired: true,
                                     onChanged: (value) {
                                       setState(() {
                                         if (value.isEmpty) {
@@ -140,6 +144,7 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                                         }
                                       });
                                     },
+                                    isCustomerTelField: true,
                                   ),
                                 ],
                               ),
@@ -149,11 +154,25 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    'Statut',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.indigo.shade900,
+                                  Text.rich(
+                                    TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text:
+                                              'Status', // Texte de l'étiquette
+                                          style: TextStyle(
+                                              fontSize: 13,
+                                              color: Colors.indigo.shade900),
+                                        ),
+                                        const TextSpan(
+                                          text:
+                                              ' *', // Ajoute une étoile pour indiquer que le champ est requis
+                                          style: TextStyle(
+                                              fontSize: 13,
+                                              color: Colors
+                                                  .red), // Couleur rouge pour l'étoile
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   Container(
@@ -165,8 +184,10 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                                       borderRadius: BorderRadius.circular(4.0),
                                       boxShadow: [
                                         BoxShadow(
-                                          color:
-                                              const Color.fromARGB(255, 0, 0, 0)
+                                          color: _isFieldEmpty
+                                              ? Colors.red.withOpacity(0.7)
+                                              : const Color.fromARGB(
+                                                      255, 0, 0, 0)
                                                   .withOpacity(0.7),
                                           spreadRadius: 1,
                                           blurRadius: 1,
@@ -227,6 +248,7 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                                     labelText: 'Montant',
                                     controller: _amountController,
                                     isFieldEmpty: _isFieldEmpty,
+                                    isRequired: true,
                                     onChanged: (value) {
                                       setState(() {
                                         if (value.isEmpty) {
@@ -237,6 +259,7 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                                         }
                                       });
                                     },
+                                    isAmountField: true,
                                   ),
                                 ],
                               ),
@@ -250,11 +273,24 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    'Ville',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.indigo.shade900,
+                                  Text.rich(
+                                    TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: 'Ville', // Texte de l'étiquette
+                                          style: TextStyle(
+                                              fontSize: 13,
+                                              color: Colors.indigo.shade900),
+                                        ),
+                                        const TextSpan(
+                                          text:
+                                              ' *', // Ajoute une étoile pour indiquer que le champ est requis
+                                          style: TextStyle(
+                                              fontSize: 13,
+                                              color: Colors
+                                                  .red), // Couleur rouge pour l'étoile
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   Container(
@@ -266,8 +302,10 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                                       borderRadius: BorderRadius.circular(4.0),
                                       boxShadow: [
                                         BoxShadow(
-                                          color:
-                                              const Color.fromARGB(255, 0, 0, 0)
+                                          color: _isFieldEmpty
+                                              ? Colors.red.withOpacity(0.7)
+                                              : const Color.fromARGB(
+                                                      255, 0, 0, 0)
                                                   .withOpacity(0.7),
                                           spreadRadius: 1,
                                           blurRadius: 1,
@@ -283,8 +321,8 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                                       },
                                       items: _cityData.map((city) {
                                         return DropdownMenuItem<int>(
-                                          value: city['id'],
-                                          child: Text(city['name']),
+                                          value: city['id'] as int,
+                                          child: Text(city['name'] as String),
                                         );
                                       }).toList(),
                                       decoration:
@@ -299,11 +337,25 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    'Type de Conteneur',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.indigo.shade900,
+                                  Text.rich(
+                                    TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text:
+                                              'Type de conteneur', // Texte de l'étiquette
+                                          style: TextStyle(
+                                              fontSize: 13,
+                                              color: Colors.indigo.shade900),
+                                        ),
+                                        const TextSpan(
+                                          text:
+                                              ' *', // Ajoute une étoile pour indiquer que le champ est requis
+                                          style: TextStyle(
+                                              fontSize: 13,
+                                              color: Colors
+                                                  .red), // Couleur rouge pour l'étoile
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   Container(
@@ -315,8 +367,10 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                                       borderRadius: BorderRadius.circular(4.0),
                                       boxShadow: [
                                         BoxShadow(
-                                          color:
-                                              const Color.fromARGB(255, 0, 0, 0)
+                                          color: _isFieldEmpty
+                                              ? Colors.red.withOpacity(0.7)
+                                              : const Color.fromARGB(
+                                                      255, 0, 0, 0)
                                                   .withOpacity(0.7),
                                           spreadRadius: 1,
                                           blurRadius: 1,
@@ -327,13 +381,14 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                                       value: _selectedContSizeID,
                                       onChanged: (value) {
                                         setState(() {
-                                          _selectedContSizeID = value;
+                                          _selectedContSizeID = value!;
                                         });
                                       },
                                       items: _contSizeData.map((contSize) {
                                         return DropdownMenuItem<int>(
-                                          value: contSize['id'],
-                                          child: Text(contSize['name']),
+                                          value: contSize['id'] as int,
+                                          child:
+                                              Text(contSize['name'] as String),
                                         );
                                       }).toList(),
                                       decoration:
@@ -349,46 +404,44 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                         CustomTextField(
                           labelText: 'Nouveau C',
                           controller: _newCController,
-                          maxLines: 2,
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 6),
                         CustomTextField(
                           labelText: 'Détails du Conteneur',
                           controller: _contDetailsController,
-                          maxLines: 2,
                         ),
                         const SizedBox(height: 12),
+                        Container(
+                          width: 350,
+                          decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 1, 1, 55),
+                              borderRadius: BorderRadius.circular(50)),
+                          child: ElevatedButton(
+                            style: buttonPrimary,
+                            onPressed: () {
+                              setState(() {
+                                _isFieldEmpty = _nameController.text.isEmpty ||
+                                    _customerController.text.isEmpty ||
+                                    _customerTelController.text.isEmpty ||
+                                    _selectedStatus == null ||
+                                    _amountController.text.isEmpty ||
+                                    _selectedCityID == null ||
+                                    _selectedContSizeID == null;
+                              });
+                              if (!_isFieldEmpty) {
+                                _addContainer();
+                              }
+                            },
+                            child: _isAddingContainer
+                                ? const CustomProgressIndicator()
+                                : const Text(
+                                    'Ajouter',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                ),
-                Container(
-                  width: 350,
-                  decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 1, 1, 55),
-                      borderRadius: BorderRadius.circular(50)),
-                  child: ElevatedButton(
-                    style: buttonPrimary,
-                    onPressed: () {
-                      setState(() {
-                        _isFieldEmpty = _nameController.text.isEmpty ||
-                            _customerController.text.isEmpty ||
-                            _customerTelController.text.isEmpty ||
-                            _selectedStatus == null ||
-                            _amountController.text.isEmpty ||
-                            _selectedCityID == null ||
-                            _selectedContSizeID == null;
-                      });
-                      if (!_isFieldEmpty) {
-                        _addContainer();
-                      }
-                    },
-                    child: _isAddingContainer
-                        ? const CustomProgressIndicator()
-                        : const Text(
-                            'Ajouter',
-                            style: TextStyle(color: Colors.white),
-                          ),
                   ),
                 ),
               ],
@@ -404,22 +457,36 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
       _isAddingContainer = true;
     });
 
+    // Récupérez les valeurs des champs et supprimez les espaces inutiles
     final containerName = _nameController.text.trim();
     final customer = _customerController.text.trim();
-    final customerTel = int.tryParse(_customerTelController.text.trim()) ?? 0;
+    final customerTel = _customerTelController.text.trim();
     final broker = _brokerController.text.trim();
-    final brokerTel = int.tryParse(_brokerTelController.text.trim()) ?? 0;
-    final amount = double.tryParse(_amountController.text.trim()) ?? 0;
+    final brokerTel = _brokerTelController.text.trim();
+    final amount = _amountController.text.trim();
     final newC = _newCController.text.trim();
     final contDetails = _contDetailsController.text.trim();
     final createdAt = DateTime.now().toIso8601String();
 
-    if (containerName.isNotEmpty &&
+    // Validez les champs de montant, de téléphone et de téléphone du courtier
+    if (!_numericRegex.hasMatch(customerTel) ||
+        !_numericRegex.hasMatch(brokerTel) ||
+        !_numericRegex.hasMatch(amount)) {
+      // Affichez un message d'erreur si l'un des champs ne contient pas que des chiffres
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text(
+                'Veuillez saisir uniquement des chiffres dans les champs de téléphone et de montant')),
+      );
+    } else if (containerName.isNotEmpty &&
         customer.isNotEmpty &&
         broker.isNotEmpty &&
         newC.isNotEmpty &&
         contDetails.isNotEmpty &&
-        amount > 0) {
+        int.parse(customerTel) > 0 &&
+        int.parse(brokerTel) > 0 &&
+        double.parse(amount) > 0) {
+      // Procédez à l'ajout du conteneur si tous les champs sont valides
       final response = await http.post(
         Uri.parse('https://votre-api-url/containers'),
         body: json.encode({
@@ -453,6 +520,7 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
         );
       }
     } else {
+      // Affichez un message d'erreur si certains champs sont vides
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Veuillez remplir tous les champs')),
       );
