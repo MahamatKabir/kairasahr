@@ -30,10 +30,10 @@ class _AddScreenneState extends State<AddScreenne> {
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 2,
-                  blurRadius: 5,
-                  offset: const Offset(0, 2),
+                  color: Colors.indigo.withOpacity(0.1),
+                  spreadRadius: 1,
+                  blurRadius: 10,
+                  offset: const Offset(4, 4),
                 ),
               ],
             ),
@@ -41,42 +41,42 @@ class _AddScreenneState extends State<AddScreenne> {
             child: TabBar(
                 indicator: BoxDecoration(
                   borderRadius: BorderRadius.circular(5.0),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
-                      color: Colors.indigo.shade100,
+                      color: Color.fromARGB(255, 4, 2, 95),
                       spreadRadius: 1,
                       blurRadius: 1,
-                      offset: const Offset(0, 1),
+                      offset: Offset(0, 1),
                     ),
                   ],
                 ),
                 tabs: [
                   Container(
                     width: 80,
-                    child: const Tab(
+                    child: Tab(
                       icon: HeroIcon(
                         HeroIcons.viewColumns,
-                        color: Color.fromARGB(255, 4, 2, 95),
+                        color: Colors.indigo.shade100,
                       ),
                       text: 'Conteneur',
                     ),
                   ),
                   Container(
                     width: 80,
-                    child: const Tab(
+                    child: Tab(
                       icon: HeroIcon(
                         HeroIcons.currencyDollar,
-                        color: Color.fromARGB(255, 4, 2, 95),
+                        color: Colors.indigo.shade100,
                       ),
                       text: 'Depense',
                     ),
                   ),
                   Container(
                     width: 80,
-                    child: const Tab(
+                    child: Tab(
                       icon: HeroIcon(
                         HeroIcons.buildingOffice2,
-                        color: Color.fromARGB(255, 4, 2, 95),
+                        color: Colors.indigo.shade100,
                       ),
                       text: 'Ville',
                     ),

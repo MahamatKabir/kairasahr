@@ -124,8 +124,8 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
                                     ' *', // Ajoute une étoile pour indiquer que le champ est requis
                                 style: TextStyle(
                                     fontSize: 13,
-                                    color: Colors
-                                        .red), // Couleur rouge pour l'étoile
+                                    color: Color.fromRGBO(244, 67, 54,
+                                        1)), // Couleur rouge pour l'étoile
                               ),
                             ],
                           ),
@@ -178,12 +178,15 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
                   style: buttonPrimary,
                   onPressed: () {
                     setState(() {
+                      // Vérifiez si les champs ne sont pas vides
                       _isFieldEmpty = _articleController.text.isEmpty ||
                           _selectedContainerID == null;
+                      // Si les champs ne sont pas vides, définissez _isFieldEmpty à faux
                       if (!_isFieldEmpty) {
                         _isFieldEmpty = false;
                       }
                     });
+                    // Vérifiez à nouveau si _isFieldEmpty est faux avant d'ajouter des dépenses
                     if (!_isFieldEmpty) {
                       _addExpense(
                         article: _articleController.text.trim(),

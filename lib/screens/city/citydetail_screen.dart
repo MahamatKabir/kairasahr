@@ -34,9 +34,9 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.indigo.shade100,
+      backgroundColor: _isEditing ? Colors.white : Colors.indigo.shade100,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 1, 0, 66),
+        backgroundColor: const Color.fromARGB(255, 4, 2, 95),
         iconTheme: const IconThemeData(color: Colors.white),
         title: Center(
           child: Center(
@@ -106,7 +106,7 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: Colors.indigo.shade100,
+          color: _isEditing ? Colors.white : Colors.indigo.shade100,
         ),
         width: 400,
         child: SingleChildScrollView(
@@ -132,52 +132,56 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 11),
       width: MediaQuery.of(context).size.width, // Utilisation de MediaQuery
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              color: Colors.indigo.shade900,
-              fontSize: 16.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          AnimatedContainer(
-            height: 65,
-            width:
-                MediaQuery.of(context).size.width, // Utilisation de MediaQuery
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeInOut,
-            padding:
-                const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
-            decoration: BoxDecoration(
-              color: _isEditing ? Colors.white : Colors.indigo.shade100,
-              borderRadius: BorderRadius.circular(10.0),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.indigo.withOpacity(0.4),
-                  spreadRadius: 4,
-                  blurRadius: 10,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-            ),
-            child: TextField(
-              controller: controller,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              label,
               style: TextStyle(
                 color: Colors.indigo.shade900,
-                fontSize: 14.0,
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
               ),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Entrer $label',
-                hintStyle: TextStyle(color: Colors.indigo.shade400),
-              ),
-              enabled: _isEditing,
             ),
-          ),
-        ],
+            AnimatedContainer(
+              height: 65,
+              width: MediaQuery.of(context)
+                  .size
+                  .width, // Utilisation de MediaQuery
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+              padding:
+                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+              decoration: BoxDecoration(
+                color: _isEditing ? Colors.white : Colors.indigo.shade100,
+                borderRadius: BorderRadius.circular(10.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.indigo.withOpacity(0.4),
+                    spreadRadius: 4,
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: TextField(
+                controller: controller,
+                style: TextStyle(
+                  color: Colors.indigo.shade900,
+                  fontSize: 14.0,
+                ),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Entrer $label',
+                  hintStyle: TextStyle(color: Colors.indigo.shade400),
+                ),
+                enabled: _isEditing,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

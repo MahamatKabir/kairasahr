@@ -4,7 +4,6 @@ import 'package:kairasahrl/models/depense_model.dart';
 import 'package:kairasahrl/screens/addscreen.dart';
 import 'package:kairasahrl/screens/btm_bar.dart';
 import 'package:kairasahrl/screens/depenses/depenseupdate_screen.dart';
-import 'package:kairasahrl/screens/profile/profile_screen.dart';
 import 'package:kairasahrl/widget/sizedtext.dart';
 
 class DepenseListScreen extends StatefulWidget {
@@ -159,13 +158,15 @@ class _DepenseListScreenState extends State<DepenseListScreen> {
       case 0:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const BottomBarScreen()),
+          MaterialPageRoute(
+              builder: (context) => const BottomBarScreen(selectedIndex: 0)),
         );
         break;
       case 1:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const ProfileScreen()),
+          MaterialPageRoute(
+              builder: (context) => const BottomBarScreen(selectedIndex: 1)),
         );
         break;
     }
@@ -176,11 +177,13 @@ class _DepenseListScreenState extends State<DepenseListScreen> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 1, 0, 66),
+          backgroundColor: const Color.fromARGB(255, 4, 2, 95),
           iconTheme: const IconThemeData(color: Colors.white),
-          title: const Text(
-            'Liste des Dépenses',
-            style: TextStyle(color: Colors.white, fontSize: 20),
+          title: const Center(
+            child: Text(
+              'Liste des Dépenses      ',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
           ),
         ),
         body: Column(

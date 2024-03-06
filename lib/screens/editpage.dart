@@ -118,7 +118,7 @@ class _EditPageState extends State<EditPage> {
         iconTheme: const IconThemeData(color: Colors.white),
         title: Center(
           child: Text(
-            _isEditing ? 'Modifier' : 'Detail du Conteneur',
+            _isEditing ? 'Modifier          ' : 'Detail du Conteneur',
             style: const TextStyle(color: Colors.white, fontSize: 20),
           ),
         ),
@@ -221,7 +221,7 @@ class _EditPageState extends State<EditPage> {
                   ElevatedButton(
                     onPressed: _isEditing ? _updateContainer : null,
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.indigo,
+                      backgroundColor: Colors.indigo,
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0),
@@ -267,7 +267,7 @@ class _EditPageState extends State<EditPage> {
                           }
                         : null,
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.red,
+                      backgroundColor: Colors.red,
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0),

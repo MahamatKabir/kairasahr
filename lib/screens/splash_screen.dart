@@ -43,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (_showSplash) {
         Get.off(_buildSplashScreen());
       } else {
-        Get.off(const BottomBarScreen());
+        Get.off(const BottomBarScreen(selectedIndex: 0));
       }
     });
     return _buildSplashScreen();
@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Widget _buildSplashScreen() {
     return const Scaffold(
-        backgroundColor: Color.fromARGB(255, 4, 1, 54),
+        backgroundColor: Colors.indigo,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -220,6 +220,9 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
     } else {
       return Column(
         children: [
+          const SizedBox(
+            height: 20,
+          ),
           const Center(
             child: Text(
               'Depense lieé au conteneur',
@@ -313,25 +316,21 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
           children: [
             Container(
               width: double.infinity,
-              height: 140,
+              height: 150,
               decoration: const BoxDecoration(
                 color: AppColors.appbar,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(5),
-                  bottomRight: Radius.circular(5),
-                ),
               ),
             ),
           ],
         ),
         Positioned(
           top: MediaQuery.of(context).size.height *
-              0.05, // 10% de la hauteur de l'écran à partir du haut
+              0.03, // 10% de la hauteur de l'écran à partir du haut
           left: MediaQuery.of(context).size.width *
               0.056, // 5.6% de la largeur de l'écran à partir de la gauche
           child: Container(
             height: MediaQuery.of(context).size.height *
-                0.33, // 23% de la hauteur de l'écran
+                0.30, // 23% de la hauteur de l'écran
             width: MediaQuery.of(context).size.width * 0.89,
 
             decoration: BoxDecoration(

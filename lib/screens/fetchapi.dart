@@ -46,12 +46,13 @@ class ApiService {
           };
         }).toList();
       } else {
-        throw Exception('Failed to load city data');
+        // throw Exception('Failed to load city data');
       }
     } catch (e) {
       print('Error: $e');
       rethrow; // Rethrow the exception to handle it where it's called
     }
+    return [];
   }
 
   static Future<bool> addContainer(Map<String, dynamic> containerData) async {
@@ -81,11 +82,12 @@ class ApiService {
           };
         }).toList();
       } else {
-        throw Exception('Failed to load container data');
+        // throw Exception('Failed to load container data');
       }
     } catch (e) {
-      throw Exception('Failed to load container data: $e');
+      // throw Exception('Failed to load container data: $e');
     }
+    return [];
   }
 }
 

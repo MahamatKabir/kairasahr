@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_iconly/flutter_iconly.dart';
-import 'package:kairasahrl/screens/addscreen.dart';
-import 'package:kairasahrl/screens/btm_bar.dart';
+import 'package:heroicons/heroicons.dart';
+import 'package:kairasahrl/screens/profile/userDetailscreen.dart';
 import 'components/profile_menu.dart';
 import 'components/profile_pic.dart';
 
@@ -15,108 +14,35 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  int _selectedIndex = 0;
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    // Navigation vers la page correspondante en fonction de l'index sélectionné
-    switch (index) {
-      case 0:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const BottomBarScreen()),
-        );
-        break;
-      case 1:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const ProfileScreen()),
-        );
-        break;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          child: Column(
-            children: [
-              const ProfilePic(),
-              const SizedBox(height: 100),
-              ProfileMenu(
-                text: "Liste des contenairs",
-                icon: Icons
-                    .cabin_outlined, // Utilisez l'icône IconData directement
-                press: () => {},
-              ),
-              ProfileMenu(
-                text: "Liste des depenses",
-                icon: Icons.payment, // Utilisez l'icône IconData directement
-                press: () {},
-              ),
-              ProfileMenu(
-                text: "Liste des villes",
-                icon: Icons
-                    .location_city, // Utilisez l'icône IconData directement
-                press: () {},
-              ),
-              ProfileMenu(
-                text: "Log Out",
-                icon: Icons.logout, // Utilisez l'icône IconData directement
-                press: () {},
-              ),
-            ],
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: Container(
-          margin: const EdgeInsets.only(top: 1),
-          height: 54,
-          width: 54,
-          child: FloatingActionButton(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AddScreenne()),
-              );
-            },
-            shape: RoundedRectangleBorder(
-              side: const BorderSide(width: 3, color: Colors.indigo),
-              borderRadius: BorderRadius.circular(150),
+      backgroundColor: Colors.indigo.shade100,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: Column(
+          children: [
+            const ProfilePic(),
+            const SizedBox(height: 100),
+            ProfileMenu(
+              text: "Détails de l'utilisateur",
+              icon: Icons.person, // Utilisez l'icône IconData directement
+              press: () {
+                // Naviguer vers la page de détails de l'utilisateur lorsque l'élément est sélectionné
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserDetailScreen()),
+                );
+              },
             ),
-            child: const Icon(
-              Icons.add,
-              color: Colors.indigo,
-            ),
-          ),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.white,
-          type: BottomNavigationBarType.fixed,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          currentIndex: _selectedIndex,
-          unselectedItemColor: Colors.black12,
-          selectedItemColor: Colors.indigo,
-          onTap: _onItemTapped,
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(
-                  _selectedIndex == 0 ? IconlyBold.home : IconlyLight.home),
-              label: "Home",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                  _selectedIndex == 1 ? IconlyBold.user2 : IconlyLight.user2),
-              label: "User",
+            ProfileMenu(
+              text: "Déconnecter",
+              icon: Icons.logout, // Utilisez l'icône IconData directement
+              press: () {},
             ),
           ],
-        ));
+        ),
+      ),
+    );
   }
 }

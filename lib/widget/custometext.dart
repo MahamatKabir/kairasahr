@@ -17,6 +17,7 @@ class CustomTextField extends StatefulWidget {
   final bool isContSizeField;
   final bool obscureText;
   final int maxLines;
+  final bool? isButtonClick; // Nouveau paramètre
   final ValueChanged<String>? onChanged;
   final VoidCallback? onButtonPressed;
 
@@ -40,6 +41,7 @@ class CustomTextField extends StatefulWidget {
     this.maxLines = 1,
     this.onChanged,
     this.onButtonPressed,
+    this.isButtonClick,
   }) : super(key: key);
 
   @override
@@ -47,6 +49,7 @@ class CustomTextField extends StatefulWidget {
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
+  bool _isFieldEmpty = false; // Ajout d'un nouvel état local
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -60,7 +63,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 style: TextStyle(fontSize: 13, color: Colors.indigo.shade900),
               ),
               if (widget.isRequired) // Vérifie si le champ est requis
-                TextSpan(
+                const TextSpan(
                   text:
                       ' *', // Ajoute une étoile pour indiquer que le champ est requis
                   style: TextStyle(
@@ -94,11 +97,17 @@ class _CustomTextFieldState extends State<CustomTextField> {
             decoration: InputDecoration(
               labelText: '',
               border: InputBorder.none,
-              errorText: widget.isFieldEmpty ?? false
+              errorText: (widget.isButtonClick ?? false && _isFieldEmpty)
                   ? 'Ce champ est obligatoire'
                   : null,
             ),
             onChanged: (value) {
+              if (widget.isButtonClick ?? false) {
+                // Vérifie si le bouton est cliqué
+                setState(() {
+                  _isFieldEmpty = value.isEmpty; // Mettre à jour _isFieldEmpty
+                });
+              }
               widget.onChanged?.call(value);
             },
           ),

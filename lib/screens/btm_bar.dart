@@ -5,7 +5,10 @@ import 'package:kairasahrl/screens/home.dart';
 import 'package:kairasahrl/screens/profile/profile_screen.dart';
 
 class BottomBarScreen extends StatefulWidget {
-  const BottomBarScreen({Key? key}) : super(key: key);
+  final int selectedIndex;
+
+  const BottomBarScreen({Key? key, required this.selectedIndex})
+      : super(key: key);
 
   @override
   State<BottomBarScreen> createState() => _BottomBarScreenState();
@@ -21,6 +24,13 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Utilisez l'index reçu comme index par défaut
+    _selectedIndex = widget.selectedIndex;
   }
 
   @override

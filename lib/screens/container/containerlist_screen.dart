@@ -5,7 +5,6 @@ import 'package:kairasahrl/models/container_model.dart';
 import 'package:kairasahrl/screens/addscreen.dart';
 import 'package:kairasahrl/screens/btm_bar.dart';
 import 'package:kairasahrl/screens/container/containerupdate.dart';
-import 'package:kairasahrl/screens/profile/profile_screen.dart';
 import 'package:kairasahrl/widget/sizedtext.dart';
 
 class ContainerListScreen extends StatefulWidget {
@@ -235,13 +234,15 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
       case 0:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const BottomBarScreen()),
+          MaterialPageRoute(
+              builder: (context) => const BottomBarScreen(selectedIndex: 0)),
         );
         break;
       case 1:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const ProfileScreen()),
+          MaterialPageRoute(
+              builder: (context) => const BottomBarScreen(selectedIndex: 1)),
         );
         break;
     }
@@ -252,7 +253,7 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
     return Scaffold(
         backgroundColor: Colors.indigo.shade100,
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 1, 0, 66),
+          backgroundColor: const Color.fromARGB(255, 4, 2, 95),
           iconTheme: const IconThemeData(color: Colors.white),
           title: const Text(
             'Liste des Conteneurs',

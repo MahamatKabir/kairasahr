@@ -52,9 +52,9 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
       });
     } catch (e) {
       print('Error: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to load city data')),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('Failed to load city data')),
+      // );
     }
   }
 
@@ -91,6 +91,7 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                           labelText: 'Nom du Conteneur',
                           controller: _nameController,
                           isFieldEmpty: _isFieldEmpty,
+
                           onChanged: (value) {
                             setState(() {
                               if (value.isEmpty) {
@@ -248,7 +249,6 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                                     labelText: 'Montant',
                                     controller: _amountController,
                                     isFieldEmpty: _isFieldEmpty,
-                                    isRequired: true,
                                     onChanged: (value) {
                                       setState(() {
                                         if (value.isEmpty) {

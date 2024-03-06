@@ -4,7 +4,6 @@ import 'package:heroicons/heroicons.dart';
 import 'package:kairasahrl/screens/addscreen.dart';
 import 'package:kairasahrl/screens/btm_bar.dart';
 import 'package:kairasahrl/screens/city/citydetail_screen.dart';
-import 'package:kairasahrl/screens/profile/profile_screen.dart';
 import 'package:kairasahrl/screens/utils/color.dart';
 
 import '../../models/city_model.dart';
@@ -105,13 +104,15 @@ class _CityListScreenState extends State<CityListScreen> {
       case 0:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const BottomBarScreen()),
+          MaterialPageRoute(
+              builder: (context) => const BottomBarScreen(selectedIndex: 0)),
         );
         break;
       case 1:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const ProfileScreen()),
+          MaterialPageRoute(
+              builder: (context) => const BottomBarScreen(selectedIndex: 1)),
         );
         break;
     }
@@ -126,7 +127,7 @@ class _CityListScreenState extends State<CityListScreen> {
           iconTheme: const IconThemeData(color: AppColors.textFieldBackground),
           title: const Center(
             child: Text(
-              'Liste des Villes',
+              'Liste des Villes       ',
               style:
                   TextStyle(color: AppColors.textFieldBackground, fontSize: 20),
             ),

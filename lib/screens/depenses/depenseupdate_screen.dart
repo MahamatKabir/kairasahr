@@ -63,7 +63,7 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
     return Scaffold(
       backgroundColor: !_isEditing ? Colors.indigo.shade100 : Colors.white,
       appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 1, 0, 66),
+          backgroundColor: const Color.fromARGB(255, 4, 2, 95),
           iconTheme: const IconThemeData(color: Colors.white),
           title: Center(
             child: Text(
@@ -153,16 +153,13 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
                             if (!_isEditing)
                               _buildTextFieldWithBorder('Date de creation',
                                   _createdAtController, false),
-                            const SizedBox(
-                              height: 20,
-                            ),
                             Visibility(
                               visible: _isEditing,
                               child: Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
-                                  const SizedBox(height: 20),
+                                  const SizedBox(height: 10),
                                   Container(
                                     width: 350,
                                     decoration: BoxDecoration(

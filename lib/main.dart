@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kairasahrl/screens/addscreen.dart';
 import 'package:kairasahrl/screens/splash_screen.dart';
 import 'screens/container/containerlist_screen.dart';
 

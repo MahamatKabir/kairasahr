@@ -44,7 +44,7 @@ class ProfilePic extends StatelessWidget {
                   "ibrahim mahamat",
                   style: TextStyle(
                       fontSize: 14,
-                      color: Colors.black,
+                      color: Colors.indigo,
                       fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(
@@ -54,7 +54,7 @@ class ProfilePic extends StatelessWidget {
                   "ibrahim@gmail.com",
                   style: TextStyle(
                       fontSize: 12,
-                      color: Colors.black,
+                      color: Colors.indigo,
                       fontWeight: FontWeight.bold),
                 ),
               ],

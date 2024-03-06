@@ -4,6 +4,7 @@ import 'package:kairasahrl/screens/container/containerlist_screen.dart';
 
 import 'package:intl/intl.dart';
 import 'package:kairasahrl/screens/depenses/depenselist_screen.dart';
+import 'package:kairasahrl/screens/utils/color.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -17,68 +18,89 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.indigo.shade100,
+      backgroundColor: Colors.white,
       body: SafeArea(
-          child: Container(
-        margin: const EdgeInsets.only(top: 18, left: 24, right: 24),
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: SizedBox(height: 700, child: uppart()),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  uppart() {
+    return Stack(children: [
+      Container(
+        color: Colors.indigo,
+        height: 400,
         child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Container(
-                      height: 30,
-                      width: 30,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            width: 3,
-                            color: Colors.grey,
+                Padding(
+                  padding: EdgeInsets.only(left: 8.0),
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              width: 3,
+                              color: Colors.grey,
+                            ),
+                            image: const DecorationImage(
+                                fit: BoxFit.cover,
+                                image: AssetImage("assets/images/cont.png"))),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Bienvenu',
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
                           ),
-                          image: const DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage("assets/images/cont.png"))),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Bienvenu',
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.indigo,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          'Mahamat kabir',
-                          style: TextStyle(
+                          Text(
+                            'Mahamat kabir',
+                            style: TextStyle(
                               fontSize: 12,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    )
-                  ],
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
-                Column(
-                  children: [
-                    Text(
-                      formattedDate,
-                      style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    ),
-                    Text(
-                      dayOfWeek,
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        formattedDate,
+                        style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                      ),
+                      Text(
+                        dayOfWeek,
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.white),
+                      ),
+                    ],
+                  ),
                 )
               ],
             ),
@@ -111,77 +133,88 @@ class _MyHomePageState extends State<MyHomePage> {
                 const SizedBox(
                   height: 48,
                 ),
-                const Text(
-                  'SERVICES',
-                  style: TextStyle(
-                      color: Colors.indigo,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _cardMenu(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const ContainerListScreen()),
-                          );
-                        },
-                        title: 'CONTENEURS',
-                        icon: 'assets/images/conta.jpeg'),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    _cardMenu(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const DepenseListScreen()),
-                          );
-                        },
-                        title: 'DEPENSES',
-                        icon: 'assets/images/expense.png'),
-                  ],
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _cardMenu(
-                        onTap: () {},
-                        title: 'UTILISATEURS',
-                        icon: 'assets/images/utilisateur.jpeg'),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    _cardMenu(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const CityListScreen()),
-                          );
-                        },
-                        title: 'VILLES',
-                        icon: 'assets/images/ville.jpeg'),
-                  ],
-                )
               ],
             ))
           ],
         ),
-      )),
-    );
+      ),
+      Positioned(
+        top: MediaQuery.of(context).size.height *
+            0.45, // 10% de la hauteur de l'écran à partir du haut
+        left: MediaQuery.of(context).size.width *
+            0.09, // 5.6% de la largeur de l'écran à partir de la gauche
+        child: Container(
+          child: Column(
+            children: [
+              const Text(
+                'SERVICES',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _cardMenu(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const ContainerListScreen()),
+                        );
+                      },
+                      title: 'CONTENEURS',
+                      icon: 'assets/images/conta.jpeg'),
+                  const SizedBox(
+                    width: 15,
+                  ),
+                  _cardMenu(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const DepenseListScreen()),
+                        );
+                      },
+                      title: 'DEPENSES',
+                      icon: 'assets/images/expense.png'),
+                ],
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _cardMenu(
+                      onTap: () {},
+                      title: 'UTILISATEURS',
+                      icon: 'assets/images/utilisateur.jpeg'),
+                  const SizedBox(
+                    width: 15,
+                  ),
+                  _cardMenu(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const CityListScreen()),
+                        );
+                      },
+                      title: 'VILLES',
+                      icon: 'assets/images/ville.jpeg'),
+                ],
+              )
+            ],
+          ),
+        ),
+      )
+    ]);
   }
 
   _cardMenu({
@@ -189,7 +222,7 @@ class _MyHomePageState extends State<MyHomePage> {
     required String icon,
     VoidCallback? onTap,
     Color color = Colors.white,
-    Color fontColor = Colors.grey,
+    Color fontColor = Colors.indigo,
   }) {
     return GestureDetector(
       onTap: onTap,
@@ -198,7 +231,16 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: const EdgeInsets.symmetric(vertical: 20),
           margin: const EdgeInsets.only(right: 1),
           width: 140,
+          height: 165,
           decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.indigo.withOpacity(0.4),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(4, 4),
+              ),
+            ],
             borderRadius: BorderRadius.circular(20),
             color: color,
           ),
