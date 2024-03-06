@@ -4,7 +4,6 @@ import 'package:kairasahrl/screens/container/containerlist_screen.dart';
 
 import 'package:intl/intl.dart';
 import 'package:kairasahrl/screens/depenses/depenselist_screen.dart';
-import 'package:kairasahrl/screens/utils/color.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -18,6 +17,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.indigo,
+        toolbarHeight: 20, // Spécifiez ici la hauteur personnalisée
+      ),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: CustomScrollView(
@@ -42,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 8.0),
+                  padding: const EdgeInsets.only(left: 8.0),
                   child: Row(
                     children: [
                       Container(
@@ -140,9 +143,9 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       Positioned(
         top: MediaQuery.of(context).size.height *
-            0.45, // 10% de la hauteur de l'écran à partir du haut
+            0.30, // 10% de la hauteur de l'écran à partir du haut
         left: MediaQuery.of(context).size.width *
-            0.09, // 5.6% de la largeur de l'écran à partir de la gauche
+            0.12, // 5.6% de la largeur de l'écran à partir de la gauche
         child: Container(
           child: Column(
             children: [
