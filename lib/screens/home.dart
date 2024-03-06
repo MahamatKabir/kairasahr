@@ -19,7 +19,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.indigo,
-        toolbarHeight: 20, // Spécifiez ici la hauteur personnalisée
+        toolbarHeight: 10, // Spécifiez ici la hauteur personnalisée
       ),
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -145,7 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
         top: MediaQuery.of(context).size.height *
             0.30, // 10% de la hauteur de l'écran à partir du haut
         left: MediaQuery.of(context).size.width *
-            0.12, // 5.6% de la largeur de l'écran à partir de la gauche
+            0.17, // 5.6% de la largeur de l'écran à partir de la gauche
         child: Container(
           child: Column(
             children: [
@@ -174,7 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       title: 'CONTENEURS',
                       icon: 'assets/images/conta.jpeg'),
                   const SizedBox(
-                    width: 15,
+                    width: 20,
                   ),
                   _cardMenu(
                       onTap: () {
@@ -199,7 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       title: 'UTILISATEURS',
                       icon: 'assets/images/utilisateur.jpeg'),
                   const SizedBox(
-                    width: 15,
+                    width: 20,
                   ),
                   _cardMenu(
                       onTap: () {

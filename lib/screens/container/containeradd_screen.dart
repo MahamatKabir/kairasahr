@@ -412,7 +412,8 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                         ),
                         const SizedBox(height: 12),
                         Container(
-                          width: 350,
+                          width: 400,
+                          margin: const EdgeInsets.only(left: 20),
                           decoration: BoxDecoration(
                               color: const Color.fromARGB(255, 1, 1, 55),
                               borderRadius: BorderRadius.circular(50)),
