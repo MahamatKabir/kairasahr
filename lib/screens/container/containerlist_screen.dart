@@ -253,7 +253,7 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
     return Scaffold(
         backgroundColor: Colors.indigo.shade100,
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 4, 2, 95),
+          backgroundColor: Colors.indigo,
           iconTheme: const IconThemeData(color: Colors.white),
           title: const Text(
             'Liste des Conteneurs',

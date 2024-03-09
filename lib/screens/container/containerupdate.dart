@@ -127,7 +127,7 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        backgroundColor: AppColors.appbar,
+        backgroundColor: Colors.indigo,
         iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           '',
@@ -318,7 +318,7 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
               width: double.infinity,
               height: 150,
               decoration: const BoxDecoration(
-                color: AppColors.appbar,
+                color: Colors.indigo,
               ),
             ),
           ],

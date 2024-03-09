@@ -114,7 +114,7 @@ class _EditPageState extends State<EditPage> {
     return Scaffold(
       backgroundColor: !_isEditing ? Colors.indigo.shade100 : Colors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.appbar,
+        backgroundColor: Colors.indigo,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Center(
           child: Text(

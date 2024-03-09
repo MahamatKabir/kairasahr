@@ -5,9 +5,11 @@ import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
 class YourApi {
+  static const String baseUrl = 'YOUR_API_BASE_URL';
+
   static Future<List<String>> fetchContainerIDs() async {
     // Replace this URL with your actual API endpoint
-    final String apiUrl = 'https://example.com/api/containerIDs';
+    const String apiUrl = '$baseUrl/containerIDs';
 
     try {
       final response = await http.get(Uri.parse(apiUrl));
@@ -33,10 +35,10 @@ class YourApi {
 }
 
 class ApiService {
+  static const String baseUrl = 'YOUR_API_BASE_URL';
   static Future<List<Map<String, dynamic>>> fetchCityData() async {
     try {
-      final response =
-          await http.get(Uri.parse('https://votre-api-url/cities'));
+      final response = await http.get(Uri.parse('$baseUrl/cities'));
       if (response.statusCode == 200) {
         final List<dynamic> cities = jsonDecode(response.body);
         return cities.map((city) {
@@ -58,7 +60,7 @@ class ApiService {
   static Future<bool> addContainer(Map<String, dynamic> containerData) async {
     try {
       final response = await http.post(
-        Uri.parse('https://votre-api-url/containers'),
+        Uri.parse('$baseUrl/containers'),
         body: json.encode(containerData),
         headers: {'Content-Type': 'application/json'},
       );
@@ -71,8 +73,7 @@ class ApiService {
 
   static Future<List<Map<String, dynamic>>> fetchContainers() async {
     try {
-      final response =
-          await http.get(Uri.parse('https://votre-api-url/containers'));
+      final response = await http.get(Uri.parse('$baseUrl/containers'));
       if (response.statusCode == 200) {
         final List<dynamic> containers = jsonDecode(response.body);
         return containers.map((container) {
@@ -92,12 +93,13 @@ class ApiService {
 }
 
 class CityService {
+  static const String baseUrl = 'YOUR_API_BASE_URL';
   static Future<String> addCity(String cityName) async {
     final cityId = _generateCityId();
     final createdAt = DateTime.now().toIso8601String();
 
     final response = await http.post(
-      Uri.parse('https://votre-api-url/cities'),
+      Uri.parse('$baseUrl/cities'),
       body: json.encode({
         'id': cityId,
         'name': cityName,
@@ -120,6 +122,7 @@ class CityService {
 }
 
 class AddExpenseService {
+  static const String baseUrl = 'YOUR_API_BASE_URL';
   static Future<void> addExpense({
     required String article,
     required int total,
@@ -133,7 +136,7 @@ class AddExpenseService {
 
     if (article.isNotEmpty && total > 0 && selectedContainerID != null) {
       final response = await http.post(
-        Uri.parse('https://your-api-url/expenses'),
+        Uri.parse('$baseUrl/expenses'),
         body: json.encode({
           'id': expenseId,
           'article': article,

@@ -30,7 +30,6 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
     try {
       _containerData = await ApiService.fetchContainers();
     } catch (e) {
-      print('Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Failed to load container data')),
       );

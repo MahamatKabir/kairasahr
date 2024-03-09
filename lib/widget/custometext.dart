@@ -97,7 +97,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             decoration: InputDecoration(
               labelText: '',
               border: InputBorder.none,
-              errorText: (widget.isButtonClick ?? false && _isFieldEmpty)
+              errorText: (widget.isButtonClick ?? false)
                   ? 'Ce champ est obligatoire'
                   : null,
             ),
@@ -105,7 +105,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               if (widget.isButtonClick ?? false) {
                 // Vérifie si le bouton est cliqué
                 setState(() {
-                  _isFieldEmpty = value.isEmpty; // Mettre à jour _isFieldEmpty
+                  _isFieldEmpty = false; // Mettre à jour _isFieldEmpty
                 });
               }
               widget.onChanged?.call(value);

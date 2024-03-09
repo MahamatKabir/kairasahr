@@ -14,6 +14,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String formattedDate = DateFormat('d MMM yyyy').format(DateTime.now());
   String dayOfWeek = DateFormat('EEEE').format(DateTime.now());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,18 +143,16 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       Positioned(
-        top: MediaQuery.of(context).size.height *
-            0.30, // 10% de la hauteur de l'écran à partir du haut
-        left: MediaQuery.of(context).size.width *
-            0.17, // 5.6% de la largeur de l'écran à partir de la gauche
-        child: Container(
+        top: MediaQuery.of(context).size.height * 0.30,
+        left: (MediaQuery.of(context).size.width - 300) / 2,
+        child: Center(
           child: Column(
             children: [
               const Text(
                 'SERVICES',
                 style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold),
               ),
               const SizedBox(
@@ -229,24 +228,25 @@ class _MyHomePageState extends State<MyHomePage> {
   }) {
     return GestureDetector(
       onTap: onTap,
-      child: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          margin: const EdgeInsets.only(right: 1),
-          width: 140,
-          height: 165,
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.indigo.withOpacity(0.4),
-                spreadRadius: 1,
-                blurRadius: 10,
-                offset: const Offset(4, 4),
-              ),
-            ],
-            borderRadius: BorderRadius.circular(20),
-            color: color,
-          ),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        margin: const EdgeInsets.only(right: 1),
+        width: 140,
+        height: 165,
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.indigo.withOpacity(0.4),
+              spreadRadius: 1,
+              blurRadius: 10,
+              offset: const Offset(4, 4),
+            ),
+          ],
+          borderRadius: BorderRadius.circular(20),
+          color: color,
+        ),
+        child: Material(
+          color: Colors.transparent,
           child: Column(children: [
             Image.asset(
               icon,

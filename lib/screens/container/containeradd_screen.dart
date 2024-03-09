@@ -91,19 +91,17 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                           labelText: 'Nom du Conteneur',
                           controller: _nameController,
                           isFieldEmpty: _isFieldEmpty,
-
                           onChanged: (value) {
                             setState(() {
                               if (value.isEmpty) {
                                 _isFieldEmpty = false;
                               } else {
-                                _isFieldEmpty = value.isEmpty;
+                                _isFieldEmpty = value.isNotEmpty;
                               }
                             });
                           },
                           isContainerNameField: true,
-                          isRequired:
-                              true, // Ajoutez cette ligne pour indiquer que le champ est requis
+                          isRequired: true,
                         ),
                         const SizedBox(height: 9),
                         CustomTextField(
@@ -205,15 +203,13 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                                       items: const [
                                         DropdownMenuItem<int>(
                                           value: 0,
-                                          child: Text('Passif'),
+                                          child: Text('Passive'),
                                         ),
                                         DropdownMenuItem<int>(
                                           value: 1,
-                                          child: Text('Actif'),
+                                          child: Text('Active'),
                                         ),
                                       ],
-                                      decoration:
-                                          const InputDecoration(labelText: ''),
                                     ),
                                   ),
                                 ],
@@ -248,17 +244,6 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                                   CustomTextField(
                                     labelText: 'Montant',
                                     controller: _amountController,
-                                    isFieldEmpty: _isFieldEmpty,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        if (value.isEmpty) {
-                                          _isFieldEmpty =
-                                              false; // Set _isFieldEmpty to false if the field becomes empty
-                                        } else {
-                                          _isFieldEmpty = value.isEmpty;
-                                        }
-                                      });
-                                    },
                                     isAmountField: true,
                                   ),
                                 ],
@@ -325,8 +310,6 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                                           child: Text(city['name'] as String),
                                         );
                                       }).toList(),
-                                      decoration:
-                                          const InputDecoration(labelText: ''),
                                     ),
                                   ),
                                 ],
@@ -391,8 +374,6 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                                               Text(contSize['name'] as String),
                                         );
                                       }).toList(),
-                                      decoration:
-                                          const InputDecoration(labelText: ''),
                                     ),
                                   ),
                                 ],
@@ -404,41 +385,45 @@ class _ContainerAddScreenState extends State<ContainerAddScreen> {
                         CustomTextField(
                           labelText: 'Nouveau C',
                           controller: _newCController,
+                          maxLines: 2,
                         ),
                         const SizedBox(height: 6),
                         CustomTextField(
                           labelText: 'Détails du Conteneur',
                           controller: _contDetailsController,
+                          maxLines: 2,
                         ),
                         const SizedBox(height: 12),
-                        Container(
-                          width: 400,
-                          margin: const EdgeInsets.only(left: 20),
-                          decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 1, 1, 55),
-                              borderRadius: BorderRadius.circular(50)),
-                          child: ElevatedButton(
-                            style: buttonPrimary,
-                            onPressed: () {
-                              setState(() {
-                                _isFieldEmpty = _nameController.text.isEmpty ||
-                                    _customerController.text.isEmpty ||
-                                    _customerTelController.text.isEmpty ||
-                                    _selectedStatus == null ||
-                                    _amountController.text.isEmpty ||
-                                    _selectedCityID == null ||
-                                    _selectedContSizeID == null;
-                              });
-                              if (!_isFieldEmpty) {
-                                _addContainer();
-                              }
-                            },
-                            child: _isAddingContainer
-                                ? const CustomProgressIndicator()
-                                : const Text(
-                                    'Ajouter',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
+                        Center(
+                          child: Container(
+                            width: 400,
+                            decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 1, 1, 55),
+                                borderRadius: BorderRadius.circular(50)),
+                            child: ElevatedButton(
+                              style: buttonPrimary,
+                              onPressed: () {
+                                setState(() {
+                                  _isFieldEmpty =
+                                      _nameController.text.isEmpty ||
+                                          _customerController.text.isEmpty ||
+                                          _customerTelController.text.isEmpty ||
+                                          _selectedStatus == null ||
+                                          _amountController.text.isEmpty ||
+                                          _selectedCityID == null ||
+                                          _selectedContSizeID == null;
+                                });
+                                if (!_isFieldEmpty) {
+                                  _addContainer();
+                                }
+                              },
+                              child: _isAddingContainer
+                                  ? const CustomProgressIndicator()
+                                  : const Text(
+                                      'Ajouter',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                            ),
                           ),
                         ),
                       ],
