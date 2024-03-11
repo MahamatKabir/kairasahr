@@ -46,7 +46,7 @@ class _AddScreenneState extends State<AddScreenne> {
                       color: Colors.indigo.shade700,
                       spreadRadius: 1,
                       blurRadius: 1,
-                      offset: Offset(0, 1),
+                      offset: const Offset(0, 1),
                     ),
                   ],
                 ),

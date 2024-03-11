@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
 class YourApi {
-  static const String baseUrl = 'YOUR_API_BASE_URL';
+  static const String baseUrl = 'http://kairasarl.yerimai.com';
 
   static Future<List<String>> fetchContainerIDs() async {
     // Replace this URL with your actual API endpoint
@@ -35,7 +35,7 @@ class YourApi {
 }
 
 class ApiService {
-  static const String baseUrl = 'YOUR_API_BASE_URL';
+  static const String baseUrl = 'http://kairasarl.yerimai.com';
   static Future<List<Map<String, dynamic>>> fetchCityData() async {
     try {
       final response = await http.get(Uri.parse('$baseUrl/cities'));
@@ -93,7 +93,7 @@ class ApiService {
 }
 
 class CityService {
-  static const String baseUrl = 'YOUR_API_BASE_URL';
+  static const String baseUrl = 'http://kairasarl.yerimai.com';
   static Future<String> addCity(String cityName) async {
     final cityId = _generateCityId();
     final createdAt = DateTime.now().toIso8601String();
@@ -122,29 +122,31 @@ class CityService {
 }
 
 class AddExpenseService {
-  static const String baseUrl = 'YOUR_API_BASE_URL';
+  static const String baseUrl = 'http://kairasarl.yerimai.com';
   static Future<void> addExpense({
-    required String article,
-    required int total,
-    required int paid,
+    required Map<String, dynamic> itemData,
     required String slug,
-    required int? selectedContainerID,
     required BuildContext context,
   }) async {
     final expenseId = _generateExpenseId();
     final createdAt = DateTime.now().toIso8601String();
 
-    if (article.isNotEmpty && total > 0 && selectedContainerID != null) {
+    // Assurez-vous que toutes les données nécessaires sont présentes dans itemData
+    if (itemData['article'] != null &&
+        itemData['total'] != null &&
+        itemData['paid'] != null &&
+        itemData['selectedContainerID'] != null) {
       final response = await http.post(
         Uri.parse('$baseUrl/expenses'),
         body: json.encode({
           'id': expenseId,
-          'article': article,
-          'total': total,
-          'paid': paid,
+          'article': itemData['article'],
+          'total': itemData['total'],
+          'paid': itemData['paid'],
           'slug': slug,
-          'container_id': selectedContainerID,
+          'container_id': itemData['selectedContainerID'],
           'created_at': createdAt,
+          // Ajoutez d'autres données spécifiques de l'élément ici
         }),
         headers: {'Content-Type': 'application/json'},
       );
@@ -163,21 +165,8 @@ class AddExpenseService {
         );
       }
     } else {
-      String errorMessage = '';
-      if (article.isEmpty) {
-        errorMessage += 'Veuillez saisir un article.\n';
-      }
-      if (total <= 0) {
-        errorMessage += 'Veuillez saisir un montant total valide.\n';
-      }
-      if (paid <= 0) {
-        errorMessage += 'Veuillez saisir un montant payé valide.\n';
-      }
-      if (selectedContainerID == null) {
-        errorMessage += 'Veuillez sélectionner un conteneur.\n';
-      }
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage)),
+        const SnackBar(content: Text('Données de dépense non valides')),
       );
     }
   }
