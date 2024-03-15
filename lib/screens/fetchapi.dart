@@ -176,3 +176,24 @@ class AddExpenseService {
     return uuid.v4();
   }
 }
+
+class AuthService {
+  static Future<String?> signIn(String email, String password) async {
+    final Uri apiUrl = Uri.parse('http://kairasarl.yerimai.com/api/v1/login');
+    final response = await http.post(
+      apiUrl,
+      body: jsonEncode({'email': email, 'password': password}),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      // Connexion réussie, retournez le jeton d'authentification
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      final String? token = responseData['token'];
+      return token;
+    } else {
+      // Échec de la connexion, retournez null
+      return null;
+    }
+  }
+}

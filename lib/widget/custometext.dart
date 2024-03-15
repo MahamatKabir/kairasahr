@@ -95,11 +95,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
             obscureText: widget.obscureText,
             maxLines: widget.maxLines,
             decoration: InputDecoration(
-              labelText: '',
-              border: InputBorder.none,
-              errorText: (widget.isButtonClick ?? false)
-                  ? 'Ce champ est obligatoire'
-                  : null,
+              labelText: 'Nom du Container',
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
             ),
             onChanged: (value) {
               if (widget.isButtonClick ?? false) {
