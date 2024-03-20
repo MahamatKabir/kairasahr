@@ -189,7 +189,7 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
   Widget _buildTextWithBorder(String text) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 11),
-      width: MediaQuery.of(context).size.width, // Utilisation de MediaQuery
+      width: MediaQuery.of(context).size.width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -202,8 +202,7 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
             ),
           ),
           AnimatedContainer(
-            width:
-                MediaQuery.of(context).size.width, // Utilisation de MediaQuery
+            width: MediaQuery.of(context).size.width,
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeInOut,
             padding:
@@ -221,7 +220,7 @@ class _CityDetailScreennState extends State<CityDetailScreenn> {
               ],
             ),
             child: Text(
-              widget.city.createdAt!,
+              widget.city.createdAt ?? 'Date de création non disponible',
               style: TextStyle(
                 color: Colors.indigo.shade900,
                 fontSize: 14.0,

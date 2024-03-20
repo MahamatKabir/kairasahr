@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kairasahrl/screens/fetchapi.dart';
 import 'package:kairasahrl/screens/utils/costomeProgress.dart';
 import 'package:kairasahrl/widget/button.dart';
-// Importez le widget personnalisé
 
 class CityAddScreen extends StatefulWidget {
   const CityAddScreen({Key? key}) : super(key: key);
@@ -14,16 +14,31 @@ class CityAddScreen extends StatefulWidget {
 
 class _CityAddScreenState extends State<CityAddScreen> {
   final TextEditingController _nameController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isAddingCity = false;
-  bool _isFieldEmpty = false;
   late Timer _timer;
-// Couleur initiale de boxShadow
+
+  @override
+  void initState() {
+    super.initState();
+    _timer =
+        Timer(const Duration(seconds: 0), () {}); // Initialisation de _timer
+  }
 
   @override
   void dispose() {
     _timer
         .cancel(); // Assurez-vous d'annuler le timer lors de la suppression de l'écran
     super.dispose();
+  }
+
+  void _submitForm() {
+    setState(() {
+      _isAddingCity = true; // Activez l'indicateur de chargement
+    });
+
+    // Appelez votre fonction pour ajouter la ville avec le nom saisi dans le champ
+    _addCity(_nameController.text);
   }
 
   @override
@@ -33,11 +48,6 @@ class _CityAddScreenState extends State<CityAddScreen> {
         // Fermez le clavier virtuel lorsque l'utilisateur clique en dehors du champ de texte
         FocusScope.of(context).unfocus();
         // Vérifie si le champ de texte est vide lorsqu'on clique en dehors du champ
-        if (_nameController.text.isEmpty) {
-          setState(() {
-            _isFieldEmpty = false;
-          });
-        }
       },
       child: Scaffold(
         backgroundColor: Colors.indigo.shade100,
@@ -50,115 +60,52 @@ class _CityAddScreenState extends State<CityAddScreen> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 6,
-                      ),
-                      Text.rich(
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                              text: 'Nom du ville', // Texte de l'étiquette
-                              style: TextStyle(
-                                  fontSize: 13, color: Colors.indigo.shade900),
-                            ),
-                            const TextSpan(
-                              text:
-                                  ' *', // Ajoute une étoile pour indiquer que le champ est requis
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors
-                                      .red), // Couleur rouge pour l'étoile
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 3,
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        height: 45,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: _isFieldEmpty
-                                  ? Colors.red.withOpacity(0.7)
-                                  : const Color.fromARGB(255, 0, 0, 0)
-                                      .withOpacity(0.7),
-                              spreadRadius: 1,
-                              blurRadius: 1,
-                            ),
-                          ],
-                          borderRadius: BorderRadius.circular(4.0),
-                          border: _isFieldEmpty
-                              ? Border.all(
-                                  color: Color.fromARGB(255, 249, 228, 226),
-                                  width: 2.0)
-                              : null,
-                        ),
-                        child: TextField(
-                          controller: _nameController,
-                          decoration: InputDecoration(
-                            labelText: '',
-                            border: InputBorder.none,
-                            errorText: _isFieldEmpty
-                                ? 'Ce champ est obligatoire'
-                                : null,
+                    padding: const EdgeInsets.all(20),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            height: 3,
                           ),
-                          onChanged: (value) {
-                            setState(() {
-                              if (value.isEmpty) {
-                                _isFieldEmpty =
-                                    false; // Set _isFieldEmpty to false if the field becomes empty
-                              } else {
-                                _isFieldEmpty = value.isEmpty;
+                          TextFormField(
+                            controller: _nameController,
+                            decoration: InputDecoration(
+                              labelText: 'Ville',
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Veuillez entrer le nom de la ville';
                               }
-                            });
-                          },
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 14,
-                      ),
-                    ],
-                  ),
-                ),
-                ElevatedButton(
-                  style: buttonPrimary,
-                  onPressed: () {
-                    if (_nameController.text.isEmpty) {
-                      setState(() {
-                        _isFieldEmpty = true;
-                      });
-                    } else {
-                      _timer = Timer(Duration(seconds: 5), () {
-                        setState(() {
-                          _isAddingCity = false;
-                        });
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Délai dépassé. Veuillez réessayer.'),
+                              return null;
+                            },
                           ),
-                        );
-                      });
-                      setState(() {
-                        _isAddingCity = true;
-                      });
-                      _addCity(_nameController.text);
-                    }
-                  },
-                  child: _isAddingCity
-                      ? CustomProgressIndicator() // Utilisez le widget personnalisé ici
-                      : const Text(
-                          'Ajouter',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                ),
+                          const SizedBox(
+                            height: 14,
+                          ),
+                          ElevatedButton(
+                            style: buttonPrimary,
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                _submitForm();
+                              }
+                            },
+                            child: _isAddingCity
+                                ? const CustomProgressIndicator()
+                                : const Text(
+                                    'Ajouter',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                          ),
+                        ],
+                      ),
+                    )),
               ],
             ),
           ),
@@ -168,28 +115,33 @@ class _CityAddScreenState extends State<CityAddScreen> {
   }
 
   void _addCity(String cityName) async {
-    if (cityName.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Veuillez remplir tous les champs')),
-      );
-      return;
-    }
-
-    final success = await CityService.addCity(cityName);
-
     setState(() {
-      _isAddingCity = false;
+      _isAddingCity = true; // Activer l'indicateur d'ajout
     });
 
-    _timer.cancel(); // Annuler le timer si la réponse est reçue avant le délai
-    if (success == 'success') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ville ajoutée avec succès')),
+    final success = await CityService.addCity(cityName);
+    if (success != 'success') {
+      Fluttertoast.showToast(
+        msg: 'Ville ajoutée avec succès',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
       );
+      _nameController.text = '';
+      FocusScope.of(context).unfocus();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Échec de l'ajout de la ville")),
+      Fluttertoast.showToast(
+        msg: "Échec de l'ajout de la ville",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
       );
     }
+
+    setState(() {
+      _isAddingCity = false; // Désactiver l'indicateur d'ajout
+    });
   }
 }

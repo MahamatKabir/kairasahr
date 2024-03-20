@@ -4,18 +4,19 @@ import 'package:kairasahrl/models/container_model.dart';
 import 'package:kairasahrl/screens/utils/color.dart';
 
 class EditPage extends StatefulWidget {
-  final Containere container;
+  final Conteneure container;
   final Function(int) onDelete;
   final Function(
     int,
     String,
     String,
     String,
-    int,
     String,
-    int,
+    String,
+    String,
+    String,
     double,
-    int,
+    String,
     int,
     int,
     String,
@@ -28,11 +29,12 @@ class EditPage extends StatefulWidget {
     String,
     String,
     String,
-    int,
     String,
-    int,
+    String,
+    String,
+    String,
     double,
-    int,
+    String,
     int,
     int,
     String,
@@ -59,6 +61,7 @@ class EditPage extends StatefulWidget {
 
 class _EditPageState extends State<EditPage> {
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _plaqueController = TextEditingController();
   final TextEditingController _slugController = TextEditingController();
   final TextEditingController _customerController = TextEditingController();
   final TextEditingController _customerTelController = TextEditingController();
@@ -126,7 +129,6 @@ class _EditPageState extends State<EditPage> {
           children: [
             _buildEditableField(
                 label: 'Nom du conteneur', controller: _nameController),
-            // _buildEditableField(label: 'Slug', controller: _slugController),
             _buildEditableField(
                 label: 'Client(e)', controller: _customerController),
             _buildEditableField(
@@ -153,51 +155,76 @@ class _EditPageState extends State<EditPage> {
                   width: 9,
                 ),
                 // Ajoutez un espacement entre les champs
-                Expanded(
-                  flex: 5, // Ajustez selon vos besoins
-                  child: _buildDropdownButton(
-                    label: 'Ville',
-                    value: _selectedCity,
-                    onChanged: (newValue) {
-                      _onCityChanged(newValue);
-                    },
-                    items: _buildDropdownItems('City'),
+                if (_isEditing != true)
+                  Expanded(
+                    flex: 5, // Ajustez selon vos besoins
+                    child: _buildEditableField(
+                      label: 'City',
+                      controller: _cityIDController,
+                    ),
                   ),
-                ),
+                if (_isEditing == true)
+                  Expanded(
+                    flex: 5, // Ajustez selon vos besoins
+                    child: _buildDropdownButton(
+                      label: 'Ville',
+                      value: _selectedCity,
+                      onChanged: (newValue) {
+                        _onCityChanged(newValue);
+                      },
+                      items: _buildDropdownItems('City'),
+                    ),
+                  ),
               ],
             ),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  flex: 5,
-                  child: _buildDropdownButton(
-                    label: 'Status',
-                    value: _statusValue ?? 0,
-                    onChanged: _updateStatus,
-                    items: [],
+                if (_isEditing != true)
+                  Expanded(
+                    flex: 5, // Ajustez selon vos besoins
+                    child: _buildEditableField(
+                      label: 'Status',
+                      controller: _statusController,
+                    ),
                   ),
-                ),
+                if (_isEditing == true)
+                  Expanded(
+                    flex: 5,
+                    child: _buildDropdownButton(
+                      label: 'Status',
+                      value: _statusValue ?? 0,
+                      onChanged: _updateStatus,
+                      items: [],
+                    ),
+                  ),
                 const SizedBox(
                   width: 9,
                 ),
                 // Ajouter un espacement entre les dropdowns
-                Expanded(
-                  flex: 5,
-                  child: Container(
-                    child: _buildDropdownButton(
+                if (_isEditing != true)
+                  Expanded(
+                    flex: 5, // Ajustez selon vos besoins
+                    child: _buildEditableField(
                       label: 'Type de Conteneur',
-                      value: _containerTypeValue,
-                      onChanged: _updateContainerType,
-                      items: _buildDropdownItems('Type de Conteneur'),
+                      controller: _contTypeIDController,
                     ),
                   ),
-                ),
+                if (_isEditing == true)
+                  Expanded(
+                    flex: 5,
+                    child: Container(
+                      child: _buildDropdownButton(
+                        label: 'Type de Conteneur',
+                        value: _containerTypeValue,
+                        onChanged: _updateContainerType,
+                        items: _buildDropdownItems('Type de Conteneur'),
+                      ),
+                    ),
+                  ),
               ],
             ),
-
             _buildEditableField(
               label: 'Nouveau C',
               controller: _newCController,
@@ -442,26 +469,26 @@ class _EditPageState extends State<EditPage> {
         }).toList();
       } else if (label == 'Type de Conteneur') {
         return [
-          DropdownMenuItem(
-            value: 0,
-            child: Text(
-              "20 pieds         ",
-              style: TextStyle(
-                color: Colors.indigo.shade900,
-                fontSize: 14.0,
-              ),
-            ),
-          ),
-          DropdownMenuItem(
-            value: 1,
-            child: Text(
-              "40 pieds          ",
-              style: TextStyle(
-                color: Colors.indigo.shade900,
-                fontSize: 14.0,
-              ),
-            ),
-          ),
+          // DropdownMenuItem(
+          //   value: 0,
+          //   child: Text(
+          //     "20 pieds         ",
+          //     style: TextStyle(
+          //       color: Colors.indigo.shade900,
+          //       fontSize: 14.0,
+          //     ),
+          //   ),
+          // ),
+          // DropdownMenuItem(
+          //   value: 1,
+          //   child: Text(
+          //     "40 pieds          ",
+          //     style: TextStyle(
+          //       color: Colors.indigo.shade900,
+          //       fontSize: 14.0,
+          //     ),
+          //   ),
+          // ),
         ];
       }
     } else {
@@ -525,16 +552,16 @@ class _EditPageState extends State<EditPage> {
 
   void _initializeControllers() {
     _nameController.text = widget.container.name;
-    _slugController.text = widget.container.slug;
+    _plaqueController.text = widget.container.plaque;
     _customerController.text = widget.container.customer;
-    _customerTelController.text = widget.container.customerTel.toString();
+    _customerTelController.text = widget.container.customerPhone.toString();
     _brokerController.text = widget.container.broker ?? '';
-    _brokerTelController.text = widget.container.brokerTel?.toString() ?? '';
-    _amountController.text = widget.container.amount?.toString() ?? '';
-    _newCController.text = widget.container.newC!;
-    _contDetailsController.text = widget.container.contDetails!;
-    _cityIDController.text = widget.container.cityID.toString();
-    _contTypeIDController.text = widget.container.contTypeID.toString();
+    _brokerTelController.text = widget.container.brokerPhone?.toString() ?? '';
+    _amountController.text = widget.container.containerPrice.toString() ?? '';
+    _newCController.text = widget.container.containerInformationC!;
+    _contDetailsController.text = widget.container.containerOtherDetails!;
+    _cityIDController.text = widget.container.containerCityID.toString();
+    _contTypeIDController.text = widget.container.containerType.toString();
     _statusController.text = widget.container.status.toString();
   }
 
@@ -581,13 +608,14 @@ class _EditPageState extends State<EditPage> {
     widget.updateContainer(
       widget.container.id,
       _nameController.text,
+      _plaqueController.text,
       _slugController.text,
       _customerController.text,
-      int.parse(_customerTelController.text),
+      _customerTelController.text,
       _brokerController.text,
-      int.parse(_brokerTelController.text),
+      _brokerTelController.text,
       double.parse(_amountController.text),
-      _selectedCity!.id, // Utiliser l'ID de la ville sélectionnée
+      _selectedCity.toString(), // Utiliser l'ID de la ville sélectionnée
       _containerTypeValue!,
       _statusValue!,
       _newCController.text,
