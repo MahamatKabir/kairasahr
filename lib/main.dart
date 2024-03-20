@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
           useMaterial3: true,
         ),
-        home: const DepenseAddScreen(),
+        home: const ContainerListScreen(),
         routes: {
           ContainerListScreen.routeName: (ctx) => const ContainerListScreen(),
         });

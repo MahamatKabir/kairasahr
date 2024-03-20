@@ -75,11 +75,7 @@ class _EditPageState extends State<EditPage> {
   int? _containerTypeValue;
   int? _statusValue;
   City? _selectedCity;
-  List<City> africanCities = [
-    City(id: 1, name: 'Lagos'),
-    City(id: 2, name: 'Le Caire'),
-    City(id: 3, name: 'Johannesburg'),
-  ];
+  List<City> africanCities = [];
   List<City> _cities = [];
 
   @override
@@ -91,23 +87,23 @@ class _EditPageState extends State<EditPage> {
     _containerTypeValue = widget.initialContainerTypeValue ?? 0;
     // Chargez les villes depuis l'API
     _cities = africanCities;
-    //_loadCities();
+    _loadCities();
   }
 
-  // Future<void> _loadCities() async {
-  //   try {
-  //     final cities =
-  //         await fetchCities(); // Appel à l'API pour récupérer les villes
-  //     setState(() {
-  //       _cities = cities;
-  //       // Sélectionnez la ville par défaut en fonction de l'ID de la ville dans Containere
-  //       _selectedCity =
-  //           _cities.firstWhere((city) => city.id == widget.container.cityID);
-  //     });
-  //   } catch (e) {
-  //     print('Failed to load cities: $e');
-  //   }
-  // }
+  Future<void> _loadCities() async {
+    try {
+      final cities =
+          await fetchCities(); // Appel à l'API pour récupérer les villes
+      setState(() {
+        _cities = cities;
+        // Sélectionnez la ville par défaut en fonction de l'ID de la ville dans Containere
+        _selectedCity =
+            _cities.firstWhere((city) => city.id == widget.container.cityID);
+      });
+    } catch (e) {
+      print('Failed to load cities: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
