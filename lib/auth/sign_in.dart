@@ -39,7 +39,7 @@ class _SignInPageState extends State<SignInPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => BottomBarScreen(selectedIndex: 1),
+            builder: (context) => const BottomBarScreen(selectedIndex: 1),
           ),
         );
         Fluttertoast.showToast(msg: 'Signed in successfully!');

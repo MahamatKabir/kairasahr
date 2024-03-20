@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kairasahrl/screens/fetchapi.dart';
 import 'package:kairasahrl/screens/utils/costomeProgress.dart';
 import 'package:kairasahrl/widget/button.dart';
-// Importez le widget personnalisé
 
 class CityAddScreen extends StatefulWidget {
   const CityAddScreen({Key? key}) : super(key: key);
@@ -17,7 +17,20 @@ class _CityAddScreenState extends State<CityAddScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isAddingCity = false;
   late Timer _timer;
-// Couleur initiale de boxShadow
+
+  @override
+  void initState() {
+    super.initState();
+    _timer =
+        Timer(const Duration(seconds: 0), () {}); // Initialisation de _timer
+  }
+
+  @override
+  void dispose() {
+    _timer
+        .cancel(); // Assurez-vous d'annuler le timer lors de la suppression de l'écran
+    super.dispose();
+  }
 
   void _submitForm() {
     setState(() {
@@ -26,13 +39,6 @@ class _CityAddScreenState extends State<CityAddScreen> {
 
     // Appelez votre fonction pour ajouter la ville avec le nom saisi dans le champ
     _addCity(_nameController.text);
-  }
-
-  @override
-  void dispose() {
-    _timer
-        .cancel(); // Assurez-vous d'annuler le timer lors de la suppression de l'écran
-    super.dispose();
   }
 
   @override
@@ -87,17 +93,15 @@ class _CityAddScreenState extends State<CityAddScreen> {
                             style: buttonPrimary,
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                // Validez le formulaire
                                 _submitForm();
                               }
                             },
-
                             child: _isAddingCity
-                                ? const CustomProgressIndicator() // Utilisez le widget personnalisé ici
+                                ? const CustomProgressIndicator()
                                 : const Text(
                                     'Ajouter',
                                     style: TextStyle(color: Colors.white),
-                                  ), // Texte du bouton
+                                  ),
                           ),
                         ],
                       ),
@@ -111,28 +115,33 @@ class _CityAddScreenState extends State<CityAddScreen> {
   }
 
   void _addCity(String cityName) async {
-    if (cityName.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Veuillez remplir tous les champs')),
-      );
-      return;
-    }
-
-    final success = await CityService.addCity(cityName);
-
     setState(() {
-      _isAddingCity = false;
+      _isAddingCity = true; // Activer l'indicateur d'ajout
     });
 
-    _timer.cancel(); // Annuler le timer si la réponse est reçue avant le délai
-    if (success == 'success') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ville ajoutée avec succès')),
+    final success = await CityService.addCity(cityName);
+    if (success != 'success') {
+      Fluttertoast.showToast(
+        msg: 'Ville ajoutée avec succès',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
       );
+      _nameController.text = '';
+      FocusScope.of(context).unfocus();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Échec de l'ajout de la ville")),
+      Fluttertoast.showToast(
+        msg: "Échec de l'ajout de la ville",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
       );
     }
+
+    setState(() {
+      _isAddingCity = false; // Désactiver l'indicateur d'ajout
+    });
   }
 }

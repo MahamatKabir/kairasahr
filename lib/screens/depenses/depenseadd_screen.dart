@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kairasahrl/models/container_model.dart';
 import 'package:kairasahrl/screens/fetchapi.dart';
 import 'package:kairasahrl/widget/button.dart';
 
@@ -15,8 +16,8 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
   final TextEditingController _paidController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   int? _selectedContainerID;
-  bool _isFieldEmpty = false;
-  List<Map<String, dynamic>> _containerData = [];
+  List<Conteneurre> _containerData = [];
+  bool _isLoading = false;
 
   final List<Widget> _repeaterItems = [];
 
@@ -28,206 +29,23 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
   }
 
   // Fonction pour récupérer les conteneurs depuis l'API
-  void _fetchContainers() async {
+  Future<void> _fetchContainers() async {
+    setState(() {
+      _isLoading = true;
+    });
     try {
-      final List<Map<String, dynamic>> containers =
-          await ApiService.fetchContainers();
+      List<Conteneurre> containers =
+          await ContainerDepenseApi.fetchContainerDepense();
       setState(() {
         _containerData = containers;
+        _isLoading = false;
       });
     } catch (e) {
-      print('Error fetching containers: $e');
+      print('Failed to load containers: $e');
+      setState(() {
+        _isLoading = false;
+      });
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.indigo.shade100,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Text.rich(
-              //   TextSpan(
-              //     children: [
-              //       TextSpan(
-              //         text: 'Conteneur', // Texte de l'étiquette
-              //         style: TextStyle(
-              //           fontSize: 13,
-              //           color: Colors.indigo.shade900,
-              //         ),
-              //       ),
-              //       const TextSpan(
-              //         text:
-              //             ' *', // Ajoute une étoile pour indiquer que le champ est requis
-              //         style: TextStyle(
-              //           fontSize: 13,
-              //           color: Color.fromRGBO(244, 67, 54, 1),
-              //         ), // Couleur rouge pour l'étoile
-              //       ),
-              //     ],
-              //   ),
-              // ),
-              const SizedBox(height: 8),
-              DropdownButtonFormField<int>(
-                decoration: InputDecoration(
-                  labelText: 'Conteneur',
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                ),
-                value: _selectedContainerID,
-                items: _containerData.map((container) {
-                  return DropdownMenuItem<int>(
-                    value: container['id'],
-                    child: Text(container['name']),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedContainerID = value;
-                    //_isFieldEmpty = _selectedContainerID == null;
-                  });
-                },
-              ),
-
-              Column(
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  for (int i = 0; i < _repeaterItems.length; i++)
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 10),
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.9),
-                            spreadRadius: 1,
-                            blurRadius: 3,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          _repeaterItems[i],
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              ElevatedButton.icon(
-                                onPressed: () {
-                                  setState(() {
-                                    _repeaterItems.add(_buildRepeaterItem());
-                                  });
-                                },
-                                icon: const Icon(Icons.add),
-                                label: const Text(
-                                  'Ajouter',
-                                  style: TextStyle(
-                                      color: Colors.indigo,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 15),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  elevation: 3, // Élévation du bouton
-                                  textStyle: const TextStyle(
-                                      color: Colors.white), // Couleur du texte
-                                  shadowColor: const Color.fromARGB(
-                                          255, 255, 255, 255)
-                                      .withOpacity(0.9), // Couleur de l'ombre
-                                ),
-                              ),
-                              if (_repeaterItems.length >
-                                  1) // Affiche l'icône de suppression uniquement pour le dernier élément lorsque la liste contient plus d'un élément
-                                ElevatedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      if (_repeaterItems.length > 1) {
-                                        _repeaterItems.removeAt(i);
-                                      }
-                                    });
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color.fromARGB(
-                                        255, 255, 197, 193),
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 15),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    elevation: 3, // Élévation du bouton
-                                    textStyle: const TextStyle(
-                                        color:
-                                            Colors.white), // Couleur du texte
-                                    shadowColor: const Color.fromARGB(
-                                            255, 255, 255, 255)
-                                        .withOpacity(0.9), // Couleur de l'ombre
-                                  ),
-                                  child: const Row(
-                                    children: [
-                                      Icon(Icons.delete,
-                                          color: Colors.red), // Icône "remove"
-                                      SizedBox(
-                                          width:
-                                              8), // Espace entre l'icône et le texte
-                                      Text(
-                                        'Supprimer',
-                                        style: TextStyle(
-                                            color:
-                                                Colors.red), // Couleur du texte
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                style: buttonPrimary,
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // Vérifiez si le formulaire est valide
-                    _addExpense(
-                      article: _articleController.text.trim(),
-                      total: int.parse(_totalController.text),
-                      paid: int.parse(_paidController.text),
-                      selectedContainerID: _selectedContainerID!,
-                    );
-                  }
-                },
-                child: const Text(
-                  'Ajouter',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   Widget _buildRepeaterItem() {
@@ -299,34 +117,236 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
     );
   }
 
-  void _addExpense({
-    required String article,
-    required int total,
-    required int paid,
-    required int selectedContainerID,
-  }) async {
-    final slug =
-        'your_slug_here'; // Remplacez "your_slug_here" par le slug approprié
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.indigo.shade100,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              DropdownButtonFormField<int>(
+                decoration: InputDecoration(
+                  labelText: 'Conteneur',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+                value: _selectedContainerID,
+                items: _containerData.map((container) {
+                  return DropdownMenuItem<int>(
+                    value: container.id,
+                    child: Text(container.name),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedContainerID = value;
+                  });
+                },
+              ),
+              Column(
+                children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  for (int i = 0; i < _repeaterItems.length; i++)
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.9),
+                            spreadRadius: 1,
+                            blurRadius: 3,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          _repeaterItems[i],
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ElevatedButton.icon(
+                                onPressed: () {
+                                  setState(() {
+                                    _repeaterItems.add(_buildRepeaterItem());
+                                  });
+                                },
+                                icon: const Icon(Icons.add),
+                                label: const Text(
+                                  'Ajouter',
+                                  style: TextStyle(
+                                      color: Colors.indigo,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 15),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  elevation: 3,
+                                  textStyle:
+                                      const TextStyle(color: Colors.white),
+                                  shadowColor:
+                                      const Color.fromARGB(255, 255, 255, 255)
+                                          .withOpacity(0.9),
+                                ),
+                              ),
+                              if (_repeaterItems.length > 1)
+                                ElevatedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      if (_repeaterItems.length > 1) {
+                                        _repeaterItems.removeAt(i);
+                                      }
+                                    });
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color.fromARGB(
+                                        255, 255, 197, 193),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 15),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    elevation: 3,
+                                    textStyle:
+                                        const TextStyle(color: Colors.white),
+                                    shadowColor:
+                                        const Color.fromARGB(255, 255, 255, 255)
+                                            .withOpacity(0.9),
+                                  ),
+                                  child: const Row(
+                                    children: [
+                                      Icon(Icons.delete, color: Colors.red),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'Supprimer',
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    // Vérifiez si le formulaire est valide
+                    // Appel de votre méthode pour ajouter les dépenses
+                    _addExpense();
+                  }
+                },
+                child: const Text(
+                  'Ajouter',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
+  void _addExpense() async {
     try {
-      for (final item in _repeaterItems) {
-        final Map<String, dynamic> itemData = {
-          'article': article,
-          'total': total,
-          'paid': paid,
-          'selectedContainerID': selectedContainerID,
-          // Ajoutez d'autres données spécifiques de l'élément ici
-        };
+      for (var item in _repeaterItems) {
+        if (item is Container) {
+          // Accédez au widget enfant du Container
+          Widget? containerChild = item.child;
 
-        await AddExpenseService.addExpense(
-          itemData: itemData,
-          slug: slug,
-          context: context,
-        );
+          if (containerChild is Column) {
+            // Accédez aux enfants de la colonne
+            List<Widget> columnChildren = containerChild.children;
+
+            // Vérifiez si la colonne a au moins 3 enfants
+            if (columnChildren.length >= 3) {
+              // Extraire les contrôleurs de texte des enfants
+              TextEditingController? articleController;
+              TextEditingController? totalController;
+              TextEditingController? paidController;
+
+              for (var child in columnChildren) {
+                if (child is TextFormField) {
+                  if (articleController == null) {
+                    articleController =
+                        child.controller as TextEditingController;
+                  } else if (totalController == null) {
+                    totalController = child.controller as TextEditingController;
+                  } else
+                    paidController ??=
+                        child.controller as TextEditingController;
+                }
+              }
+
+              // Vérifier si les contrôleurs de texte ont été correctement initialisés
+              if (articleController != null &&
+                  totalController != null &&
+                  paidController != null) {
+                // Extraire les valeurs des contrôleurs de texte
+                String article = articleController.text.trim();
+                int total = int.parse(totalController.text);
+                int paid = int.parse(paidController.text);
+
+                // Ajouter votre logique pour ajouter cette dépense à l'API
+                await AddExpenseService.createExpense(
+                  article: article,
+                  total: total,
+                  paid: paid,
+                  containerID: _selectedContainerID!,
+                );
+              } else {
+                // Afficher un message d'erreur si les contrôleurs de texte n'ont pas été correctement initialisés
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                        'Erreur lors de la récupération des données de dépense'),
+                  ),
+                );
+                return; // Arrêtez le processus pour éviter toute autre erreur
+              }
+            } else {
+              // Afficher un message d'erreur si la colonne n'a pas suffisamment d'enfants
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                      'Erreur lors de la récupération des données de dépense'),
+                ),
+              );
+              return; // Arrêtez le processus pour éviter toute autre erreur
+            }
+          }
+        }
       }
     } catch (e) {
-      // Gérez les erreurs ici
-      print('Error adding expense: $e');
+      // Gérer les erreurs en cas d'échec de l'ajout
+      print('Erreur lors de l\'ajout de la dépense: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Erreur lors de l\'ajout de la dépense')),
+      );
     }
   }
 }

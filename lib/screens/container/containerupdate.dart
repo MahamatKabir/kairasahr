@@ -8,21 +8,22 @@ import 'package:kairasahrl/widget/sizedtext.dart';
 
 class ContainerUpScreen extends StatefulWidget {
   static const routeName = "/ContainerUpScreen";
-  Containere container;
+  Conteneure container;
   final String name;
   final String customer;
-  final String customerTel;
+  final String? customerPhone;
   final Function(int) onDelete;
   final Function(
     int,
     String,
     String,
     String,
-    int,
     String,
-    int,
+    String,
+    String,
+    String,
     double,
-    int,
+    String,
     int,
     int,
     String,
@@ -36,7 +37,7 @@ class ContainerUpScreen extends StatefulWidget {
     required this.container,
     required this.name,
     required this.customer,
-    required this.customerTel,
+    this.customerPhone,
     required this.onDelete,
     required this.onUpdate,
     required this.createdAt,
@@ -145,8 +146,11 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
                     onUpdate: widget.onUpdate,
                     isEditing: true,
                     updateContainer: widget.onUpdate,
-                    initialStatusValue: widget.container.status,
-                    initialContainerTypeValue: widget.container.contTypeID,
+                    initialStatusValue:
+                        int.tryParse(widget.container.status.toString()) ?? 0,
+                    initialContainerTypeValue: int.tryParse(
+                            widget.container.containerType.toString()) ??
+                        0,
                   ),
                 ),
               );
@@ -380,9 +384,13 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
                               onUpdate: widget.onUpdate,
                               isEditing: false,
                               updateContainer: widget.onUpdate,
-                              initialStatusValue: widget.container.status,
-                              initialContainerTypeValue:
-                                  widget.container.contTypeID,
+                              initialStatusValue: int.tryParse(
+                                      widget.container.status.toString()) ??
+                                  0,
+                              initialContainerTypeValue: int.tryParse(widget
+                                      .container.containerType
+                                      .toString()) ??
+                                  0,
                             ),
                           ),
                         );
@@ -430,7 +438,7 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
                           ),
                           const SizedBox(width: 2),
                           Text(
-                            widget.customerTel,
+                            widget.customerPhone!.toString(),
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 16,

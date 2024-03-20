@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:kairasahrl/screens/addscreen.dart';
 import 'package:kairasahrl/screens/btm_bar.dart';
 import 'package:kairasahrl/screens/city/citydetail_screen.dart';
+import 'package:kairasahrl/screens/fetchapi.dart';
 import 'package:kairasahrl/screens/utils/color.dart';
 
 import '../../models/city_model.dart';
@@ -18,26 +20,40 @@ class CityListScreen extends StatefulWidget {
 class _CityListScreenState extends State<CityListScreen> {
   final TextEditingController _searchTextController = TextEditingController();
   final FocusNode _searchTextFocusNode = FocusNode();
-  final List<City> _cities = [
-    City(name: 'Ndjamena ', slug: 'city_1', createdAt: '2024-02-06', id: 1),
-    City(name: 'Samsung', slug: 'city_1', createdAt: '2024-02-06', id: 2),
-    City(name: 'Sahr', slug: 'city_2', createdAt: '2024-02-07', id: 3),
-    City(name: 'Mondou', slug: 'city_1', createdAt: '2024-02-06', id: 4),
-    City(name: 'Koumra', slug: 'city_2', createdAt: '2024-02-07', id: 5),
-    City(name: 'Doba', slug: 'city_1', createdAt: '2024-02-06', id: 6),
-    City(name: 'Bongore', slug: 'city_2', createdAt: '2024-02-07', id: 7),
-    City(name: 'Léré', slug: 'city_1', createdAt: '2024-02-06', id: 8),
-    City(name: 'Amdjarass', slug: 'city_2', createdAt: '2024-02-07', id: 8),
-
-    // Ajoutez d'autres villes fictives si nécessaire
-  ];
-
-  List<City> _filteredCities = []; // Liste filtrée de villes
+  final List<City> _cities = []; // Liste de villes
+  final List<City> _filteredCities = []; // Liste filtrée de villes
+  bool _isLoading = true;
   @override
   void initState() {
     super.initState();
-    _filteredCities
-        .addAll(_cities); // Initialiser la liste filtrée avec toutes les villes
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_isLoading) {
+      _fetchCities();
+    }
+  }
+
+  Future<void> _fetchCities() async {
+    try {
+      // Appeler votre API pour récupérer les données des villes
+      List<Map<String, dynamic>> cityData = await ApiService.fetchCityData();
+
+      // Convertir les données de la ville en une liste de City
+      List<City> cities = cityData.map((data) => City.fromJson(data)).toList();
+
+      setState(() {
+        // Mettre à jour la liste des villes filtrées avec les données reçues de l'API
+        _cities.addAll(cities);
+        _filteredCities.addAll(cities);
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('Error: $e');
+      // Gérer les erreurs ici, par exemple afficher un message à l'utilisateur
+    }
   }
 
   @override
@@ -60,36 +76,50 @@ class _CityListScreenState extends State<CityListScreen> {
         () {}); // Mettre à jour l'interface utilisateur avec les villes filtrées
   }
 
-  void deleteCity(int id) {
-    // Code pour supprimer la ville avec l'ID spécifié
+  void deleteCity(int id) async {
     setState(() {
-      // Mettez à jour la liste des villes après la suppression
-      _cities.removeWhere((city) => city.id == id);
-      _filteredCities.removeWhere(
-          (city) => city.id == id); // Supprimer de la liste filtrée également
+      _isLoading = true;
     });
+    await ApiService.deleteCity(id);
+    setState(() {
+      _cities.removeWhere((city) => city.id == id);
+      _isLoading = false;
+    });
+    _fetchCities();
   }
 
-  void updateCity(int id, String newName) {
-    // Recherchez la ville avec l'ID spécifié dans la liste
-    for (int i = 0; i < _cities.length; i++) {
-      if (_cities[i].id == id) {
-        // Mettez à jour le nom de la ville
-        _cities[i] = City(
+  void updateCity(int id, String newName) async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    // Appel à la méthode pour mettre à jour la ville dans l'API
+    await ApiService.updateCity(id, newName);
+
+    // Mettre à jour la ville dans la liste locale
+    setState(() {
+      for (int i = 0; i < _cities.length; i++) {
+        if (_cities[i].id == id) {
+          _cities[i] = City(
             id: id,
             name: newName,
             slug: _cities[i].slug,
-            createdAt: _cities[i].createdAt);
-        _filteredCities[i] = City(
-            id: id,
-            name: newName,
-            slug: _filteredCities[i].slug,
-            createdAt: _filteredCities[i]
-                .createdAt); // Mettre à jour également dans la liste filtrée
-        break; // Arrêtez la boucle une fois la mise à jour effectuée
+            createdAt: _cities[i].createdAt,
+          );
+          break;
+        }
       }
-    }
-    setState(() {}); // Mettre à jour l'interface utilisateur
+      _isLoading = false;
+    });
+
+    // Afficher un message de succès
+    Fluttertoast.showToast(
+      msg: 'Mise à jour réussie',
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.green,
+      textColor: Colors.white,
+    );
   }
 
   int _selectedIndex = 0;
@@ -133,111 +163,113 @@ class _CityListScreenState extends State<CityListScreen> {
             ),
           ),
         ),
-        body: Column(children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              height: kBottomNavigationBarHeight,
-              child: TextField(
-                //focusNode: _searchTextFocusNode,
-                controller: _searchTextController,
-                onChanged: (value) {
-                  _filterCities(
-                      value); // Appeler la fonction de filtrage lors de la saisie de texte
-                },
-                decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide:
-                        const BorderSide(color: AppColors.appbar, width: 1),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide:
-                        const BorderSide(color: AppColors.appbar, width: 1),
-                  ),
-                  hintText: "Vous recherchez ? ",
-                  prefixIcon: const Icon(Icons.search),
-                  suffix: IconButton(
-                    onPressed: () {
-                      _searchTextController.clear();
-                      _searchTextFocusNode.unfocus();
-                      _filterCities('');
-                      _searchTextFocusNode.unfocus();
-                    },
-                    icon: Icon(
-                      Icons.close,
-                      color: _searchTextFocusNode.hasFocus
-                          ? Colors.red
-                          : Colors.black,
+        body: _isLoading
+            ? Center(child: const CircularProgressIndicator())
+            : Column(children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    height: kBottomNavigationBarHeight,
+                    child: TextField(
+                      //focusNode: _searchTextFocusNode,
+                      controller: _searchTextController,
+                      onChanged: (value) {
+                        _filterCities(
+                            value); // Appeler la fonction de filtrage lors de la saisie de texte
+                      },
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                              color: AppColors.appbar, width: 1),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                              color: AppColors.appbar, width: 1),
+                        ),
+                        hintText: "Vous recherchez ? ",
+                        prefixIcon: const Icon(Icons.search),
+                        suffix: IconButton(
+                          onPressed: () {
+                            _searchTextController.clear();
+                            _searchTextFocusNode.unfocus();
+                            _filterCities('');
+                            _searchTextFocusNode.unfocus();
+                          },
+                          icon: Icon(
+                            Icons.close,
+                            color: _searchTextFocusNode.hasFocus
+                                ? Colors.red
+                                : Colors.black,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
-          ),
-          Expanded(
-              child: MediaQuery.removePadding(
-            context: context,
-            removeTop: true, // Supprimer le padding du haut
-            child: _filteredCities.isNotEmpty
-                ? ListView.builder(
-                    padding: const EdgeInsets.only(top: 0),
-                    itemCount: _filteredCities.length,
-                    itemBuilder: (context, index) {
-                      final city = _filteredCities[index];
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CityDetailScreenn(
-                                city: city,
-                                onDelete:
-                                    deleteCity, // Passer la fonction de suppression
-                                onUpdate:
-                                    updateCity, // Passer la fonction de mise à jour
-                              ),
-                            ),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Card(
-                            color: AppColors.textFieldBackground,
-                            child: ListTile(
-                              title: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    city.name,
-                                    style: const TextStyle(
-                                        fontSize: 20,
-                                        color: AppColors.textColor),
-                                    overflow: TextOverflow.ellipsis,
+                Expanded(
+                    child: MediaQuery.removePadding(
+                  context: context,
+                  removeTop: true, // Supprimer le padding du haut
+                  child: _filteredCities.isNotEmpty
+                      ? ListView.builder(
+                          padding: const EdgeInsets.only(top: 0),
+                          itemCount: _filteredCities.length,
+                          itemBuilder: (context, index) {
+                            final city = _filteredCities[index];
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CityDetailScreenn(
+                                      city: city,
+                                      onDelete:
+                                          deleteCity, // Passer la fonction de suppression
+                                      onUpdate:
+                                          updateCity, // Passer la fonction de mise à jour
+                                    ),
                                   ),
-                                  const HeroIcon(
-                                    HeroIcons.chevronRight,
-                                    size: 16,
-                                    color: AppColors.appbar,
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Card(
+                                  color: AppColors.textFieldBackground,
+                                  child: ListTile(
+                                    title: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          city.name,
+                                          style: const TextStyle(
+                                              fontSize: 20,
+                                              color: AppColors.textColor),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const HeroIcon(
+                                          HeroIcons.chevronRight,
+                                          size: 16,
+                                          color: AppColors.appbar,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
+                            );
+                          },
+                        )
+                      : const Center(
+                          child: Text(
+                            'Aucun résultat trouvé',
+                            style: TextStyle(fontSize: 18),
                           ),
                         ),
-                      );
-                    },
-                  )
-                : const Center(
-                    child: Text(
-                      'Aucun résultat trouvé',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  ),
-          )),
-        ]),
+                )),
+              ]),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: Container(
           margin: const EdgeInsets.only(top: 1),

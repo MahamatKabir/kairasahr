@@ -1,67 +1,73 @@
 import 'package:kairasahrl/models/depense_model.dart';
 
-class Containere {
+class Conteneure {
   int id;
   String name;
+  String plaque;
   String slug;
   String customer;
-  int customerTel;
+  String? customerPhone;
   String? broker;
-  int? brokerTel;
-  double? amount;
-  int cityID;
-  int contTypeID;
-  int status;
-  String? newC;
-  String? contDetails;
-  String? createdBy;
+  String? brokerPhone;
+  double containerPrice;
+  String? containerCityID; // Modifier le type en String
+  int? containerType;
+  int? status;
+  String? containerInformationC;
+  String? containerOtherDetails;
+  String createdBy;
   String createdAt;
   String? updatedBy;
   String? updatedAt;
-  List<Expense>? depenses;
+  List<Expense>? containerRelatedExpenses;
 
-  Containere({
+  Conteneure({
     required this.id,
     required this.name,
+    required this.plaque,
     required this.slug,
     required this.customer,
-    required this.customerTel,
+    this.customerPhone,
     this.broker,
-    this.brokerTel,
-    this.amount,
-    required this.cityID,
-    required this.contTypeID,
-    required this.status,
-    this.newC,
-    this.contDetails,
-    this.createdBy,
+    this.brokerPhone,
+    required this.containerPrice,
+    this.containerCityID,
+    this.containerType,
+    this.status,
+    this.containerInformationC,
+    this.containerOtherDetails,
+    required this.createdBy,
     required this.createdAt,
     this.updatedBy,
     this.updatedAt,
-    this.depenses,
+    this.containerRelatedExpenses,
   });
 
-  factory Containere.fromJson(Map<String, dynamic> json) {
-    return Containere(
+  factory Conteneure.fromJson(Map<String, dynamic> json) {
+    return Conteneure(
       id: json['id'],
-      name: json['name'],
+      name: json['container_name'],
+      plaque: json['plaque'],
       slug: json['slug'],
       customer: json['customer'],
-      customerTel: json['customerTel'],
+      customerPhone: json['customer_phone']?.toString(),
       broker: json['broker'],
-      brokerTel: json['brokerTel'],
-      amount: json['amount'],
-      cityID: json['cityID'],
-      contTypeID: json['contTypeID'],
-      status: json['status'],
-      newC: json['newC'],
-      contDetails: json['cont_Details'],
+      brokerPhone: json['broker_phone']?.toString(),
+      containerPrice: json['container_price']?.toDouble() ?? 0.0,
+      containerCityID:
+          json['container_city_id'], // Garder comme une chaîne de caractères
+      containerType: json['container_type'],
+      status: json['Status'],
+      containerInformationC: json['container_information_c'],
+      containerOtherDetails: json['container_other_details'],
       createdBy: json['created_by'],
       createdAt: json['created_at'],
       updatedBy: json['updated_by'],
       updatedAt: json['updated_at'],
-      depenses:
-          List<Expense>.from(json["depenses"].map((x) => Expense.fromJson(x))),
+      containerRelatedExpenses:
+          (json['container_related_expenses'] as List<dynamic>)
+              .map((item) => Expense.fromJson(item))
+              .toList(),
     );
   }
 }

@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kairasahrl/auth/sign_in.dart';
-import 'package:kairasahrl/auth/sign_up.dart';
-import 'package:kairasahrl/screens/container/containeradd_screen.dart';
-import 'package:kairasahrl/screens/depenses/depenseadd_screen.dart';
 import 'package:kairasahrl/screens/splash_screen.dart';
-import 'screens/container/containerlist_screen.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
