@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kairasahrl/models/city_model.dart';
 import 'package:kairasahrl/models/container_model.dart';
+import 'package:kairasahrl/screens/fetchapi.dart';
 import 'package:kairasahrl/screens/utils/color.dart';
 
 class EditPage extends StatefulWidget {
@@ -77,9 +78,9 @@ class _EditPageState extends State<EditPage> {
   bool _isEditing = false;
   int? _containerTypeValue;
   int? _statusValue;
-  City? _selectedCity;
-  List<City> africanCities = [];
-  List<City> _cities = [];
+  List<Map<String, dynamic>> _cityData = [];
+  int? _selectedCity;
+  TextEditingController controller = TextEditingController();
 
   @override
   void initState() {
@@ -89,22 +90,24 @@ class _EditPageState extends State<EditPage> {
     _statusValue = widget.initialStatusValue ?? 0;
     _containerTypeValue = widget.initialContainerTypeValue ?? 0;
     // Chargez les villes depuis l'API
-    _cities = africanCities;
-    _loadCities();
+    _fetchCityData();
   }
 
-  Future<void> _loadCities() async {
+  Future<void> _fetchCityData() async {
     try {
-      final cities =
-          await fetchCities(); // Appel à l'API pour récupérer les villes
+      final List<Map<String, dynamic>> cities =
+          await ApiService.fetchCityData();
       setState(() {
-        _cities = cities;
-        // Sélectionnez la ville par défaut en fonction de l'ID de la ville dans Containere
-        _selectedCity =
-            _cities.firstWhere((city) => city.id == widget.container.cityID);
+        _cityData = cities;
+        if (_cityData.isNotEmpty) {
+          _selectedCity = _cityData[0]['id'];
+        }
       });
     } catch (e) {
-      print('Failed to load cities: $e');
+      print('Error: $e');
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('Failed to load city data')),
+      // );
     }
   }
 
@@ -166,13 +169,34 @@ class _EditPageState extends State<EditPage> {
                 if (_isEditing == true)
                   Expanded(
                     flex: 5, // Ajustez selon vos besoins
-                    child: _buildDropdownButton(
-                      label: 'Ville',
+                    child: DropdownButtonFormField<int>(
                       value: _selectedCity,
-                      onChanged: (newValue) {
-                        _onCityChanged(newValue);
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedCity = value;
+                        });
                       },
-                      items: _buildDropdownItems('City'),
+                      items: _cityData.map((city) {
+                        return DropdownMenuItem<int>(
+                          value: city['id']
+                              as int, // Utilisez l'ID de la ville comme valeur
+                          child: Text(city['name'] as String),
+                        );
+                      }).toList(),
+                      decoration: InputDecoration(
+                        labelText: 'Ville',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Veuillez sélectionner une ville';
+                        }
+                        return null;
+                      },
                     ),
                   ),
               ],
@@ -318,66 +342,144 @@ class _EditPageState extends State<EditPage> {
     required TextEditingController controller,
     bool isMultiline = false,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.indigo.shade900,
-            fontSize: 15.0,
-            fontWeight: FontWeight.bold,
+    // Vérifier si le label est "Status" ou "Type de Conteneur"
+    if (label == 'Status' || label == 'Type de Conteneur') {
+      // Condition pour déterminer le texte en fonction de la valeur du contrôleur
+      String displayText = '';
+      if (controller.text == '1' && label == 'Status') {
+        displayText = 'Actif';
+      } else if (controller.text == '2' && label == 'Status') {
+        displayText = 'Passif';
+      } else if (controller.text == '1' && label == 'Type de Conteneur') {
+        displayText = '20 pieds';
+      } else if (controller.text == '2' && label == 'Type de Conteneur') {
+        displayText = '40 pieds';
+      } else {
+        displayText = controller
+            .text; // Si la valeur n'est ni 1 ni 2, affiche la valeur du contrôleur
+      }
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              color: Colors.indigo.shade900,
+              fontSize: 15.0,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        const SizedBox(height: 5.0),
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-          decoration: BoxDecoration(
-            color: _isEditing ? Colors.white : Colors.indigo.shade100,
-            borderRadius: BorderRadius.circular(10.0),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.indigo.withOpacity(0.5),
-                spreadRadius: 1,
-                blurRadius: 10,
-                offset: const Offset(4, 4),
-              ),
-            ],
-          ),
-          child: isMultiline
-              ? TextField(
-                  controller: controller,
-                  enabled: _isEditing,
-                  maxLines: null,
-                  style: TextStyle(
-                    color: Colors.indigo.shade900,
-                    fontSize: 14.0,
-                  ),
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'Entrer $label',
-                    hintStyle: TextStyle(color: Colors.indigo.shade400),
-                  ),
-                )
-              : TextField(
-                  controller: controller,
-                  enabled: _isEditing,
-                  style: TextStyle(
-                    color: Colors.indigo.shade900,
-                    fontSize: 14.0,
-                  ),
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'Entrer $label',
-                    hintStyle: TextStyle(color: Colors.indigo.shade400),
-                  ),
+          const SizedBox(height: 5.0),
+          AnimatedContainer(
+            width: MediaQuery.of(context).size.width * 2,
+            height: MediaQuery.of(context).size.height / 9,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+            padding:
+                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+            decoration: BoxDecoration(
+              color: _isEditing ? Colors.white : Colors.indigo.shade100,
+              borderRadius: BorderRadius.circular(10.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.indigo.withOpacity(0.5),
+                  spreadRadius: 1,
+                  blurRadius: 10,
+                  offset: const Offset(4, 4),
                 ),
-        ),
-        const SizedBox(height: 20.0),
-      ],
-    );
+              ],
+            ),
+            child: isMultiline
+                ? TextField(
+                    controller: controller,
+                    enabled: _isEditing,
+                    maxLines: null,
+                    style: TextStyle(
+                      color: Colors.indigo.shade900,
+                      fontSize: 14.0,
+                    ),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Entrer $label',
+                      hintStyle: TextStyle(color: Colors.indigo.shade400),
+                    ),
+                  )
+                : Text(
+                    displayText, // Affiche le texte déterminé en fonction de la valeur du contrôleur
+                    style: TextStyle(
+                      color: Colors.indigo.shade900,
+                      fontSize: 14.0,
+                    ),
+                  ),
+          ),
+          const SizedBox(height: 20.0),
+        ],
+      );
+    } else {
+      // Si le label n'est ni "Status" ni "Type de Conteneur", afficher le champ de texte sans modification
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              color: Colors.indigo.shade900,
+              fontSize: 15.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 5.0),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+            padding:
+                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+            decoration: BoxDecoration(
+              color: _isEditing ? Colors.white : Colors.indigo.shade100,
+              borderRadius: BorderRadius.circular(10.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.indigo.withOpacity(0.5),
+                  spreadRadius: 1,
+                  blurRadius: 10,
+                  offset: const Offset(4, 4),
+                ),
+              ],
+            ),
+            child: isMultiline
+                ? TextField(
+                    controller: controller,
+                    enabled: _isEditing,
+                    maxLines: null,
+                    style: TextStyle(
+                      color: Colors.indigo.shade900,
+                      fontSize: 14.0,
+                    ),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Entrer $label',
+                      hintStyle: TextStyle(color: Colors.indigo.shade400),
+                    ),
+                  )
+                : TextField(
+                    controller: controller,
+                    enabled: _isEditing,
+                    style: TextStyle(
+                      color: Colors.indigo.shade900,
+                      fontSize: 14.0,
+                    ),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Entrer $label',
+                      hintStyle: TextStyle(color: Colors.indigo.shade400),
+                    ),
+                  ),
+          ),
+          const SizedBox(height: 20.0),
+        ],
+      );
+    }
   }
 
   Widget _buildDropdownButton({
@@ -454,66 +556,27 @@ class _EditPageState extends State<EditPage> {
             ),
           ),
         ];
-      } else if (label == 'Ville') {
-        return _cities.map((city) {
-          return DropdownMenuItem<City>(
-            value: city,
+      } else if (label == 'Type de Conteneur') {
+        return [
+          DropdownMenuItem(
+            value: 1,
             child: Text(
-              city.name,
+              "20 pieds",
               style: TextStyle(
                 color: Colors.indigo.shade900,
                 fontSize: 14.0,
               ),
-            ), // Utilisez l'opérateur de navigation de nullité pour accéder à la propriété name
-          );
-        }).toList();
-      } else if (label == 'Type de Conteneur') {
-        return [
-          // DropdownMenuItem(
-          //   value: 0,
-          //   child: Text(
-          //     "20 pieds         ",
-          //     style: TextStyle(
-          //       color: Colors.indigo.shade900,
-          //       fontSize: 14.0,
-          //     ),
-          //   ),
-          // ),
-          // DropdownMenuItem(
-          //   value: 1,
-          //   child: Text(
-          //     "40 pieds          ",
-          //     style: TextStyle(
-          //       color: Colors.indigo.shade900,
-          //       fontSize: 14.0,
-          //     ),
-          //   ),
-          // ),
-        ];
-      }
-    } else {
-      // Si l'édition est désactivée
-      if (label == 'Status') {
-        return [
-          DropdownMenuItem(
-            value: _statusValue,
-            child: Text(_statusValue == 0 ? "Passif" : "Actif"),
+            ),
           ),
-        ];
-      } else if (label == 'Ville') {
-        return [
-          DropdownMenuItem<City>(
-            value: _selectedCity,
-            child: Text(_selectedCity?.name ?? 'Ville            '),
-            // Utilisez ! pour garantir que _selectedCity n'est pas null
-          ),
-        ];
-      } else if (label == 'Type de Conteneur') {
-        return [
           DropdownMenuItem(
-            value: _containerTypeValue,
+            value: 2,
             child: Text(
-                _containerTypeValue == 0 ? "20 pieds      " : "40 pieds      "),
+              "40 pieds",
+              style: TextStyle(
+                color: Colors.indigo.shade900,
+                fontSize: 14.0,
+              ),
+            ),
           ),
         ];
       }
@@ -528,19 +591,19 @@ class _EditPageState extends State<EditPage> {
     });
   }
 
-  void _updateCity(City? city) {
+  void _updateCity(int? selectedCity) {
     setState(() {
-      _selectedCity = city;
-      if (city != null) {
+      _selectedCity = selectedCity;
+      if (selectedCity != null) {
         // Mettre à jour la valeur par défaut du dropdown
-        _cityIDController.text = city.id.toString();
+        _cityIDController.text = selectedCity.toString();
       }
     });
   }
 
-  void _onCityChanged(City? city) {
+  void _onCityChanged(int? selectedCity) {
     setState(() {
-      _selectedCity = city;
+      _selectedCity = selectedCity;
     });
   }
 

@@ -70,4 +70,27 @@ class Conteneure {
               .toList(),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'container_name': name,
+      'plaque': plaque,
+      'slug': slug,
+      'customer': customer,
+      'customer_phone': customerPhone,
+      'broker': broker,
+      'broker_phone': brokerPhone,
+      'container_price': containerPrice,
+      'container_city_id': containerCityID,
+      'container_type': containerType,
+      'Status': status,
+      'container_information_c': containerInformationC,
+      'container_other_details': containerOtherDetails,
+      'created_by': createdBy,
+      'created_at': createdAt,
+      'updated_by': updatedBy,
+      'updated_at': updatedAt,
+    };
+  }
 }

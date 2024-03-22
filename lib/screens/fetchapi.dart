@@ -2,19 +2,24 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:kairasahrl/models/city_model.dart';
 import 'package:kairasahrl/models/container_model.dart';
+import 'package:kairasahrl/models/depense_model.dart';
 import 'package:uuid/uuid.dart';
 
 class Conteneurre {
   final int id;
   final String name;
+  final int status; // Nouveau champ pour le statut
 
-  Conteneurre({required this.id, required this.name});
+  Conteneurre({required this.id, required this.name, required this.status});
 
   factory Conteneurre.fromJson(Map<String, dynamic> json) {
     return Conteneurre(
       id: json['id'] ?? 0,
       name: json['container_name'] ?? '',
+      status:
+          json['status'] ?? 0, // Récupère le statut à partir des données JSON
     );
   }
 }
@@ -34,20 +39,16 @@ class ContainerDepenseApi {
         List<Conteneurre> containers = [];
 
         for (var data in responseData) {
-          // Vérifiez si data['id'] n'est pas null avant de l'utiliser
-          int id = data['id'] != null ? data['id'] : 0;
-
-          // Vérifiez si data['container_name'] n'est pas null avant de l'utiliser
-          String name =
-              data['container_name'] != null ? data['container_name'] : '';
-
-          // Effectuez des vérifications similaires pour les autres propriétés
-
           containers.add(Conteneurre(
-            id: id,
-            name: name,
-            // Ajoutez les autres propriétés de la même manière
-          ));
+              id: data['id'] ?? 0,
+              name: data['container_name'] ?? '',
+              status: data['Status'] == "Actif"
+                  ? 1
+                  : data['Status'] == "Passif"
+                      ? 0
+                      : data['Status'] == "Standby"
+                          ? 2
+                          : -1));
         }
 
         return containers;
@@ -89,8 +90,14 @@ class YourApi {
             containerCityID: data['container_city_id'] != null
                 ? data['container_city_id'].toString()
                 : '',
-            containerType: data['container_type'] == "40pieds" ? 1 : 2,
-            status: data['Status'] == "Actif" ? 1 : 0,
+            containerType: data['container_type'] == "40 Pieds" ? 2 : 1,
+            status: data['Status'] == "Actif"
+                ? 1
+                : data['Status'] == "Passif"
+                    ? 0
+                    : data['Status'] == "Standby"
+                        ? 2
+                        : -1,
             containerInformationC: data['container_information_c'] ?? '',
             containerOtherDetails: data['container_other_details'] ?? '',
             createdAt: data['created_at'] ?? '',
@@ -106,10 +113,108 @@ class YourApi {
       throw Exception('Failed to load containers: $e');
     }
   }
+
+  static Future<void> updateContainer(
+      String containerId, Conteneure container) async {
+    final int parsedId =
+        int.tryParse(containerId) ?? 0; // Default to 0 if parsing fails
+    final String apiUrl = '$baseUrl/containers/$parsedId';
+
+    try {
+      final response = await http.put(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          // Add authentication header if required by your API
+          // 'Authorization': 'Bearer YourAccessToken',
+        },
+        body: jsonEncode(container.toJson()),
+      );
+
+      if (response.statusCode == 200) {
+        // Container updated successfully
+      } else {
+        throw Exception('Failed to update container: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to update container: $e');
+    }
+  }
+
+  static Future<void> deleteContainer(int id) async {
+    final String apiUrl = '$baseUrl/containers/$id';
+
+    try {
+      final response = await http.delete(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        // La suppression a réussi, vous pouvez traiter la réponse en conséquence si nécessaire
+        print('Container with ID $id deleted successfully');
+      } else {
+        throw Exception('Failed to delete container');
+      }
+    } catch (e) {
+      throw Exception('Failed to delete container: $e');
+    }
+  }
+
+  static Future<List<Expense>> fetchExpenses() async {
+    const String apiUrl = '$baseUrl/expenses';
+
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = json.decode(response.body)['data'];
+
+        List<Expense> expenses = [];
+
+        for (var data in responseData) {
+          expenses.add(
+            Expense(
+              id: data['id'] ?? 0,
+              article: data['article'] ?? '',
+              slug: data['slug'] ?? '',
+              total: data['total'],
+              paid: data['paid'],
+              containerID: data['Conteneur'] ?? '',
+              createdBy: data['Creer Par'] ?? '',
+              createdAt: data['Date de Création'] ?? '',
+              updatedBy: data['Mise a jour Par'] ?? '',
+              updatedAt: data['Date de mise a jour'] ?? '',
+            ),
+          );
+        }
+
+        return expenses;
+      } else {
+        throw Exception('Failed to load expenses');
+      }
+    } catch (e) {
+      throw Exception('Failed to load expenses: $e');
+    }
+  }
 }
 
 class ApiService {
   static const String baseUrl = 'http://kairasarl.yerimai.com/api/v1';
+
+  static Future<List<Map<String, dynamic>>> fetchCities() async {
+    final response = await http.get(Uri.parse('$baseUrl/cities'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> citiesData = json.decode(response.body);
+      return citiesData.map((json) {
+        return {
+          'id': json['id'],
+          'name': json['name'],
+        };
+      }).toList();
+    } else {
+      throw Exception('Failed to load cities: ${response.statusCode}');
+    }
+  }
+
   static Future<List<Map<String, dynamic>>> fetchCityData() async {
     try {
       final response = await http.get(Uri.parse('$baseUrl/cities'));
