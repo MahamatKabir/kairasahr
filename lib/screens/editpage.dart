@@ -1,29 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:kairasahrl/models/city_model.dart';
 import 'package:kairasahrl/models/container_model.dart';
+import 'package:kairasahrl/screens/container/containerlist_screen.dart';
 import 'package:kairasahrl/screens/fetchapi.dart';
 import 'package:kairasahrl/screens/utils/color.dart';
 
 class EditPage extends StatefulWidget {
   final Conteneure container;
   final Function(int) onDelete;
-  final Function(
-    int,
-    String,
-    String,
-    String,
-    String,
-    String,
-    String,
-    String,
-    double,
-    String,
-    int,
-    int,
-    String,
-    String,
-    String,
-  ) onUpdate;
   final bool isEditing;
   final Function(
     int,
@@ -49,7 +32,6 @@ class EditPage extends StatefulWidget {
     Key? key,
     required this.container,
     required this.onDelete,
-    required this.onUpdate,
     required this.isEditing,
     required this.updateContainer,
     this.initialStatusValue,
@@ -63,7 +45,6 @@ class EditPage extends StatefulWidget {
 class _EditPageState extends State<EditPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _plaqueController = TextEditingController();
-  final TextEditingController _slugController = TextEditingController();
   final TextEditingController _customerController = TextEditingController();
   final TextEditingController _customerTelController = TextEditingController();
   final TextEditingController _brokerController = TextEditingController();
@@ -132,6 +113,7 @@ class _EditPageState extends State<EditPage> {
           children: [
             _buildEditableField(
                 label: 'Nom du conteneur', controller: _nameController),
+            _buildEditableField(label: 'Plaque', controller: _plaqueController),
             _buildEditableField(
                 label: 'Client(e)', controller: _customerController),
             _buildEditableField(
@@ -620,7 +602,7 @@ class _EditPageState extends State<EditPage> {
     _customerTelController.text = widget.container.customerPhone.toString();
     _brokerController.text = widget.container.broker ?? '';
     _brokerTelController.text = widget.container.brokerPhone?.toString() ?? '';
-    _amountController.text = widget.container.containerPrice.toString() ?? '';
+    _amountController.text = widget.container.containerPrice.toString();
     _newCController.text = widget.container.containerInformationC!;
     _contDetailsController.text = widget.container.containerOtherDetails!;
     _cityIDController.text = widget.container.containerCityID.toString();
@@ -632,7 +614,7 @@ class _EditPageState extends State<EditPage> {
     return double.tryParse(str) != null;
   }
 
-  void _updateContainer() {
+  void _updateContainer() async {
     // Vérifier si tous les champs obligatoires sont remplis
     if (_nameController.text.isEmpty ||
         _customerController.text.isEmpty ||
@@ -667,34 +649,42 @@ class _EditPageState extends State<EditPage> {
       return;
     }
 
-    // Mettre à jour le conteneur s'il n'y a pas d'erreurs
-    widget.updateContainer(
-      widget.container.id,
-      _nameController.text,
-      _plaqueController.text,
-      _slugController.text,
-      _customerController.text,
-      _customerTelController.text,
-      _brokerController.text,
-      _brokerTelController.text,
-      double.parse(_amountController.text),
-      _selectedCity.toString(), // Utiliser l'ID de la ville sélectionnée
-      _containerTypeValue!,
-      _statusValue!,
-      _newCController.text,
-      _contDetailsController.text,
-      widget.container.createdAt,
-    );
+    // Récupération des données du formulaire
 
-    // Afficher un message de succès
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('La mise à jour a été effectuée avec succès.'),
-        backgroundColor: Colors.green,
-      ),
-    );
+    // Validation des données
 
-    // Retourner à l'écran précédent
-    Navigator.pop(context);
+    // Préparation de la requête API
+    final Map<String, dynamic> body = {
+      'id': widget.container.id,
+      'container_name': _nameController.text,
+      'container_plate_no': _plaqueController.text,
+      'customer_name': _customerController.text,
+      'customer_phone': _customerTelController.text,
+      'broker_name': _brokerController.text,
+      'broker_phone': _brokerTelController.text,
+      'container_price':
+          double.parse(_amountController.text).toStringAsFixed(2),
+      'container_city_id':
+          _selectedCity, // Use the actual ID retrieved from the city selection
+      'container_type_id': _containerTypeValue,
+      'status': _statusValue,
+      'container_information_c': _newCController.text,
+      'container_other_details': _contDetailsController.text,
+      'createdAt': widget.container.createdAt,
+    };
+
+    // Envoi de la requête API
+    final response = await ApiClient.updateContainer(widget.container.id, body);
+
+// Handle API response
+    if (response.statusCode == 200) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ContainerListScreen()),
+      );
+    } else {
+      // Update failed
+      // ...
+    }
   }
 }

@@ -48,80 +48,7 @@ class ContainerUpScreen extends StatefulWidget {
 }
 
 class _ContainerUpScreenState extends State<ContainerUpScreen> {
-  final List<Expense> _depenses = [
-    Expense(
-      id: 1,
-      article: 'Achat de fournitures',
-      slug: 'achat_fournitures_bureau',
-      total: 2000,
-      paid: 150,
-      containerID: 2,
-      createdBy: 1,
-      createdAt: '2024-02-17',
-      updatedBy: 1,
-      updatedAt: '2024-02-17',
-    ),
-    Expense(
-      id: 1,
-      article: 'Achat de fournitures',
-      slug: 'achat_fournitures_bureau',
-      total: 2000,
-      paid: 150,
-      containerID: 2,
-      createdBy: 1,
-      createdAt: '2024-02-17',
-      updatedBy: 1,
-      updatedAt: '2024-02-17',
-    ),
-    Expense(
-      id: 1,
-      article: 'Achat de fournitures',
-      slug: 'achat_fournitures_bureau',
-      total: 2000,
-      paid: 150,
-      containerID: 2,
-      createdBy: 1,
-      createdAt: '2024-02-17',
-      updatedBy: 1,
-      updatedAt: '2024-02-17',
-    ),
-    Expense(
-      id: 2,
-      article: 'Achat de fournitures',
-      slug: 'achat_fournitures_bureau',
-      total: 90000,
-      paid: 150,
-      containerID: 3,
-      createdBy: 1,
-      createdAt: '2024-02-17',
-      updatedBy: 1,
-      updatedAt: '2024-02-17',
-    ),
-    Expense(
-      id: 3,
-      article: 'Achat de fournitures de l ambasssade de france',
-      slug: 'achat_fournitures_bureau',
-      total: 700000,
-      paid: 150,
-      containerID: 2,
-      createdBy: 1,
-      createdAt: '2024-02-17',
-      updatedBy: 1,
-      updatedAt: '2024-02-17',
-    ),
-    Expense(
-      id: 3,
-      article: 'Achat de fournitures de l ambasssade de france',
-      slug: 'achat_fournitures_bureau',
-      total: 3000000,
-      paid: 150,
-      containerID: 4,
-      createdBy: 1,
-      createdAt: '2024-02-17',
-      updatedBy: 1,
-      updatedAt: '2024-02-17',
-    ),
-  ];
+  final List<Expense> _depenses = [];
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +70,7 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
                   builder: (context) => EditPage(
                     container: widget.container,
                     onDelete: widget.onDelete,
-                    onUpdate: widget.onUpdate,
+                    // onUpdate: widget.onUpdate,
                     isEditing: true,
                     updateContainer: widget.onUpdate,
                     initialStatusValue:
@@ -183,11 +110,16 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
   }
 
   Widget list() {
-    // Check if _depenses is empty or if there are no expenses for the current container
-    if (_depenses.isEmpty ||
-        _depenses
-            .where((depense) => depense.containerID == widget.container.id)
-            .isEmpty) {
+    // Filtrer les dépenses liées au conteneur actuel
+    List<Expense> containerExpenses =
+        widget.container.containerRelatedExpenses ?? [];
+    containerExpenses = containerExpenses
+        .where((depense) => depense.containerID == widget.container.id)
+        .toList();
+
+    // Vérifier s'il n'y a pas de dépenses ou si les dépenses pour le conteneur actuel sont vides
+    if (containerExpenses.isEmpty) {
+      // Afficher un message indiquant l'absence de dépenses
       return const Padding(
         padding: EdgeInsets.symmetric(vertical: 50.0),
         child: Center(
@@ -198,22 +130,20 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
                 alignment: Alignment.center,
                 children: [
                   Opacity(
-                    opacity: 0.2, // Opacité de l'image
+                    opacity: 0.2,
                     child: Image(
-                      image: AssetImage(
-                        "assets/images/expense.png", // Chemin de l'image
-                      ),
-                      width: 100, // Largeur de l'image
-                      height: 100, // Hauteur de l'image
+                      image: AssetImage("assets/images/expense.png"),
+                      width: 100,
+                      height: 100,
                     ),
                   ),
                   Text(
-                    'Aucune dépense disponible', // Texte indiquant l'absence de dépenses
+                    'Aucune dépense disponible',
                     style: TextStyle(
-                      fontSize: 16.0, // Taille de la police du texte
-                      color: Colors.black, // Couleur du texte
+                      fontSize: 16.0,
+                      color: Colors.black,
                     ),
-                    textAlign: TextAlign.center, // Alignement du texte
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
@@ -222,14 +152,13 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
         ),
       );
     } else {
+      // Afficher la liste des dépenses liées au conteneur
       return Column(
         children: [
-          const SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 20),
           const Center(
             child: Text(
-              'Depense lieé au conteneur',
+              'Dépenses liées au conteneur',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
@@ -240,23 +169,19 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
           ),
           const SizedBox(height: 10),
           Column(
-            children: _depenses
-                .where((depense) => depense.containerID == widget.container.id)
-                .map((depense) {
+            children: containerExpenses.map((depense) {
               return GestureDetector(
                 onTap: () {
-                  // Navigate to container details screen
+                  // Naviguer vers les détails de la dépense
                 },
                 child: Container(
                   margin: const EdgeInsets.symmetric(
-                    vertical: 8.0,
-                    horizontal: 16.0,
-                  ),
+                      vertical: 8.0, horizontal: 16.0),
                   decoration: BoxDecoration(
                     color: Colors.indigo.shade100,
                     borderRadius: const BorderRadius.all(Radius.circular(5)),
-                    boxShadow: const [
-                      BoxShadow(
+                    boxShadow: [
+                      const BoxShadow(
                         color: Colors.white,
                         offset: Offset(5, 5),
                         spreadRadius: 5.0,
@@ -284,23 +209,21 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
                               ),
                               const SizedBox(height: 8),
                               SizedText(
-                                text: 'creer le ${depense.createdAt}',
+                                text: 'créée le ${depense.createdAt}',
                                 color: Colors.green,
                               ),
                             ],
                           ),
                         ),
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 25),
-                          child: Text(
-                            "${depense.total.toString()} FCFA",
-                            style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.green,
-                            ),
-                          ),
-                        ),
+                        // Afficher le montant de la dépense si nécessaire
+                        // Text(
+                        //   "${depense.amount} FCFA",
+                        //   style: TextStyle(
+                        //     fontSize: 13,
+                        //     fontWeight: FontWeight.bold,
+                        //     color: Colors.green,
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -381,7 +304,7 @@ class _ContainerUpScreenState extends State<ContainerUpScreen> {
                             builder: (context) => EditPage(
                               container: widget.container,
                               onDelete: widget.onDelete,
-                              onUpdate: widget.onUpdate,
+                              //onUpdate: widget.onUpdate,
                               isEditing: false,
                               updateContainer: widget.onUpdate,
                               initialStatusValue: int.tryParse(

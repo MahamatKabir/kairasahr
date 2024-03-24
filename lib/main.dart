@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kairasahrl/screens/depenses/depenseadd_screen.dart';
 import 'package:kairasahrl/screens/splash_screen.dart';
 
 void main() {
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
         useMaterial3: true,
       ),
-      home: const SplashScreen(),
+      home: const DepenseAddScreen(),
       // initialRoute: '/',
       // routes: {
       //   '/': (context) => SignInPage(),

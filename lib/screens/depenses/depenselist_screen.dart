@@ -17,58 +17,7 @@ class DepenseListScreen extends StatefulWidget {
 class _DepenseListScreenState extends State<DepenseListScreen> {
   final TextEditingController _searchTextController = TextEditingController();
   final FocusNode _searchTextFocusNode = FocusNode();
-  final List<Expense> _expense = [
-    Expense(
-      id: 1,
-      article: 'Achat de papeterie',
-      slug: 'achat_fournitures_bureau',
-      total: 2000,
-      paid: 150,
-      containerID: 2,
-      createdBy: 1,
-      createdAt: '2024-02-17',
-      updatedBy: 1,
-      updatedAt: '2024-02-17',
-    ),
-    Expense(
-      id: 2,
-      article: 'Achat de mobilier de bureau',
-      slug: 'achat_fournitures_bureau',
-      total: 90000,
-      paid: 150,
-      containerID: 3,
-      createdBy: 1,
-      createdAt: '2024-02-17',
-      updatedBy: 1,
-      updatedAt: '2024-02-17',
-    ),
-    Expense(
-      id: 3,
-      article: 'Achat de fournitures de l\'ambassade de France',
-      slug: 'achat_fournitures_bureau',
-      total: 700000,
-      paid: 150,
-      containerID: 2,
-      createdBy: 1,
-      createdAt: '2024-02-17',
-      updatedBy: 1,
-      updatedAt: '2024-02-17',
-    ),
-    Expense(
-      id: 3,
-      article: 'Achat de matériel informatique',
-      slug: 'achat_fournitures_bureau',
-      total: 3000000,
-      paid: 150,
-      containerID: 4,
-      createdBy: 1,
-      createdAt: '2024-02-17',
-      updatedBy: 1,
-      updatedAt: '2024-02-17',
-    ),
-
-    // Add more Container objects if needed
-  ];
+  final List<Expense> _expense = [];
 
   List<Expense> _filteredExpenses = []; // Liste filtrée de dépenses
 
@@ -93,7 +42,7 @@ class _DepenseListScreenState extends State<DepenseListScreen> {
       // Parcourir toutes les dépenses et ajouter celles qui correspondent au critère de recherche
       for (Expense expense in _expense) {
         if (expense.article.toLowerCase().contains(searchText.toLowerCase()) ||
-            expense.total
+            expense.details
                 .toString()
                 .toLowerCase()
                 .contains(searchText.toLowerCase()) ||
@@ -116,8 +65,7 @@ class _DepenseListScreenState extends State<DepenseListScreen> {
   void updateExpense(
     int id,
     String newArticle,
-    String newSlug,
-    int newTotal,
+    String newDetails,
     int newPaid,
     int newContainerID,
     int newCreatedBy,
@@ -131,8 +79,7 @@ class _DepenseListScreenState extends State<DepenseListScreen> {
           _expense[i] = Expense(
             id: id,
             article: newArticle,
-            slug: newSlug,
-            total: newTotal,
+            details: newDetails,
             paid: newPaid,
             containerID: newContainerID,
             createdBy: newCreatedBy,
@@ -322,7 +269,7 @@ class _DepenseListScreenState extends State<DepenseListScreen> {
                                                 child: Container(
                                                   width: 200,
                                                   child: Text(
-                                                    "${expenses.total.toString()}FCFA",
+                                                    "${expenses.details.toString()}FCFA",
                                                     style: const TextStyle(
                                                         fontSize: 10,
                                                         color: Colors.green,

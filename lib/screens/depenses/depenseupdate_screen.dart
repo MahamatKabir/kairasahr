@@ -15,7 +15,6 @@ class DepenseUpScreen extends StatefulWidget {
     int,
     int,
     int,
-    int,
     String,
     int,
     String,
@@ -34,8 +33,7 @@ class DepenseUpScreen extends StatefulWidget {
 
 class _DepenseUpScreenState extends State<DepenseUpScreen> {
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _slugController = TextEditingController();
-  final TextEditingController _totalController = TextEditingController();
+  final TextEditingController _detailsController = TextEditingController();
   final TextEditingController _paidController = TextEditingController();
   final TextEditingController _containerIDController = TextEditingController();
   final TextEditingController _createdByController = TextEditingController();
@@ -125,7 +123,7 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
                               height: 2,
                             ),
                             _buildTextFieldWithBorder(
-                                'Total', _totalController, _isEditing),
+                                'Details', _detailsController, _isEditing),
                             const SizedBox(
                               height: 2,
                             ),
@@ -309,8 +307,7 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
 
   void _initializeControllers() {
     _nameController.text = widget.expense.article;
-    _slugController.text = widget.expense.slug;
-    _totalController.text = widget.expense.total.toString();
+    _detailsController.text = widget.expense.details.toString();
     _paidController.text = widget.expense.paid.toString();
     _containerIDController.text = widget.expense.containerID.toString();
     _createdByController.text = widget.expense.createdBy.toString();
@@ -333,7 +330,7 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
     }
 
     // Vérifier que les champs total et paid ne sont ni nulls ni vides
-    if (_totalController.text.isEmpty || _paidController.text.isEmpty) {
+    if (_detailsController.text.isEmpty || _paidController.text.isEmpty) {
       Fluttertoast.showToast(
         msg: 'Total and Paid fields cannot be empty',
         toastLength: Toast.LENGTH_SHORT,
@@ -345,10 +342,10 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
     }
 
     // Vérifier que les valeurs de total et paid ne sont pas inférieures à 0
-    int? total = int.tryParse(_totalController.text);
+
     int? paid = int.tryParse(_paidController.text);
 
-    if (total == null || paid == null || total < 0 || paid < 0) {
+    if (paid == null) {
       Fluttertoast.showToast(
         msg: 'Total and Paid values must be valid positive integers',
         toastLength: Toast.LENGTH_SHORT,
@@ -373,18 +370,17 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
     }
 
     // Mettre à jour l'Expense
-    widget.onUpdate(
-      widget.expense.id,
-      _nameController.text,
-      _slugController.text,
-      total,
-      paid,
-      int.parse(containerID),
-      int.tryParse(_createdByController.text) ?? 0,
-      _createdAtController.text,
-      int.tryParse(_updatedByController.text) ?? 0,
-      _updatedAtController.text,
-    );
+    // widget.onUpdate(
+    //   widget.expense.id,
+    //   _nameController.text,
+    //   details,
+    //   paid,
+    //   int.parse(containerID),
+    //   int.tryParse(_createdByController.text) ?? 0,
+    //   _createdAtController.text,
+    //   int.tryParse(_updatedByController.text) ?? 0,
+    //   _updatedAtController.text,
+    // );
 
     // Si la mise à jour s'est déroulée avec succès, inverser l'état d'édition
     setState(() {
@@ -423,8 +419,8 @@ class _DepenseUpScreenState extends State<DepenseUpScreen> {
   @override
   void dispose() {
     _nameController.dispose();
-    _slugController.dispose();
-    _totalController.dispose();
+
+    _detailsController.dispose();
     _paidController.dispose();
     _containerIDController.dispose();
     _createdByController.dispose();

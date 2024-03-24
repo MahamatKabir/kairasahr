@@ -4,6 +4,7 @@ import 'package:kairasahrl/screens/container/containerlist_screen.dart';
 
 import 'package:intl/intl.dart';
 import 'package:kairasahrl/screens/depenses/depenselist_screen.dart';
+import 'package:kairasahrl/screens/depenses/expenselist.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -180,7 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const DepenseListScreen()),
+                              builder: (context) => const ExpenseList()),
                         );
                       },
                       title: 'DEPENSES',

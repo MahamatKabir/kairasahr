@@ -1,4 +1,4 @@
-import 'package:kairasahrl/models/depense_model.dart';
+import 'package:kairasahrl/models/depense_model.dart'; // Assurez-vous d'importer correctement la classe Expense
 
 class Conteneure {
   int id;
@@ -10,7 +10,7 @@ class Conteneure {
   String? broker;
   String? brokerPhone;
   double containerPrice;
-  String? containerCityID; // Modifier le type en String
+  String? containerCityID;
   int? containerType;
   int? status;
   String? containerInformationC;
@@ -19,7 +19,8 @@ class Conteneure {
   String createdAt;
   String? updatedBy;
   String? updatedAt;
-  List<Expense>? containerRelatedExpenses;
+  List<Expense>?
+      containerRelatedExpenses; // Liste des dépenses associées au conteneur
 
   Conteneure({
     required this.id,
@@ -54,8 +55,7 @@ class Conteneure {
       broker: json['broker'],
       brokerPhone: json['broker_phone']?.toString(),
       containerPrice: json['container_price']?.toDouble() ?? 0.0,
-      containerCityID:
-          json['container_city_id'], // Garder comme une chaîne de caractères
+      containerCityID: json['container_city_id'],
       containerType: json['container_type'],
       status: json['Status'],
       containerInformationC: json['container_information_c'],
@@ -65,8 +65,8 @@ class Conteneure {
       updatedBy: json['updated_by'],
       updatedAt: json['updated_at'],
       containerRelatedExpenses:
-          (json['container_related_expenses'] as List<dynamic>)
-              .map((item) => Expense.fromJson(item))
+          (json['container_related_expenses'] as List<dynamic>?)
+              ?.map((item) => Expense.fromJson(item))
               .toList(),
     );
   }
@@ -91,6 +91,9 @@ class Conteneure {
       'created_at': createdAt,
       'updated_by': updatedBy,
       'updated_at': updatedAt,
+      'container_related_expenses': containerRelatedExpenses
+          ?.map((expense) => expense.toJson())
+          .toList(), // Convertit chaque dépense en JSON
     };
   }
 }

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:kairasahrl/models/city_model.dart';
 import 'package:kairasahrl/models/container_model.dart';
 import 'package:kairasahrl/models/depense_model.dart';
 import 'package:uuid/uuid.dart';
@@ -79,7 +78,7 @@ class YourApi {
           containers.add(Conteneure(
             id: data['id'] ?? 0,
             name: data['container_name'] ?? '',
-            plaque: data['plaque'] ?? '',
+            plaque: data['container_plate'] ?? '',
             slug: data['slug'] ?? '',
             customer: data['customer'] ?? '',
             customerPhone: data['customer_phone']?.toString() ?? '',
@@ -102,9 +101,13 @@ class YourApi {
             containerOtherDetails: data['container_other_details'] ?? '',
             createdAt: data['created_at'] ?? '',
             createdBy: data['created_by'] ?? '',
+            // containerRelatedExpenses:
+            //     (data['container_related_expenses'] as List<dynamic>?)
+            //         ?.map((item) => Expense.fromJson(item))
+            //         .toList(),
           ));
         }
-
+        print(responseData);
         return containers;
       } else {
         throw Exception('Failed to load containers');
@@ -174,9 +177,8 @@ class YourApi {
             Expense(
               id: data['id'] ?? 0,
               article: data['article'] ?? '',
-              slug: data['slug'] ?? '',
-              total: data['total'],
               paid: data['paid'],
+              details: data['total'],
               containerID: data['Conteneur'] ?? '',
               createdBy: data['Creer Par'] ?? '',
               createdAt: data['Date de Création'] ?? '',
@@ -356,7 +358,7 @@ class AddExpenseService {
 
     // Assurez-vous que toutes les données nécessaires sont présentes dans itemData
     if (itemData['article'] != null &&
-        itemData['total'] != null &&
+        itemData['details'] != null &&
         itemData['paid'] != null &&
         itemData['selectedContainerID'] != null) {
       final response = await http.post(
@@ -364,14 +366,29 @@ class AddExpenseService {
         body: json.encode({
           'id': expenseId,
           'article': itemData['article'],
-          'total': itemData['total'],
+          'details': itemData['details'],
           'paid': itemData['paid'],
           'slug': slug,
           'container_id': itemData['selectedContainerID'],
           'created_at': createdAt,
           // Ajoutez d'autres données spécifiques de l'élément ici
         }),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+      print(
+        json.encode({
+          'id': expenseId,
+          'article': itemData['article'],
+          'details': itemData['details'],
+          'paid': itemData['paid'],
+          'slug': slug,
+          'container_id': itemData['selectedContainerID'],
+          'created_at': createdAt,
+          // Ajoutez d'autres données spécifiques de l'élément ici
+        }),
       );
       if (response.statusCode == 200) {
         Fluttertoast.showToast(
@@ -395,35 +412,39 @@ class AddExpenseService {
   }
 
   static Future<void> createExpense({
-    required String article,
-    required int total,
-    required int paid,
-    required int containerID,
+    required List<Map<String, dynamic>> expenses,
+    required String details,
   }) async {
-    const String apiUrl = '$baseUrl/expenses';
-
+    // Envoyer les données à votre API
     try {
+      // Construire le corps de la requête
+      Map<String, dynamic> requestBody = {
+        'expenses': expenses,
+        'details': details,
+      };
+      print(requestBody);
+      // Envoyer la requête POST à votre API
       final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'article': article,
-          'total': total,
-          'paid': paid,
-          'containerID': containerID,
-        }),
+        Uri.parse('$baseUrl/expenses'), // Remplacez ceci par l'URL de votre API
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode(requestBody),
       );
-
-      if (response.statusCode == 200) {
-        // Si la requête est réussie (statut 200), la dépense est ajoutée avec succès
-        print('Expense added successfully');
+      if (response.statusCode == 201) {
+        // La dépense a été ajoutée avec succès
+        print('Dépense ajoutée avec succès');
       } else {
-        // Si la requête échoue, lancez une exception avec le message d'erreur
-        throw Exception('Failed to add expense: ${response.body}');
+        // Gérer les erreurs
+        print('Erreur lors de l\'ajout de la dépense: ${response.statusCode}');
+        print('Réponse: ${response.body}');
+        throw Exception('Échec de l\'ajout de la dépense');
       }
     } catch (e) {
-      // Gère les erreurs d'envoi de la requête
-      throw Exception('Failed to add expense: $e');
+      // Gérer les erreurs en cas d'échec de la requête
+      print('Erreur lors de la connexion à l\'API: $e');
+      throw Exception('Échec de la connexion à l\'API');
     }
   }
 
@@ -450,6 +471,36 @@ class AuthService {
     } else {
       // Échec de la connexion, retournez null
       return null;
+    }
+  }
+}
+
+class ApiClient {
+  // ... other API methods
+
+  static Future<http.Response> updateContainer(
+      int id, Map<String, dynamic> body) async {
+    // Construct the API request URL and headers
+    final url = Uri.parse(
+        'http://kairasarl.yerimai.com/api/v1/containers/$id'); // Replace with actual API endpoint
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json', // Adjust if needed
+      // 'Authorization': 'Bearer your-api-token' // Include if authentication is required
+    };
+
+    // Encode the request body as JSON
+    final jsonBody = jsonEncode(body);
+    print(jsonEncode(body));
+
+    // Send the PUT request
+    try {
+      final response = await http.put(url, headers: headers, body: jsonBody);
+      print(json.decode(response.body));
+      return response;
+    } catch (error) {
+      // Handle network errors or API failures
+      throw Exception('Failed to update container: $error');
     }
   }
 }
