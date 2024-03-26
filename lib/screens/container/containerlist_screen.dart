@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:kairasahrl/models/city_model.dart';
@@ -22,6 +23,7 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
   final FocusNode _searchTextFocusNode = FocusNode();
   List<Conteneure> _containers = [];
   List<Conteneure> _filteredContainers = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -91,7 +93,7 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
     double newAmount,
     String? cityID,
     int? contTypeID,
-    int? status,
+    //int? status,
     String newC,
     String newContDetails,
     String newCreatedAt,
@@ -110,8 +112,8 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
             brokerPhone: newBrokerTel,
             containerPrice: newAmount,
             containerCityID: cityID,
-            containerType: contTypeID ?? 0,
-            status: status ?? 0,
+            // containerType: contTypeID ?? 0,
+            // status: status ?? 0,
             containerInformationC: newC,
             containerOtherDetails: newContDetails,
             createdAt: newCreatedAt,
@@ -271,14 +273,19 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                containerdepense.name,
-                                                style: const TextStyle(
-                                                    fontSize: 16,
-                                                    color: Color.fromARGB(
-                                                        255, 0, 0, 0),
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                              Container(
+                                                width: 190,
+                                                child: Text(
+                                                  containerdepense.name,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                      fontSize: 16,
+                                                      color: Color.fromARGB(
+                                                          255, 0, 0, 0),
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
                                               ),
                                               Row(
                                                 children: [
@@ -338,13 +345,14 @@ class _ContainerListScreenState extends State<ContainerListScreen> {
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10),
-                                          color: containerdepense.status == 1
-                                              ? Colors.green
-                                              : Colors.red,
+                                          color:
+                                              containerdepense.status == 'Actif'
+                                                  ? Colors.green
+                                                  : Colors.red,
                                         ),
                                         child: Center(
                                           child: Text(
-                                            containerdepense.status == 1
+                                            containerdepense.status == 'Actif'
                                                 ? 'Active'
                                                 : 'Passive',
                                             style: const TextStyle(

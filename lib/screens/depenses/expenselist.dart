@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:heroicons/heroicons.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:kairasahrl/models/depense_model.dart';
 import 'package:kairasahrl/screens/addscreen.dart';
 import 'package:kairasahrl/screens/btm_bar.dart';
 import 'package:kairasahrl/screens/depenses/expensedetail.dart';
+import 'package:kairasahrl/widget/sizedtext.dart';
 
 class ExpenseList extends StatefulWidget {
   const ExpenseList({super.key});
@@ -53,8 +55,8 @@ class _ExpenseListState extends State<ExpenseList> {
         .get(Uri.parse('http://kairasarl.yerimai.com/api/v1/expenses'));
     if (response.statusCode == 200) {
       Map<String, dynamic> responseData = jsonDecode(response.body);
-      List<dynamic> data = responseData[
-          'data']; // Assurez-vous d'adapter cette partie selon la structure de vos données JSON
+      List<dynamic> data = responseData['data'];
+      print(data);
       List<Expenses> expenses = data.map((e) => Expenses.fromJson(e)).toList();
       return expenses;
     } else {
@@ -90,17 +92,104 @@ class _ExpenseListState extends State<ExpenseList> {
                 itemBuilder: (context, index) {
                   Expenses expense = snapshot.data![index];
                   return ListTile(
-                    title: Text(expense.article),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Montant payé: ${expense.amountPaid.toString()}'),
-                        Text('Conteneur: ${expense.expenseType}'),
-                        Text('Créé par: ${expense.createdBy}'),
-                        Text('Détails: ${expense.details}'),
-                        Text('Date de création: ${expense.createdAt}'),
-                        // Text('Type: ${expense.type}'),
-                      ],
+                    subtitle: Container(
+                      height: 75,
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 1.0,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.indigo.shade100,
+                        borderRadius: BorderRadius.circular(5),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.indigo,
+                            offset: Offset(1, 1),
+                            spreadRadius: 1.0,
+                            blurRadius: 1.0,
+                          )
+                        ],
+                      ),
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 10, left: 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          width: 200,
+                                          child: Text(
+                                            expense.article,
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                color: Color.fromARGB(
+                                                    255, 0, 0, 0),
+                                                fontWeight: FontWeight.bold),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 8,
+                                        ),
+                                        SizedText(
+                                            text: ' ${expense.createdAt}',
+                                            color: Color.fromARGB(255, 0, 0, 0))
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Column(
+                                  children: [
+                                    Container(
+                                      width: 100,
+                                      height: 27,
+                                      child: Center(
+                                        child: Container(
+                                          width: 300,
+                                          child: Text(
+                                            "${expense.amountPaid.toString()}FCFA",
+                                            style: const TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.green,
+                                                fontWeight: FontWeight.bold),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          bottom: 20, left: 50),
+                                      width: 40,
+                                      height: 18,
+                                      child: const Center(
+                                        child: HeroIcon(
+                                          HeroIcons.chevronRight,
+                                          size: 18,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
                     ),
                     onTap: () {
                       Navigator.push(

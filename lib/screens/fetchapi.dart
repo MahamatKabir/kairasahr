@@ -71,12 +71,12 @@ class YourApi {
 
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body)['data'];
-
+        print(json.decode(response.body)['data']);
         List<Conteneure> containers = [];
 
         for (var data in responseData) {
           containers.add(Conteneure(
-            id: data['id'] ?? 0,
+            id: data['id'],
             name: data['container_name'] ?? '',
             plaque: data['container_plate'] ?? '',
             slug: data['slug'] ?? '',
@@ -86,17 +86,17 @@ class YourApi {
             brokerPhone: data['broker_phone'] ?? '',
             containerPrice:
                 double.parse(data['container_price']?.toString() ?? '0'),
-            containerCityID: data['container_city_id'] != null
-                ? data['container_city_id'].toString()
-                : '',
-            containerType: data['container_type'] == "40 Pieds" ? 2 : 1,
-            status: data['Status'] == "Actif"
-                ? 1
-                : data['Status'] == "Passif"
-                    ? 0
-                    : data['Status'] == "Standby"
-                        ? 2
-                        : -1,
+            containerCityID: data['city']['name'] ?? '',
+
+            containerType: data['type']['name'],
+            status: data['status'],
+            //  == "Actif"
+            //     ? 1
+            //     : data['Status'] == "Passif"
+            //         ? 0
+            //         : data['Status'] == "Standby"
+            //             ? 2
+            //             : -1,
             containerInformationC: data['container_information_c'] ?? '',
             containerOtherDetails: data['container_other_details'] ?? '',
             createdAt: data['created_at'] ?? '',
@@ -412,17 +412,17 @@ class AddExpenseService {
   }
 
   static Future<void> createExpense({
-    required List<Map<String, dynamic>> expenses,
+    required List<Map<String, dynamic>> contExpenses,
     required String details,
   }) async {
     // Envoyer les données à votre API
     try {
       // Construire le corps de la requête
       Map<String, dynamic> requestBody = {
-        'expenses': expenses,
         'details': details,
+        'contExpenses': contExpenses,
       };
-      print(requestBody);
+
       // Envoyer la requête POST à votre API
       final response = await http.post(
         Uri.parse('$baseUrl/expenses'), // Remplacez ceci par l'URL de votre API
@@ -432,6 +432,10 @@ class AddExpenseService {
         },
         body: jsonEncode(requestBody),
       );
+      print(
+        jsonEncode(requestBody),
+      );
+      print(response.body);
       if (response.statusCode == 201) {
         // La dépense a été ajoutée avec succès
         print('Dépense ajoutée avec succès');

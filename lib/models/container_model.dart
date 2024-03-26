@@ -11,8 +11,8 @@ class Conteneure {
   String? brokerPhone;
   double containerPrice;
   String? containerCityID;
-  int? containerType;
-  int? status;
+  String? containerType;
+  String? status;
   String? containerInformationC;
   String? containerOtherDetails;
   String createdBy;
@@ -56,8 +56,8 @@ class Conteneure {
       brokerPhone: json['broker_phone']?.toString(),
       containerPrice: json['container_price']?.toDouble() ?? 0.0,
       containerCityID: json['container_city_id'],
-      containerType: json['container_type'],
-      status: json['Status'],
+      containerType: json['container_type_id'],
+      status: json['status'],
       containerInformationC: json['container_information_c'],
       containerOtherDetails: json['container_other_details'],
       createdBy: json['created_by'],
@@ -83,8 +83,8 @@ class Conteneure {
       'broker_phone': brokerPhone,
       'container_price': containerPrice,
       'container_city_id': containerCityID,
-      'container_type': containerType,
-      'Status': status,
+      'container_type_id': containerType,
+      'status': status,
       'container_information_c': containerInformationC,
       'container_other_details': containerOtherDetails,
       'created_by': createdBy,

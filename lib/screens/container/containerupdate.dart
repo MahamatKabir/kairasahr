@@ -24,7 +24,7 @@ class ContainerUpScreen extends StatefulWidget {
     String,
     double,
     String,
-    int,
+    // int,
     int,
     String,
     String,

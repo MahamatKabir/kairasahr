@@ -20,7 +20,7 @@ class EditPage extends StatefulWidget {
     double,
     String,
     int,
-    int,
+    //int,
     String,
     String,
     String,
@@ -57,11 +57,11 @@ class _EditPageState extends State<EditPage> {
   final TextEditingController _statusController = TextEditingController();
 
   bool _isEditing = false;
-  int? _containerTypeValue;
+  int _containerTypeValue = 1;
   int? _statusValue;
   List<Map<String, dynamic>> _cityData = [];
   int? _selectedCity;
-  TextEditingController controller = TextEditingController();
+  //TextEditingController controller = TextEditingController();
 
   @override
   void initState() {
@@ -69,7 +69,7 @@ class _EditPageState extends State<EditPage> {
     _initializeControllers();
     _isEditing = widget.isEditing;
     _statusValue = widget.initialStatusValue ?? 0;
-    _containerTypeValue = widget.initialContainerTypeValue ?? 0;
+    _containerTypeValue = 1;
     // Chargez les villes depuis l'API
     _fetchCityData();
   }
@@ -197,14 +197,39 @@ class _EditPageState extends State<EditPage> {
                   ),
                 if (_isEditing == true)
                   Expanded(
-                    flex: 5,
-                    child: _buildDropdownButton(
-                      label: 'Status',
-                      value: _statusValue ?? 0,
-                      onChanged: _updateStatus,
-                      items: [],
-                    ),
-                  ),
+                      flex: 5,
+                      child: // Valeur initiale du dropdown
+                          DropdownButton<int>(
+                        value: _statusValue,
+                        onChanged: (newValue) {
+                          setState(() {
+                            _statusValue = newValue!;
+                          });
+                        },
+                        items: [
+                          DropdownMenuItem(
+                            value: 1,
+                            child: Text(
+                              "Actif",
+                              style: TextStyle(
+                                color: Colors.indigo.shade400,
+                                fontSize: 14.0,
+                              ),
+                            ),
+                          ),
+                          DropdownMenuItem(
+                            value: 0,
+                            child: Text(
+                              "Passif",
+                              style: TextStyle(
+                                color: Colors.indigo.shade900,
+                                fontSize: 14.0,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )),
+
                 const SizedBox(
                   width: 9,
                 ),
@@ -219,16 +244,38 @@ class _EditPageState extends State<EditPage> {
                   ),
                 if (_isEditing == true)
                   Expanded(
-                    flex: 5,
-                    child: Container(
-                      child: _buildDropdownButton(
-                        label: 'Type de Conteneur',
+                      flex: 5,
+                      child: // Valeur initiale du dropdown
+                          DropdownButton<int>(
                         value: _containerTypeValue,
-                        onChanged: _updateContainerType,
-                        items: _buildDropdownItems('Type de Conteneur'),
-                      ),
-                    ),
-                  ),
+                        onChanged: (newValue) {
+                          setState(() {
+                            _containerTypeValue = newValue!;
+                          });
+                        },
+                        items: [
+                          DropdownMenuItem(
+                            value: 1,
+                            child: Text(
+                              "20 Pieds",
+                              style: TextStyle(
+                                color: Colors.indigo.shade400,
+                                fontSize: 14.0,
+                              ),
+                            ),
+                          ),
+                          DropdownMenuItem(
+                            value: 2,
+                            child: Text(
+                              "40 pieds",
+                              style: TextStyle(
+                                color: Colors.indigo.shade900,
+                                fontSize: 14.0,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ))
               ],
             ),
             _buildEditableField(
@@ -499,72 +546,72 @@ class _EditPageState extends State<EditPage> {
               ),
             ],
           ),
-          child: DropdownButton<dynamic>(
-            // Modifier le type en dynamique
-            value: value,
-            onChanged: onChanged,
-            items: _buildDropdownItems(
-                label), // Extraire la création d'éléments dans une méthode séparée
-          ),
+          // child: DropdownButton<dynamic>(
+          //   // Modifier le type en dynamique
+          //   value: value,
+          //   onChanged: onChanged,
+          //   // items: _buildDropdownItems(
+          //   //     label), // Extraire la création d'éléments dans une méthode séparée
+          // ),
         ),
         const SizedBox(height: 30.0),
       ],
     );
   }
 
-  List<DropdownMenuItem<dynamic>> _buildDropdownItems(String label) {
-    if (_isEditing) {
-      // Vérifiez si l'édition est activée
-      if (label == 'Status') {
-        return [
-          DropdownMenuItem(
-            value: 0,
-            child: Text(
-              "Passif              ",
-              style: TextStyle(
-                color: Colors.indigo.shade400,
-                fontSize: 14.0,
-              ),
-            ),
-          ),
-          DropdownMenuItem(
-            value: 1,
-            child: Text(
-              "Actif             ",
-              style: TextStyle(
-                color: Colors.indigo.shade900,
-                fontSize: 14.0,
-              ),
-            ),
-          ),
-        ];
-      } else if (label == 'Type de Conteneur') {
-        return [
-          DropdownMenuItem(
-            value: 1,
-            child: Text(
-              "20 pieds",
-              style: TextStyle(
-                color: Colors.indigo.shade900,
-                fontSize: 14.0,
-              ),
-            ),
-          ),
-          DropdownMenuItem(
-            value: 2,
-            child: Text(
-              "40 pieds",
-              style: TextStyle(
-                color: Colors.indigo.shade900,
-                fontSize: 14.0,
-              ),
-            ),
-          ),
-        ];
-      }
-    }
-    return [];
-  }
+  // List<DropdownMenuItem<dynamic>> _buildDropdownItems(String label) {
+  //   if (_isEditing) {
+  //     // Vérifiez si l'édition est activée
+  //     if (label == 'Status') {
+  //       return [
+  // DropdownMenuItem(
+  //   value: 0,
+  //   child: Text(
+  //     "Passif              ",
+  //     style: TextStyle(
+  //       color: Colors.indigo.shade400,
+  //       fontSize: 14.0,
+  //     ),
+  //   ),
+  // ),
+  // DropdownMenuItem(
+  //   value: 1,
+  //   child: Text(
+  //     "Actif             ",
+  //     style: TextStyle(
+  //       color: Colors.indigo.shade900,
+  //       fontSize: 14.0,
+  //     ),
+  //   ),
+  // ),
+  //       ];
+  //     } else if (label == 'Type de Conteneur') {
+  //       return [
+  //         DropdownMenuItem(
+  //           value: 1,
+  //           child: Text(
+  //             "20 pieds",
+  //             style: TextStyle(
+  //               color: Colors.indigo.shade900,
+  //               fontSize: 14.0,
+  //             ),
+  //           ),
+  //         ),
+  //         DropdownMenuItem(
+  //           value: 2,
+  //           child: Text(
+  //             "40 pieds",
+  //             style: TextStyle(
+  //               color: Colors.indigo.shade900,
+  //               fontSize: 14.0,
+  //             ),
+  //           ),
+  //         ),
+  //       ];
+  //     }
+  //   }
+  //   return [];
+  // }
 
   void _updateStatus(dynamic newValue) {
     // Mettre le type comme dynamique
@@ -589,11 +636,11 @@ class _EditPageState extends State<EditPage> {
     });
   }
 
-  void _updateContainerType(dynamic newValue) {
-    setState(() {
-      _containerTypeValue = newValue as int?; // Convertir newValue en int
-    });
-  }
+  // void _updateContainerType(dynamic newValue) {
+  //   setState(() {
+  //     _containerTypeValue = newValue; // Convertir newValue en int
+  //   });
+  // }
 
   void _initializeControllers() {
     _nameController.text = widget.container.name;

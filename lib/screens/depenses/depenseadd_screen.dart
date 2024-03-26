@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kairasahrl/screens/fetchapi.dart';
 import 'package:kairasahrl/widget/button.dart';
 
@@ -66,29 +65,49 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              DropdownButtonFormField<int>(
-                decoration: InputDecoration(
-                  labelText: 'Conteneur',
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
-                value: _selectedContainerID,
-                items: _containerData.map((container) {
-                  return DropdownMenuItem<int>(
-                    value: container.id,
-                    child: Text(container.name),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedContainerID = value;
-                  });
-                },
+                child: DropdownButtonFormField<int>(
+                  decoration: InputDecoration(
+                    labelText: 'Conteneur',
+                    labelStyle: const TextStyle(color: Colors.indigo),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  value: _selectedContainerID,
+                  items: _containerData.map((container) {
+                    return DropdownMenuItem<int>(
+                      value: container.id,
+                      child: Text(container.name),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedContainerID = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Veuillez sélectionner un conteneur';
+                    }
+                    return null;
+                  },
+                ),
               ),
-              const SizedBox(height: 20),
+
               // Affichage des champs "article" et "paid" ajoutés dynamiquement
               Column(
                 children: _articleAndPaidFields.map((field) {
@@ -99,10 +118,21 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
                 height: 20,
               ),
               Container(
-                decoration: const BoxDecoration(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
                   color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: TextFormField(
+                  maxLines: 2,
                   controller: _detailsController,
                   decoration: InputDecoration(
                     labelText: 'Details',
@@ -114,7 +144,6 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 20),
               ElevatedButton(
                 style: buttonPrimary,
@@ -147,9 +176,7 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
   Widget _buildArticleAndPaidField(ArticlePaidField field) {
     return Column(
       children: [
-        const SizedBox(
-          height: 22,
-        ),
+        const SizedBox(height: 22),
         Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
@@ -176,13 +203,11 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 15,
-              ),
+              const SizedBox(height: 15),
               TextFormField(
                 controller: field.paidController,
                 decoration: InputDecoration(
-                  labelText: 'Paid',
+                  labelText: 'Payé',
                   labelStyle: const TextStyle(color: Colors.indigo),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
@@ -190,9 +215,7 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
                 ),
                 keyboardType: TextInputType.number,
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -221,35 +244,39 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
                           .withOpacity(0.9),
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _articleAndPaidFields.remove(field);
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 255, 197, 193),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      elevation: 3,
-                      textStyle: const TextStyle(color: Colors.white),
-                      shadowColor: const Color.fromARGB(255, 255, 255, 255)
-                          .withOpacity(0.9),
-                    ),
-                    child: const Row(
-                      children: [
-                        Icon(Icons.delete, color: Colors.red),
-                        SizedBox(width: 8),
-                        Text(
-                          'Supprimer',
-                          style: TextStyle(color: Colors.red),
+                  if (_articleAndPaidFields.length > 1)
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          if (_articleAndPaidFields.length > 1) {
+                            _articleAndPaidFields.remove(field);
+                          }
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            const Color.fromARGB(255, 255, 197, 193),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
                         ),
-                      ],
+                        elevation: 3,
+                        textStyle: const TextStyle(color: Colors.white),
+                        shadowColor: const Color.fromARGB(255, 255, 255, 255)
+                            .withOpacity(0.9),
+                      ),
+                      child: const Row(
+                        children: [
+                          Icon(Icons.delete, color: Colors.red),
+                          SizedBox(width: 8),
+                          Text(
+                            'Supprimer',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
                 ],
               ),
             ],
@@ -261,17 +288,40 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
 
   void _addExpense() async {
     try {
-      // Liste pour stocker les données des champs "article" et "paid"
-      List<Map<String, dynamic>> expenses = [];
+      List<Map<String, dynamic>> contExpenses = [];
 
-      // Parcourir tous les champs "article" et "paid" ajoutés dynamiquement
       for (ArticlePaidField field in _articleAndPaidFields) {
         // Récupérer les valeurs de l'article et du montant
         String article = field.articleController.text.trim();
         int paid = int.tryParse(field.paidController.text) ?? 0;
 
+        // Vérifier si les champs sont vides
+        if (article.isEmpty || paid == 0 || _selectedContainerID == null) {
+          // Afficher un message d'erreur et arrêter le processus d'ajout
+          Fluttertoast.showToast(
+            msg: 'Veuillez remplir tous les champs',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+          return; // Arrêter la fonction _addExpense()
+        } else {
+          Fluttertoast.showToast(
+            msg: 'Dépenses ajoutées avec succès',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+        }
+
         // Ajouter les données à la liste
-        expenses.add({
+        contExpenses.add({
           'article': article,
           'paid': paid,
           'containerID': _selectedContainerID,
@@ -280,20 +330,14 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
 
       // Ajouter votre logique pour ajouter ces dépenses à l'API
       await AddExpenseService.createExpense(
-        expenses: expenses,
+        contExpenses: contExpenses,
         details: _detailsController.text,
       );
 
       // Afficher un message de succès
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Dépenses ajoutées avec succès')),
-      );
     } catch (e) {
       // Gérer les erreurs en cas d'échec de l'ajout
       print('Erreur lors de l\'ajout des dépenses: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Erreur lors de l\'ajout des dépenses')),
-      );
     }
   }
 }

@@ -50,37 +50,71 @@ class Expense {
   }
 }
 
+class Status {
+  final String? label;
+  final int value;
+
+  Status({
+    this.label,
+    required this.value,
+  });
+
+  factory Status.fromJson(Map<String, dynamic> json) {
+    return Status(
+      label: json['label'],
+      value: json['value'],
+    );
+  }
+}
+
+class Type {
+  final String? name;
+  final int? value;
+
+  Type({
+    this.name,
+    this.value,
+  });
+
+  factory Type.fromJson(Map<String, dynamic> json) {
+    return Type(
+      name: json['name'],
+      value: json['value'],
+    );
+  }
+}
+
 class Expenses {
   final int id;
   final String article;
   final double amountPaid;
-  final String expenseType;
-  final String createdBy;
-  final String createdAt;
-  final String type;
-  final String details;
+  final Type type;
+  final String? details;
+  final Status status;
+  final String? createdBy;
+  final String? createdAt;
 
   Expenses({
     required this.id,
     required this.article,
     required this.amountPaid,
-    required this.expenseType,
-    required this.createdBy,
-    required this.createdAt,
     required this.type,
-    required this.details,
+    this.details,
+    required this.status,
+    this.createdBy,
+    this.createdAt,
   });
 
   factory Expenses.fromJson(Map<String, dynamic> json) {
     return Expenses(
       id: json['id'],
-      article: json['Article'],
-      amountPaid: double.parse(json['Payé']),
-      expenseType: json['Type de la Dépense'] ?? 'Non spécifié',
-      createdBy: json['Creer Par'],
-      createdAt: json['Date de Création'],
-      type: json['Type'] ?? 'Non spécifié',
-      details: json['Détails'] ?? 'Non spécifié',
+      article: json['article'],
+      amountPaid: double.parse(json['paid']),
+      status: Status.fromJson(json['status']),
+      type: Type.fromJson(json['type']),
+      details: json['details'],
+      createdBy: json['created_by'],
+      createdAt: json['created_at'],
     );
   }
 }
