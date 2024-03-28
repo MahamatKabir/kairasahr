@@ -36,11 +36,11 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
     _fetchContainers();
     // Pre-fill controllers with existing values
     _articleController.text = widget.expense.article;
-    _amountPaidController.text = widget.expense.amountPaid.toString();
+    _amountPaidController.text = widget.expense.amountPaid.toStringAsFixed(2);
     _detailsController.text = widget.expense.details ?? 'Non spécifié';
     _createdby.text = widget.expense.createdBy ?? 'Non spécifié';
     _date.text = widget.expense.createdAt ?? 'Non spécifié';
-    _container.text = widget.expense.type.name ?? 'Non spécifié';
+    _container.text = widget.expense.type?.name ?? 'Non spécifié';
   }
 
   // Fonction pour récupérer les conteneurs depuis l'API
@@ -120,12 +120,12 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
     return Scaffold(
       backgroundColor: !isEditing ? Colors.indigo.shade100 : Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.indigo,
+        backgroundColor: const Color.fromARGB(255, 4, 2, 95),
         iconTheme: const IconThemeData(color: Colors.white),
         title: Center(
           child: Text(
             isEditing ? 'Modifier          ' : 'Detail du Conteneur',
-            style: const TextStyle(color: Colors.white, fontSize: 20),
+            style: const TextStyle(color: Colors.white, fontSize: 18),
           ),
         ),
         actions: [
@@ -138,238 +138,249 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
             child: Text(
               isEditing ? 'Save' : 'Editer',
               style: TextStyle(
+                fontSize: 18,
                 color: isEditing ? Colors.green : Colors.white,
               ),
             ),
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Form(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (isEditing)
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 3,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: TextFormField(
-                      controller: _articleController,
-                      decoration: InputDecoration(
-                        labelText: 'Article',
-                        fillColor: Colors.white,
-                        labelStyle: const TextStyle(color: Colors.indigo),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                if (isEditing)
-                  const SizedBox(
-                    height: 20,
-                  ),
-                if (!isEditing)
-                  _buildTextField('Article', _articleController,
-                      required: true),
-                if (isEditing)
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 3,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: TextFormField(
-                      controller: _amountPaidController,
-                      decoration: InputDecoration(
-                        labelText: 'Montant payé',
-                        fillColor: Colors.white,
-                        labelStyle: const TextStyle(color: Colors.indigo),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                if (isEditing)
-                  const SizedBox(
-                    height: 20,
-                  ),
-                if (!isEditing)
-                  _buildTextField('Montant payé', _amountPaidController,
-                      required: true),
-                if (!isEditing)
-                  _buildTextField('Conteneur', _container, required: true),
-                if (isEditing)
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 3,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: DropdownButtonFormField<int>(
-                      decoration: InputDecoration(
-                        labelText: 'Conteneur',
-                        labelStyle: const TextStyle(color: Colors.indigo),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      value: _selectedContainerID,
-                      items: _containerData.map((container) {
-                        return DropdownMenuItem<int>(
-                          value: container.id,
-                          child: Text(container.name),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedContainerID = value;
-                        });
-                      },
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Veuillez sélectionner un conteneur';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                if (isEditing)
-                  const SizedBox(
-                    height: 20,
-                  ),
-                if (isEditing)
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 3,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: TextFormField(
-                      controller: _detailsController,
-                      decoration: InputDecoration(
-                        labelText: 'Détails',
-                        fillColor: Colors.white,
-                        labelStyle: const TextStyle(color: Colors.indigo),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                if (isEditing)
-                  const SizedBox(
-                    height: 20,
-                  ),
-                if (!isEditing)
-                  _buildTextField('Détails', _detailsController,
-                      required: true),
-                if (!isEditing)
-                  _buildTextField('Creé par', _createdby, required: true),
-                if (!isEditing)
-                  _buildTextField('Date de création ', _date, required: true),
-                const SizedBox(height: 16),
-                Visibility(
-                  visible: isEditing,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Form(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ElevatedButton(
-                        style: buttonPrimary,
-                        onPressed: () {
-                          if (_articleController.text.isEmpty ||
-                              _amountPaidController.text.isEmpty ||
-                              _detailsController.text.isEmpty ||
-                              _selectedContainerID == null) {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text('Champs requis'),
-                                  content: const Text(
-                                      'Veuillez remplir tous les champs obligatoires.'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          } else {
-                            setState(() {
-                              isEditing = false;
-                              // Perform update operation here
-                            });
-                          }
-                        },
-                        child: const Text(
-                          'Mettre à jour',
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.w600),
+                      if (isEditing)
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 1,
+                                blurRadius: 3,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: TextFormField(
+                            controller: _articleController,
+                            decoration: InputDecoration(
+                              labelText: 'Article',
+                              fillColor: Colors.white,
+                              labelStyle: const TextStyle(color: Colors.indigo),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      ElevatedButton(
-                        style: buttonDelete,
-                        onPressed: () {
-                          _confirmDelete(context, widget.expense.id.toString());
-                        },
-                        child: const Text(
-                          'Supprimer',
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.w600),
+                      if (isEditing)
+                        const SizedBox(
+                          height: 20,
+                        ),
+                      if (!isEditing)
+                        _buildTextField('Article', _articleController,
+                            required: true),
+                      if (isEditing)
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 1,
+                                blurRadius: 3,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: TextFormField(
+                            controller: _amountPaidController,
+                            decoration: InputDecoration(
+                              labelText: 'Montant payé',
+                              fillColor: Colors.white,
+                              labelStyle: const TextStyle(color: Colors.indigo),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                          ),
+                        ),
+                      if (isEditing)
+                        const SizedBox(
+                          height: 20,
+                        ),
+                      if (!isEditing)
+                        _buildTextField('Montant payé', _amountPaidController,
+                            required: true),
+                      if (!isEditing)
+                        _buildTextField('Conteneur', _container,
+                            required: true),
+                      if (isEditing)
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 1,
+                                blurRadius: 3,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: DropdownButtonFormField<int>(
+                            decoration: InputDecoration(
+                              labelText: 'Conteneur',
+                              labelStyle: const TextStyle(color: Colors.indigo),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                            value: _selectedContainerID,
+                            items: _containerData.map((container) {
+                              return DropdownMenuItem<int>(
+                                value: container.id,
+                                child: Text(container.name),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedContainerID = value;
+                              });
+                            },
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Veuillez sélectionner un conteneur';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      if (isEditing)
+                        const SizedBox(
+                          height: 20,
+                        ),
+                      if (isEditing)
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 1,
+                                blurRadius: 3,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: TextFormField(
+                            controller: _detailsController,
+                            decoration: InputDecoration(
+                              labelText: 'Détails',
+                              fillColor: Colors.white,
+                              labelStyle: const TextStyle(color: Colors.indigo),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                          ),
+                        ),
+                      if (isEditing)
+                        const SizedBox(
+                          height: 20,
+                        ),
+                      if (!isEditing)
+                        _buildTextField('Détails', _detailsController,
+                            required: true),
+                      if (!isEditing)
+                        _buildTextField('Creé par', _createdby, required: true),
+                      if (!isEditing)
+                        _buildTextField('Date de création ', _date,
+                            required: true),
+                      const SizedBox(height: 16),
+                      Visibility(
+                        visible: isEditing,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ElevatedButton(
+                              style: buttonPrimary,
+                              onPressed: () async {
+                                if (_articleController.text.isEmpty ||
+                                    _amountPaidController.text.isEmpty) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Champs requis'),
+                                        content: const Text(
+                                            'Veuillez remplir tous les champs obligatoires.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('OK'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                } else {
+                                  setState(() {
+                                    isEditing = false;
+                                    // Call the updateExpense method
+                                    updateExpense();
+                                  });
+                                }
+                              },
+                              child: const Text(
+                                'Mettre à jour',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            ElevatedButton(
+                              style: buttonDelete,
+                              onPressed: () {
+                                _confirmDelete(
+                                    context, widget.expense.id.toString());
+                              },
+                              child: const Text(
+                                'Supprimer',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -429,5 +440,28 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
         ],
       ),
     );
+  }
+
+  Future<void> updateExpense() async {
+    // Build the expense object with updated values
+    Expenses updatedExpense = Expenses(
+      id: widget.expense.id,
+      article: _articleController.text,
+      amountPaid: double.parse(_amountPaidController.text),
+    );
+
+    try {
+      // Call the API method to update the expense
+      await AddExpenseService.updateExpense(updatedExpense);
+
+      // If successful, navigate back to the ExpenseList screen
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ExpenseList()),
+      );
+    } catch (e) {
+      print('Failed to update expense: $e');
+      // Handle error appropriately
+    }
   }
 }

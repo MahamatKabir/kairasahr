@@ -101,7 +101,7 @@ class _EditPageState extends State<EditPage> {
         iconTheme: const IconThemeData(color: Colors.white),
         title: Center(
           child: Text(
-            _isEditing ? 'Modifier          ' : 'Detail du Conteneur',
+            _isEditing ? 'Modifier  ' : 'Detail du Conteneur',
             style: const TextStyle(color: Colors.white, fontSize: 20),
           ),
         ),
@@ -111,31 +111,263 @@ class _EditPageState extends State<EditPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildEditableField(
-                label: 'Nom du conteneur', controller: _nameController),
-            _buildEditableField(label: 'Plaque', controller: _plaqueController),
-            _buildEditableField(
-                label: 'Client(e)', controller: _customerController),
-            _buildEditableField(
-                label: 'Téléphone du client',
-                controller: _customerTelController),
-            _buildEditableField(
-                label: 'Courtièr(e)', controller: _brokerController),
-            _buildEditableField(
-                label: 'Téléphone du courtièr',
-                controller: _brokerTelController),
+            if (_isEditing == true)
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: TextFormField(
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                    labelText: 'Nom du conteneur',
+                    fillColor: Colors.white,
+                    labelStyle: const TextStyle(color: Colors.indigo),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                ),
+              ),
+            if (_isEditing == true)
+              const SizedBox(
+                height: 15,
+              ),
+            if (_isEditing != true)
+              _buildEditableField(
+                  label: 'Nom du conteneur', controller: _nameController),
+            if (_isEditing == true)
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: TextFormField(
+                  controller: _plaqueController,
+                  decoration: InputDecoration(
+                    labelText: 'Plaque',
+                    fillColor: Colors.white,
+                    labelStyle: const TextStyle(color: Colors.indigo),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                ),
+              ),
+            if (_isEditing == true)
+              const SizedBox(
+                height: 15,
+              ),
+            if (_isEditing != true)
+              _buildEditableField(
+                  label: 'Plaque', controller: _plaqueController),
+            if (_isEditing == true)
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: TextFormField(
+                  controller: _customerController,
+                  decoration: InputDecoration(
+                    labelText: 'Client(e)',
+                    fillColor: Colors.white,
+                    labelStyle: const TextStyle(color: Colors.indigo),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                ),
+              ),
+            if (_isEditing == true)
+              const SizedBox(
+                height: 15,
+              ),
+            if (_isEditing != true)
+              _buildEditableField(
+                  label: 'Client(e)', controller: _customerController),
+            if (_isEditing == true)
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: TextFormField(
+                  controller: _customerTelController,
+                  decoration: InputDecoration(
+                    labelText: 'Téléphone du client',
+                    fillColor: Colors.white,
+                    labelStyle: const TextStyle(color: Colors.indigo),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                ),
+              ),
+            if (_isEditing == true)
+              const SizedBox(
+                height: 15,
+              ),
+            if (_isEditing != true)
+              _buildEditableField(
+                  label: 'Téléphone du client',
+                  controller: _customerTelController),
+            if (_isEditing == true)
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: TextFormField(
+                  controller: _brokerController,
+                  decoration: InputDecoration(
+                    labelText: 'Courtièr(e)',
+                    fillColor: Colors.white,
+                    labelStyle: const TextStyle(color: Colors.indigo),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                ),
+              ),
+            if (_isEditing == true)
+              const SizedBox(
+                height: 15,
+              ),
+            if (_isEditing != true)
+              _buildEditableField(
+                  label: 'Courtièr(e)', controller: _brokerController),
+            if (_isEditing == true)
+              const SizedBox(
+                height: 15,
+              ),
+            if (_isEditing != true)
+              _buildEditableField(
+                  label: 'Téléphone du courtièr',
+                  controller: _brokerTelController),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment:
                   CrossAxisAlignment.start, // Ajustez selon vos besoins
               children: [
-                Expanded(
-                  flex: 5, // Ajustez selon vos besoins
-                  child: _buildEditableField(
-                    label: 'Mountant',
-                    controller: _amountController,
+                if (_isEditing == true)
+                  Expanded(
+                    flex: 5,
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 3,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: TextFormField(
+                        controller: _brokerTelController,
+                        decoration: InputDecoration(
+                          labelText: 'Téléphone du courtièr',
+                          fillColor: Colors.white,
+                          labelStyle: const TextStyle(color: Colors.indigo),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                if (_isEditing == true)
+                  const SizedBox(
+                    width: 20,
+                  ),
+                if (_isEditing == true)
+                  Expanded(
+                    flex: 5,
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 3,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: TextFormField(
+                        controller: _amountController,
+                        decoration: InputDecoration(
+                          labelText: 'Montant',
+                          fillColor: Colors.white,
+                          labelStyle: const TextStyle(color: Colors.indigo),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                if (_isEditing != true)
+                  Expanded(
+                    flex: 5, // Ajustez selon vos besoins
+                    child: _buildEditableField(
+                      label: 'Mountant',
+                      controller: _amountController,
+                    ),
+                  ),
                 const SizedBox(
                   width: 9,
                 ),
@@ -148,41 +380,61 @@ class _EditPageState extends State<EditPage> {
                       controller: _cityIDController,
                     ),
                   ),
-                if (_isEditing == true)
-                  Expanded(
-                    flex: 5, // Ajustez selon vos besoins
-                    child: DropdownButtonFormField<int>(
-                      value: _selectedCity,
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedCity = value;
-                        });
-                      },
-                      items: _cityData.map((city) {
-                        return DropdownMenuItem<int>(
-                          value: city['id']
-                              as int, // Utilisez l'ID de la ville comme valeur
-                          child: Text(city['name'] as String),
-                        );
-                      }).toList(),
-                      decoration: InputDecoration(
-                        labelText: 'Ville',
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Veuillez sélectionner une ville';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
               ],
             ),
+            if (_isEditing == true)
+              const SizedBox(
+                height: 15,
+              ),
+            if (_isEditing == true)
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: DropdownButtonFormField<int>(
+                  value: _selectedCity,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedCity = value;
+                    });
+                  },
+                  items: _cityData.map((city) {
+                    return DropdownMenuItem<int>(
+                      value: city['id']
+                          as int, // Utilisez l'ID de la ville comme valeur
+                      child: Text(city['name'] as String),
+                    );
+                  }).toList(),
+                  decoration: InputDecoration(
+                    labelText: 'Ville',
+                    fillColor: Colors.white,
+                    labelStyle: const TextStyle(color: Colors.indigo),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Veuillez sélectionner une ville';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            if (_isEditing == true)
+              const SizedBox(
+                height: 15,
+              ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,37 +451,62 @@ class _EditPageState extends State<EditPage> {
                   Expanded(
                       flex: 5,
                       child: // Valeur initiale du dropdown
-                          DropdownButton<int>(
-                        value: _statusValue,
-                        onChanged: (newValue) {
-                          setState(() {
-                            _statusValue = newValue!;
-                          });
-                        },
-                        items: [
-                          DropdownMenuItem(
-                            value: 1,
-                            child: Text(
-                              "Actif",
-                              style: TextStyle(
-                                color: Colors.indigo.shade400,
-                                fontSize: 14.0,
-                              ),
+                          Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 1,
+                              blurRadius: 3,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: DropdownButtonFormField<int>(
+                          decoration: InputDecoration(
+                            labelText: 'Status',
+                            labelStyle: const TextStyle(color: Colors.indigo),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
                           ),
-                          DropdownMenuItem(
-                            value: 0,
-                            child: Text(
-                              "Passif",
-                              style: TextStyle(
-                                color: Colors.indigo.shade900,
-                                fontSize: 14.0,
+                          value: _statusValue,
+                          onChanged: (newValue) {
+                            setState(() {
+                              _statusValue = newValue!;
+                            });
+                          },
+                          items: [
+                            DropdownMenuItem(
+                              value: 1,
+                              child: Text(
+                                "Actif",
+                                style: TextStyle(
+                                  color: Colors.indigo.shade400,
+                                  fontSize: 14.0,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                            DropdownMenuItem(
+                              value: 0,
+                              child: Text(
+                                "Passif",
+                                style: TextStyle(
+                                  color: Colors.indigo.shade900,
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       )),
-
+                if (_isEditing == true)
+                  const SizedBox(
+                    width: 9,
+                  ),
                 const SizedBox(
                   width: 9,
                 ),
@@ -246,48 +523,136 @@ class _EditPageState extends State<EditPage> {
                   Expanded(
                       flex: 5,
                       child: // Valeur initiale du dropdown
-                          DropdownButton<int>(
-                        value: _containerTypeValue,
-                        onChanged: (newValue) {
-                          setState(() {
-                            _containerTypeValue = newValue!;
-                          });
-                        },
-                        items: [
-                          DropdownMenuItem(
-                            value: 1,
-                            child: Text(
-                              "20 Pieds",
-                              style: TextStyle(
-                                color: Colors.indigo.shade400,
-                                fontSize: 14.0,
-                              ),
+                          Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 1,
+                              blurRadius: 3,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: DropdownButtonFormField<int>(
+                          value: _containerTypeValue,
+                          decoration: InputDecoration(
+                            labelText: 'Conteneur',
+                            labelStyle: const TextStyle(color: Colors.indigo),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
                           ),
-                          DropdownMenuItem(
-                            value: 2,
-                            child: Text(
-                              "40 pieds",
-                              style: TextStyle(
-                                color: Colors.indigo.shade900,
-                                fontSize: 14.0,
+                          onChanged: (newValue) {
+                            setState(() {
+                              _containerTypeValue = newValue!;
+                            });
+                          },
+                          items: const [
+                            DropdownMenuItem(
+                              value: 1,
+                              child: Text(
+                                "20 Pieds",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14.0,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                            DropdownMenuItem(
+                              value: 2,
+                              child: Text(
+                                "40 pieds",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ))
               ],
             ),
-            _buildEditableField(
-              label: 'Nouveau C',
-              controller: _newCController,
-              isMultiline: true, // Rend le champ multiligne
-            ),
-            _buildEditableField(
-              label: 'Détails du conteneur',
-              controller: _contDetailsController,
-              isMultiline: true, // Rend le champ multiligne
-            ),
+            if (_isEditing == true)
+              const SizedBox(
+                height: 15,
+              ),
+            if (_isEditing == true)
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: TextFormField(
+                  controller: _newCController,
+                  maxLines: 2,
+                  decoration: InputDecoration(
+                    labelText: 'Nouveau C',
+                    fillColor: Colors.white,
+                    labelStyle: const TextStyle(color: Colors.indigo),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                ),
+              ),
+            if (_isEditing == true)
+              const SizedBox(
+                height: 15,
+              ),
+            if (_isEditing != true)
+              _buildEditableField(
+                label: 'Nouveau C',
+                controller: _newCController,
+                isMultiline: true, // Rend le champ multiligne
+              ),
+            if (_isEditing == true)
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: TextFormField(
+                  controller: _contDetailsController,
+                  maxLines: 2,
+                  decoration: InputDecoration(
+                    labelText: 'Détails du conteneur',
+                    fillColor: Colors.white,
+                    labelStyle: const TextStyle(color: Colors.indigo),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                ),
+              ),
+            if (_isEditing != true)
+              _buildEditableField(
+                label: 'Détails du conteneur',
+                controller: _contDetailsController,
+                isMultiline: true, // Rend le champ multiligne
+              ),
             Visibility(
               visible: _isEditing,
               child: Column(
@@ -372,143 +737,68 @@ class _EditPageState extends State<EditPage> {
     bool isMultiline = false,
   }) {
     // Vérifier si le label est "Status" ou "Type de Conteneur"
-    if (label == 'Status' || label == 'Type de Conteneur') {
-      // Condition pour déterminer le texte en fonction de la valeur du contrôleur
-      String displayText = '';
-      if (controller.text == '1' && label == 'Status') {
-        displayText = 'Actif';
-      } else if (controller.text == '2' && label == 'Status') {
-        displayText = 'Passif';
-      } else if (controller.text == '1' && label == 'Type de Conteneur') {
-        displayText = '20 pieds';
-      } else if (controller.text == '2' && label == 'Type de Conteneur') {
-        displayText = '40 pieds';
-      } else {
-        displayText = controller
-            .text; // Si la valeur n'est ni 1 ni 2, affiche la valeur du contrôleur
-      }
 
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              color: Colors.indigo.shade900,
-              fontSize: 15.0,
-              fontWeight: FontWeight.bold,
-            ),
+    // Si le label n'est ni "Status" ni "Type de Conteneur", afficher le champ de texte sans modification
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.indigo.shade900,
+            fontSize: 15.0,
+            fontWeight: FontWeight.bold,
           ),
-          const SizedBox(height: 5.0),
-          AnimatedContainer(
-            width: MediaQuery.of(context).size.width * 2,
-            height: MediaQuery.of(context).size.height / 9,
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeInOut,
-            padding:
-                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-            decoration: BoxDecoration(
-              color: _isEditing ? Colors.white : Colors.indigo.shade100,
-              borderRadius: BorderRadius.circular(10.0),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.indigo.withOpacity(0.5),
-                  spreadRadius: 1,
-                  blurRadius: 10,
-                  offset: const Offset(4, 4),
-                ),
-              ],
-            ),
-            child: isMultiline
-                ? TextField(
-                    controller: controller,
-                    enabled: _isEditing,
-                    maxLines: null,
-                    style: TextStyle(
-                      color: Colors.indigo.shade900,
-                      fontSize: 14.0,
-                    ),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Entrer $label',
-                      hintStyle: TextStyle(color: Colors.indigo.shade400),
-                    ),
-                  )
-                : Text(
-                    displayText, // Affiche le texte déterminé en fonction de la valeur du contrôleur
-                    style: TextStyle(
-                      color: Colors.indigo.shade900,
-                      fontSize: 14.0,
-                    ),
+        ),
+        const SizedBox(height: 5.0),
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeInOut,
+          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+          decoration: BoxDecoration(
+            color: _isEditing ? Colors.white : Colors.indigo.shade100,
+            borderRadius: BorderRadius.circular(10.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.indigo.withOpacity(0.5),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(4, 4),
+              ),
+            ],
+          ),
+          child: isMultiline
+              ? TextField(
+                  controller: controller,
+                  enabled: _isEditing,
+                  maxLines: null,
+                  style: TextStyle(
+                    color: Colors.indigo.shade900,
+                    fontSize: 14.0,
                   ),
-          ),
-          const SizedBox(height: 20.0),
-        ],
-      );
-    } else {
-      // Si le label n'est ni "Status" ni "Type de Conteneur", afficher le champ de texte sans modification
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              color: Colors.indigo.shade900,
-              fontSize: 15.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 5.0),
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeInOut,
-            padding:
-                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-            decoration: BoxDecoration(
-              color: _isEditing ? Colors.white : Colors.indigo.shade100,
-              borderRadius: BorderRadius.circular(10.0),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.indigo.withOpacity(0.5),
-                  spreadRadius: 1,
-                  blurRadius: 10,
-                  offset: const Offset(4, 4),
-                ),
-              ],
-            ),
-            child: isMultiline
-                ? TextField(
-                    controller: controller,
-                    enabled: _isEditing,
-                    maxLines: null,
-                    style: TextStyle(
-                      color: Colors.indigo.shade900,
-                      fontSize: 14.0,
-                    ),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Entrer $label',
-                      hintStyle: TextStyle(color: Colors.indigo.shade400),
-                    ),
-                  )
-                : TextField(
-                    controller: controller,
-                    enabled: _isEditing,
-                    style: TextStyle(
-                      color: Colors.indigo.shade900,
-                      fontSize: 14.0,
-                    ),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Entrer $label',
-                      hintStyle: TextStyle(color: Colors.indigo.shade400),
-                    ),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Entrer $label',
+                    hintStyle: TextStyle(color: Colors.indigo.shade400),
                   ),
-          ),
-          const SizedBox(height: 20.0),
-        ],
-      );
-    }
+                )
+              : TextField(
+                  controller: controller,
+                  enabled: _isEditing,
+                  style: TextStyle(
+                    color: Colors.indigo.shade900,
+                    fontSize: 14.0,
+                  ),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Entrer $label',
+                    hintStyle: TextStyle(color: Colors.indigo.shade400),
+                  ),
+                ),
+        ),
+        const SizedBox(height: 20.0),
+      ],
+    );
   }
 
   Widget _buildDropdownButton({

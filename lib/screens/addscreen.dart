@@ -3,6 +3,7 @@ import 'package:heroicons/heroicons.dart';
 import 'package:kairasahrl/screens/city/cityAdd_screen.dart';
 import 'package:kairasahrl/screens/container/container_add.dart';
 import 'package:kairasahrl/screens/depenses/depenseadd_screen.dart';
+import 'package:kairasahrl/screens/depenses/otherDepense.dart';
 
 class AddScreenne extends StatefulWidget {
   const AddScreenne({super.key});
@@ -15,7 +16,7 @@ class _AddScreenneState extends State<AddScreenne> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         backgroundColor: Colors.indigo.shade100,
         appBar: AppBar(
@@ -75,6 +76,16 @@ class _AddScreenneState extends State<AddScreenne> {
                     width: 80,
                     child: Tab(
                       icon: HeroIcon(
+                        HeroIcons.currencyDollar,
+                        color: Colors.indigo.shade100,
+                      ),
+                      text: 'AutreD',
+                    ),
+                  ),
+                  Container(
+                    width: 80,
+                    child: Tab(
+                      icon: HeroIcon(
                         HeroIcons.buildingOffice2,
                         color: Colors.indigo.shade100,
                       ),
@@ -87,6 +98,7 @@ class _AddScreenneState extends State<AddScreenne> {
             child: TabBarView(children: [
               CreateContainerPage(),
               DepenseAddScreen(),
+              AuthDepenseAddScreen(),
               CityAddScreen(),
             ]),
           )

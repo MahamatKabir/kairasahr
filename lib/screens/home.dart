@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kairasahrl/screens/city/citylist_screen.dart';
 import 'package:kairasahrl/screens/container/containerlist_screen.dart';
-
 import 'package:intl/intl.dart';
-import 'package:kairasahrl/screens/depenses/depenselist_screen.dart';
 import 'package:kairasahrl/screens/depenses/expenselist.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -54,14 +52,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         height: 30,
                         width: 30,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              width: 3,
-                              color: Colors.grey,
-                            ),
-                            image: const DecorationImage(
-                                fit: BoxFit.cover,
-                                image: AssetImage("assets/images/cont.png"))),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            width: 3,
+                            color: Colors.grey,
+                          ),
+                        ),
                       ),
                       const SizedBox(
                         width: 10,

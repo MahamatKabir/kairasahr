@@ -17,6 +17,8 @@ class ExpenseList extends StatefulWidget {
 }
 
 class _ExpenseListState extends State<ExpenseList> {
+  final TextEditingController _searchTextController = TextEditingController();
+  final FocusNode _searchTextFocusNode = FocusNode();
   late Future<List<Expenses>> futureExpenses;
   int _selectedIndex = 0;
 
@@ -56,7 +58,6 @@ class _ExpenseListState extends State<ExpenseList> {
     if (response.statusCode == 200) {
       Map<String, dynamic> responseData = jsonDecode(response.body);
       List<dynamic> data = responseData['data'];
-      print(data);
       List<Expenses> expenses = data.map((e) => Expenses.fromJson(e)).toList();
       return expenses;
     } else {
@@ -77,133 +78,178 @@ class _ExpenseListState extends State<ExpenseList> {
             ),
           ),
         ),
-        body: FutureBuilder<List<Expenses>>(
-          future: futureExpenses,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text('Erreur: ${snapshot.error}'),
-              );
-            } else {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  Expenses expense = snapshot.data![index];
-                  return ListTile(
-                    subtitle: Container(
-                      height: 75,
-                      margin: const EdgeInsets.symmetric(
-                        vertical: 1.0,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.indigo.shade100,
-                        borderRadius: BorderRadius.circular(5),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.indigo,
-                            offset: Offset(1, 1),
-                            spreadRadius: 1.0,
-                            blurRadius: 1.0,
-                          )
-                        ],
-                      ),
-                      child: Container(
-                        margin: const EdgeInsets.only(top: 10, left: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              children: [
-                                Row(
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                height: kBottomNavigationBarHeight,
+                child: TextField(
+                  focusNode: _searchTextFocusNode,
+                  controller: _searchTextController,
+                  decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide:
+                          const BorderSide(color: Colors.indigo, width: 1),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide:
+                          const BorderSide(color: Colors.indigo, width: 1),
+                    ),
+                    hintText: "Vous recherchez ? ",
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      color: Colors.indigo,
+                    ),
+                    suffix: IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () {},
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                color: Colors.white,
+                child: FutureBuilder<List<Expenses>>(
+                  future: futureExpenses,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Erreur: ${snapshot.error}'),
+                      );
+                    } else {
+                      return ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          Expenses expense = snapshot.data![index];
+
+                          return ListTile(
+                            subtitle: Container(
+                              height: 75,
+                              decoration: BoxDecoration(
+                                color: Colors.indigo.shade100,
+                                borderRadius: BorderRadius.circular(5),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.indigo,
+                                    offset: Offset(1, 1),
+                                    spreadRadius: 1.0,
+                                    blurRadius: 1.0,
+                                  )
+                                ],
+                              ),
+                              child: Container(
+                                margin: const EdgeInsets.only(top: 10, left: 8),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
                                       children: [
-                                        SizedBox(
-                                          width: 200,
-                                          child: Text(
-                                            expense.article,
-                                            style: const TextStyle(
-                                                fontSize: 16,
-                                                color: Color.fromARGB(
-                                                    255, 0, 0, 0),
-                                                fontWeight: FontWeight.bold),
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
+                                        Row(
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(
+                                                  width: 200,
+                                                  child: Text(
+                                                    expense.article,
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Color.fromARGB(
+                                                            255, 0, 0, 0),
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 8,
+                                                ),
+                                                SizedText(
+                                                    text:
+                                                        ' ${expense.createdAt}',
+                                                    color: Color.fromARGB(
+                                                        255, 0, 0, 0))
+                                              ],
+                                            ),
+                                          ],
                                         ),
                                         const SizedBox(
-                                          height: 8,
+                                          height: 15,
                                         ),
-                                        SizedText(
-                                            text: ' ${expense.createdAt}',
-                                            color: Color.fromARGB(255, 0, 0, 0))
                                       ],
                                     ),
+                                    Row(
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Container(
+                                              width: 100,
+                                              height: 27,
+                                              child: Center(
+                                                child: Container(
+                                                  width: 300,
+                                                  child: Text(
+                                                    "${expense.amountPaid.toString()}FCFA",
+                                                    style: const TextStyle(
+                                                        fontSize: 13,
+                                                        color: Colors.green,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              margin: const EdgeInsets.only(
+                                                  bottom: 20, left: 50),
+                                              width: 40,
+                                              height: 18,
+                                              child: const Center(
+                                                child: HeroIcon(
+                                                  HeroIcons.chevronRight,
+                                                  size: 18,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    )
                                   ],
                                 ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                              ],
+                              ),
                             ),
-                            Row(
-                              children: [
-                                Column(
-                                  children: [
-                                    Container(
-                                      width: 100,
-                                      height: 27,
-                                      child: Center(
-                                        child: Container(
-                                          width: 300,
-                                          child: Text(
-                                            "${expense.amountPaid.toString()}FCFA",
-                                            style: const TextStyle(
-                                                fontSize: 13,
-                                                color: Colors.green,
-                                                fontWeight: FontWeight.bold),
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          bottom: 20, left: 50),
-                                      width: 40,
-                                      height: 18,
-                                      child: const Center(
-                                        child: HeroIcon(
-                                          HeroIcons.chevronRight,
-                                          size: 18,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                ExpenseDetailPage(expense: expense)),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ExpenseDetailPage(expense: expense)),
+                              );
+                            },
+                          );
+                        },
                       );
-                    },
-                  );
-                },
-              );
-            }
-          },
+                    }
+                  },
+                ),
+              ),
+            ),
+          ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: Container(

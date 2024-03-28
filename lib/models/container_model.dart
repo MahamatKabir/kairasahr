@@ -45,6 +45,8 @@ class Conteneure {
   });
 
   factory Conteneure.fromJson(Map<String, dynamic> json) {
+    // Convertir la liste des dépenses à partir des données JSON
+
     return Conteneure(
       id: json['id'],
       name: json['container_name'],

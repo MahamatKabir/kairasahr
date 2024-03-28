@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:kairasahrl/screens/fetchapi.dart';
@@ -80,6 +78,7 @@ class _CreateContainerPageState extends State<CreateContainerPage> {
           'status': selectedStatus.toString(),
         },
       );
+      print(response);
       if (response.statusCode != 200) {
         Fluttertoast.showToast(
           msg: "Container created successfully!",

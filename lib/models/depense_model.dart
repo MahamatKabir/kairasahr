@@ -1,12 +1,12 @@
 class Expense {
   int id;
   String article;
-  int? paid;
+  double? paid;
   String? details;
   int? containerID;
-  int createdBy;
+  String? createdBy;
   String createdAt;
-  int? updatedBy;
+  String? updatedBy;
   String? updatedAt;
 
   Expense({
@@ -25,9 +25,8 @@ class Expense {
     return Expense(
       id: json['id'],
       article: json['article'],
-      paid: json['paid'],
+      paid: double.parse(json['paid'] ?? '0.0'),
       details: json['details'],
-      containerID: json['containerID'],
       createdBy: json['created_by'],
       createdAt: json['created_at'],
       updatedBy: json['updated_by'],
@@ -58,6 +57,13 @@ class Status {
     this.label,
     required this.value,
   });
+  Map<String, dynamic> toJson() {
+    return {
+      'label':
+          label, // Utilisation de label ici, il peut être null, c'est correct
+      'value': value,
+    };
+  }
 
   factory Status.fromJson(Map<String, dynamic> json) {
     return Status(
@@ -76,6 +82,14 @@ class Type {
     this.value,
   });
 
+  Map<String, dynamic> toJson() {
+    return {
+      'name':
+          name, // Utilisation de label ici, il peut être null, c'est correct
+      'value': value,
+    };
+  }
+
   factory Type.fromJson(Map<String, dynamic> json) {
     return Type(
       name: json['name'],
@@ -88,9 +102,9 @@ class Expenses {
   final int id;
   final String article;
   final double amountPaid;
-  final Type type;
+  final Type? type;
   final String? details;
-  final Status status;
+  final Status? status;
   final String? createdBy;
   final String? createdAt;
 
@@ -98,12 +112,25 @@ class Expenses {
     required this.id,
     required this.article,
     required this.amountPaid,
-    required this.type,
+    this.type,
     this.details,
-    required this.status,
+    this.status,
     this.createdBy,
     this.createdAt,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'article': article,
+      'paid': amountPaid,
+      'status': status?.toJson(),
+      'type': type?.toJson(),
+      'details': details,
+      'created_by': createdBy,
+      'created_at': createdAt,
+    };
+  }
 
   factory Expenses.fromJson(Map<String, dynamic> json) {
     return Expenses(

@@ -12,46 +12,24 @@ class ArticlePaidField {
         paidController = TextEditingController();
 }
 
-class DepenseAddScreen extends StatefulWidget {
-  const DepenseAddScreen({Key? key}) : super(key: key);
+class AuthDepenseAddScreen extends StatefulWidget {
+  const AuthDepenseAddScreen({Key? key}) : super(key: key);
 
   @override
-  State<DepenseAddScreen> createState() => _DepenseAddScreenState();
+  State<AuthDepenseAddScreen> createState() => _AuthDepenseAddScreenState();
 }
 
-class _DepenseAddScreenState extends State<DepenseAddScreen> {
+class _AuthDepenseAddScreenState extends State<AuthDepenseAddScreen> {
   final List<ArticlePaidField> _articleAndPaidFields = [];
   final TextEditingController _detailsController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  int? _selectedContainerID;
-  List<Conteneurre> _containerData = [];
+
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    _fetchContainers();
     _addArticleAndPaidField(); // Ajouter le premier champ "article" et "paid" dès le début
-  }
-
-  // Fonction pour récupérer les conteneurs depuis l'API
-  Future<void> _fetchContainers() async {
-    setState(() {
-      _isLoading = true;
-    });
-    try {
-      List<Conteneurre> containers =
-          await ContainerDepenseApi.fetchContainerDepense();
-      setState(() {
-        _containerData = containers;
-        _isLoading = false;
-      });
-    } catch (e) {
-      print('Failed to load containers: $e');
-      setState(() {
-        _isLoading = false;
-      });
-    }
   }
 
   @override
@@ -71,49 +49,6 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 3,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: DropdownButtonFormField<int>(
-                    decoration: InputDecoration(
-                      labelText: 'Conteneur',
-                      labelStyle: const TextStyle(color: Colors.indigo),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                    value: _selectedContainerID,
-                    items: _containerData.map((container) {
-                      return DropdownMenuItem<int>(
-                        value: container.id,
-                        child: Text(container.name),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedContainerID = value;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null) {
-                        return 'Veuillez sélectionner un conteneur';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-
                 // Affichage des champs "article" et "paid" ajoutés dynamiquement
                 Column(
                   children: _articleAndPaidFields.map((field) {
@@ -303,7 +238,7 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
         int paid = int.tryParse(field.paidController.text) ?? 0;
 
         // Vérifier si les champs sont vides
-        if (article.isEmpty || paid == 0 || _selectedContainerID == null) {
+        if (article.isEmpty || paid == 0) {
           // Afficher un message d'erreur et arrêter le processus d'ajout
           Fluttertoast.showToast(
             msg: 'Veuillez remplir tous les champs',
@@ -315,28 +250,17 @@ class _DepenseAddScreenState extends State<DepenseAddScreen> {
             fontSize: 16.0,
           );
           return; // Arrêter la fonction _addExpense()
-        } else {
-          Fluttertoast.showToast(
-            msg: 'Dépenses ajoutées avec succès',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.green,
-            textColor: Colors.white,
-            fontSize: 16.0,
-          );
         }
 
         // Ajouter les données à la liste
         contExpenses.add({
           'article': article,
           'paid': paid,
-          'containerID': _selectedContainerID,
         });
       }
 
       // Ajouter votre logique pour ajouter ces dépenses à l'API
-      await AddExpenseService.createExpense(
+      await AddExpenseService.createAuthExpense(
         contExpenses: contExpenses,
         details: _detailsController.text,
       );

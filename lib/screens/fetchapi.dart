@@ -71,12 +71,12 @@ class YourApi {
 
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body)['data'];
-        print(json.decode(response.body)['data']);
+
         List<Conteneure> containers = [];
 
         for (var data in responseData) {
           containers.add(Conteneure(
-            id: data['id'],
+            id: int.parse(data['id'].toString()),
             name: data['container_name'] ?? '',
             plaque: data['container_plate'] ?? '',
             slug: data['slug'] ?? '',
@@ -87,27 +87,19 @@ class YourApi {
             containerPrice:
                 double.parse(data['container_price']?.toString() ?? '0'),
             containerCityID: data['city']['name'] ?? '',
-
             containerType: data['type']['name'],
             status: data['status'],
-            //  == "Actif"
-            //     ? 1
-            //     : data['Status'] == "Passif"
-            //         ? 0
-            //         : data['Status'] == "Standby"
-            //             ? 2
-            //             : -1,
             containerInformationC: data['container_information_c'] ?? '',
             containerOtherDetails: data['container_other_details'] ?? '',
             createdAt: data['created_at'] ?? '',
             createdBy: data['created_by'] ?? '',
-            // containerRelatedExpenses:
-            //     (data['container_related_expenses'] as List<dynamic>?)
-            //         ?.map((item) => Expense.fromJson(item))
-            //         .toList(),
+            containerRelatedExpenses:
+                (data['container_related_expenses'] as List<dynamic>?)
+                    ?.map((item) => Expense.fromJson(item))
+                    .toList(),
           ));
         }
-        print(responseData);
+
         return containers;
       } else {
         throw Exception('Failed to load containers');
@@ -348,68 +340,6 @@ class CityService {
 
 class AddExpenseService {
   static const String baseUrl = 'http://kairasarl.yerimai.com/api/v1';
-  static Future<void> addExpense({
-    required Map<String, dynamic> itemData,
-    required String slug,
-    required BuildContext context,
-  }) async {
-    final expenseId = _generateExpenseId();
-    final createdAt = DateTime.now().toIso8601String();
-
-    // Assurez-vous que toutes les données nécessaires sont présentes dans itemData
-    if (itemData['article'] != null &&
-        itemData['details'] != null &&
-        itemData['paid'] != null &&
-        itemData['selectedContainerID'] != null) {
-      final response = await http.post(
-        Uri.parse('$baseUrl/expenses'),
-        body: json.encode({
-          'id': expenseId,
-          'article': itemData['article'],
-          'details': itemData['details'],
-          'paid': itemData['paid'],
-          'slug': slug,
-          'container_id': itemData['selectedContainerID'],
-          'created_at': createdAt,
-          // Ajoutez d'autres données spécifiques de l'élément ici
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      );
-      print(
-        json.encode({
-          'id': expenseId,
-          'article': itemData['article'],
-          'details': itemData['details'],
-          'paid': itemData['paid'],
-          'slug': slug,
-          'container_id': itemData['selectedContainerID'],
-          'created_at': createdAt,
-          // Ajoutez d'autres données spécifiques de l'élément ici
-        }),
-      );
-      if (response.statusCode == 200) {
-        Fluttertoast.showToast(
-          msg: 'Dépense ajoutée avec succès',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-        );
-        Navigator.pop(context);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Échec de l\'ajout de la dépense')),
-        );
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Données de dépense non valides')),
-      );
-    }
-  }
 
   static Future<void> createExpense({
     required List<Map<String, dynamic>> contExpenses,
@@ -432,10 +362,7 @@ class AddExpenseService {
         },
         body: jsonEncode(requestBody),
       );
-      print(
-        jsonEncode(requestBody),
-      );
-      print(response.body);
+
       if (response.statusCode == 201) {
         // La dépense a été ajoutée avec succès
         print('Dépense ajoutée avec succès');
@@ -449,6 +376,69 @@ class AddExpenseService {
       // Gérer les erreurs en cas d'échec de la requête
       print('Erreur lors de la connexion à l\'API: $e');
       throw Exception('Échec de la connexion à l\'API');
+    }
+  }
+
+  static Future<void> createAuthExpense({
+    required List<Map<String, dynamic>> contExpenses,
+    required String details,
+  }) async {
+    // Envoyer les données à votre API
+    try {
+      // Construire le corps de la requête
+      Map<String, dynamic> requestBody = {
+        'details': details,
+        'contExpenses': contExpenses,
+      };
+
+      // Envoyer la requête POST à votre API
+      final response = await http.post(
+        Uri.parse(
+            '$baseUrl/other-expenses'), // Remplacez ceci par l'URL de votre API
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode(requestBody),
+      );
+      if (response.statusCode == 201) {
+        Fluttertoast.showToast(
+          msg: 'Dépenses ajoutées avec succès',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        // La dépense a été ajoutée avec succès
+        print('Dépense ajoutée avec succès');
+      } else {
+        // Gérer les erreurs
+        print('Erreur lors de l\'ajout de la dépense: ${response.statusCode}');
+        print('Réponse: ${response.body}');
+        throw Exception('Échec de l\'ajout de la dépense');
+      }
+    } catch (e) {
+      // Gérer les erreurs en cas d'échec de la requête
+      print('Erreur lors de la connexion à l\'API: $e');
+      throw Exception('Échec de la connexion à l\'API');
+    }
+  }
+
+  static Future<void> updateExpense(Expenses expense) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/other-expenses/${expense.id}'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(expense.toJson()),
+    );
+    print(response.body);
+    print(jsonEncode(expense.toJson()));
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update expense: ${response.statusCode}');
     }
   }
 
